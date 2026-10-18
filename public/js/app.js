@@ -367,6 +367,153 @@
         if (jump) jump.addEventListener('change', function () { var el = document.getElementById('ayat-' + jump.value); if (el) el.scrollIntoView({ behavior: 'smooth' }); });
     }
 
+    // ---------- Pemutar murattal (Qari ALMARA / Quran.Foundation) ----------
+    var player = $('[data-audio]');
+    if (player) (function () {
+        var audio = new Audio();
+        audio.preload = 'none';
+        var btn = $('[data-audio-play]', player), sel = $('[data-audio-reciter]', player);
+        var seek = $('[data-audio-seek]', player), cur = $('[data-audio-cur]', player), dur = $('[data-audio-dur]', player);
+        var note = $('[data-audio-note]', player), ayahLbl = $('[data-audio-ayah]', player);
+        var modeBtn = $('[data-audio-mode]', player), repBtn = $('[data-audio-repeat]', player);
+        window.MA.isBusy = function () { return !audio.paused; };
+        var st = { data: null, key: null, loading: null, verseMode: player.dataset.mode === 'verse', repeat: false, range: null, active: null, seeking: false };
+
+        function fmt(s) { s = Math.max(0, Math.floor(s || 0)); var h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60); return (h ? h + ':' + pad(m) : m) + ':' + pad(s % 60); }
+        function setNote(t) { note.textContent = t || ''; note.hidden = !t; }
+        function busy(on) { player.classList.toggle('is-loading', on); btn.setAttribute('aria-busy', on ? 'true' : 'false'); }
+        function segs() { return (st.data && st.data.segments) || []; }
+        function segOf(ayah) { var s = segs(); for (var i = 0; i < s.length; i++) if (s[i].ayah === ayah) return s[i]; return null; }
+
+        function load() {
+            var key = sel ? sel.value : null;
+            if (st.data && st.key === key) return Promise.resolve(st.data);
+            if (st.loading) return st.loading;
+            busy(true);
+            st.loading = fetch(player.dataset.api + (key ? '?reciter=' + encodeURIComponent(key) : ''), { headers: { Accept: 'application/json' }, credentials: 'same-origin' })
+                .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j.message || 'Audio belum tersedia.'); return j.data; }); })
+                .then(function (d) {
+                    st.data = d; st.key = key; audio.src = d.url;
+                    var info = [];
+                    if (d.simulated) info.push('Mode simulasi: nada uji, bukan bacaan.');
+                    if (d.attribution) info.push(d.attribution + '.');
+                    if (st.verseMode && !(d.segments || []).length) info.push('Penanda ayat belum tersedia untuk qari ini — diputar satu surah.');
+                    setNote(info.join(' '));
+                    if (d.duration_ms) { dur.textContent = fmt(d.duration_ms / 1000); seek.max = d.duration_ms / 1000; }
+                    if ('mediaSession' in navigator) {
+                        try { navigator.mediaSession.metadata = new MediaMetadata({ title: 'QS. ' + player.dataset.surahName, artist: d.reciter.name, album: document.title }); } catch (e) {}
+                    }
+                    return d;
+                })
+                .finally(function () { st.loading = null; busy(false); });
+            return st.loading;
+        }
+
+        function highlight(ayah) {
+            if (st.active === ayah) return;
+            if (st.active) { var old = document.getElementById('ayat-' + st.active); if (old) old.classList.remove('is-playing'); }
+            st.active = ayah;
+            ayahLbl.textContent = ayah ? '· ayat ' + ayah : '';
+            if (!ayah) return;
+            var el = document.getElementById('ayat-' + ayah);
+            if (!el) return;
+            el.classList.add('is-playing');
+            var r = el.getBoundingClientRect();
+            if (!audio.paused && (r.top < 80 || r.top > window.innerHeight * 0.6)) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Geser posisi setelah metadata siap (sebelum itu peramban mengabaikan currentTime).
+        function seekTo(t) {
+            if (audio.readyState >= 1) { audio.currentTime = t; return Promise.resolve(); }
+            return new Promise(function (res) {
+                audio.addEventListener('loadedmetadata', function h() { audio.removeEventListener('loadedmetadata', h); audio.currentTime = t; res(); });
+                audio.load();
+            });
+        }
+
+        function playFrom(ayah) {
+            return load().then(function () {
+                var s = ayah ? segOf(ayah) : null;
+                st.range = null;
+                if (ayah && !s) toast('Penanda ayat belum tersedia — diputar dari awal surah');
+                if (s && st.verseMode) st.range = { start: s.start_ms / 1000, end: s.end_ms / 1000 };
+                return (s ? seekTo(s.start_ms / 1000) : ayah ? seekTo(0) : Promise.resolve()).then(function () { return audio.play(); });
+            }).catch(function (e) { if (e && e.name !== 'AbortError') { toast(e.message || 'Audio gagal diputar'); setNote(e.message); } });
+        }
+
+        btn.addEventListener('click', function () {
+            if (!audio.paused) { audio.pause(); return; }
+            if (st.data && audio.currentTime > 0) { audio.play().catch(function () {}); return; }
+            playFrom(null);
+        });
+        $$('[data-play-ayah]').forEach(function (b) { b.addEventListener('click', function () { playFrom(+b.dataset.playAyah); }); });
+
+        audio.addEventListener('play', function () { player.classList.add('is-playing'); btn.setAttribute('aria-label', 'Jeda murattal'); });
+        audio.addEventListener('pause', function () { player.classList.remove('is-playing'); btn.setAttribute('aria-label', 'Putar murattal'); });
+        audio.addEventListener('loadedmetadata', function () { if (isFinite(audio.duration)) { seek.max = audio.duration; dur.textContent = fmt(audio.duration); } });
+        audio.addEventListener('waiting', function () { busy(true); });
+        audio.addEventListener('playing', function () { busy(false); });
+        audio.addEventListener('error', function () { busy(false); if (st.data) setNote('Audio tidak dapat dimuat. Periksa koneksi lalu coba lagi.'); });
+        audio.addEventListener('timeupdate', function () {
+            var t = audio.currentTime;
+            if (!st.seeking) seek.value = t;
+            cur.textContent = fmt(t);
+            var ms = t * 1000, s = segs(), found = null;
+            for (var i = 0; i < s.length; i++) { if (ms >= s[i].start_ms && ms < s[i].end_ms) { found = s[i].ayah; break; } }
+            if (s.length) highlight(found);
+            if (st.range && t >= st.range.end) {
+                if (st.repeat) audio.currentTime = st.range.start;
+                else { audio.pause(); st.range = null; }
+            }
+        });
+        audio.addEventListener('ended', function () {
+            if (st.repeat) { audio.currentTime = st.range ? st.range.start : 0; audio.play().catch(function () {}); return; }
+            highlight(null);
+            var next = $('.pager .btn--tonal');
+            if (next) setNote('Selesai. Lanjut ke surah berikutnya: ' + next.textContent.trim() + '.');
+        });
+
+        seek.addEventListener('input', function () { st.seeking = true; cur.textContent = fmt(+seek.value); });
+        seek.addEventListener('change', function () {
+            st.seeking = false;
+            var go = function () { st.range = null; return seekTo(+seek.value); };
+            if (!st.data) load().then(go).catch(function (e) { toast(e.message); }); else go();
+        });
+
+        if (sel) sel.addEventListener('change', function () {
+            var wasPlaying = !audio.paused, at = st.active;
+            audio.pause(); audio.removeAttribute('src'); audio.load();
+            st.data = null; st.range = null; seek.value = 0; seek.max = 0; cur.textContent = '0:00'; dur.textContent = '--:--'; setNote(''); highlight(null);
+            if (window.ALMARA) http('POST', ALMARA.routes.quranPrefs, { reciter: sel.value }).catch(function () {});
+            if (wasPlaying) playFrom(at || null);
+        });
+        modeBtn.addEventListener('click', function () {
+            st.verseMode = !st.verseMode; st.range = null;
+            modeBtn.setAttribute('aria-pressed', st.verseMode ? 'true' : 'false');
+            toast(st.verseMode ? 'Mode per ayat: berhenti di akhir ayat' : 'Mode satu surah penuh');
+            if (window.ALMARA) http('POST', ALMARA.routes.quranPrefs, { audio_mode: st.verseMode ? 'verse' : 'surah' }).catch(function () {});
+        });
+        repBtn.addEventListener('click', function () {
+            st.repeat = !st.repeat;
+            repBtn.setAttribute('aria-pressed', st.repeat ? 'true' : 'false');
+            toast(st.repeat ? (st.verseMode ? 'Ulang ayat aktif' : 'Ulang surah aktif') : 'Ulang nonaktif');
+        });
+
+        if ('mediaSession' in navigator) {
+            try {
+                navigator.mediaSession.setActionHandler('play', function () { audio.play(); });
+                navigator.mediaSession.setActionHandler('pause', function () { audio.pause(); });
+                navigator.mediaSession.setActionHandler('seekbackward', function () { audio.currentTime = Math.max(0, audio.currentTime - 10); });
+                navigator.mediaSession.setActionHandler('seekforward', function () { audio.currentTime = audio.currentTime + 10; });
+            } catch (e) {}
+        }
+        // Spasi = putar/jeda (kecuali saat mengetik)
+        document.addEventListener('keydown', function (e) {
+            if (e.code !== 'Space' || /input|textarea|select|button/i.test((e.target.tagName || '')) || e.target.isContentEditable) return;
+            e.preventDefault(); btn.click();
+        });
+    })();
+
     // ---------- Hapus bookmark/catatan dari halaman profil ----------
     document.addEventListener('click', function (e) {
         var b = e.target.closest('[data-bookmark-delete], [data-note-delete]');
@@ -414,9 +561,11 @@
                 });
             }).catch(function () {});
             if (window.ALMARA && ALMARA.clearPrivateCache && navigator.serviceWorker.controller) navigator.serviceWorker.controller.postMessage('CLEAR_PRIVATE');
-            var refreshing = false;
+            // Muat ulang hanya saat PEMBARUAN (bukan pemasangan pertama) dan tidak sedang memutar audio.
+            var refreshing = false, hadController = !!navigator.serviceWorker.controller;
             navigator.serviceWorker.addEventListener('controllerchange', function () {
-                if (refreshing || !navigator.serviceWorker.controller) return;
+                if (refreshing || !hadController || !navigator.serviceWorker.controller) return;
+                if (window.MA.isBusy && window.MA.isBusy()) { toast('Versi baru siap — aktif saat halaman dibuka ulang'); return; }
                 refreshing = true;
                 location.reload();
             });

@@ -29,8 +29,11 @@ class QuranController extends Controller
         $surah = $this->quran->surah($nomor);
         abort_if(! $surah, 404);
         $user = $request->user();
+        $catalog = app(\App\Services\Quran\Audio\AudioCatalog::class);
+        $reciters = $catalog->reciters($nomor);
 
         return view('pages.quran.show', [
+            'audio' => ['reciters' => $reciters, 'current' => $catalog->resolve($prefs->quran()['reciter'], $nomor)],
             'surah' => $surah,
             'verses' => $this->quran->verses($surah),
             'prev' => $this->quran->surah($nomor - 1),

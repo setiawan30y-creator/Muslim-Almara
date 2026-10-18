@@ -14,6 +14,7 @@ class Permission extends Model
         'content.edit' => 'Membuat & mengubah draf konten (doa, dzikir)',
         'content.review' => 'Meninjau & menyetujui konten agama',
         'content.publish' => 'Menerbitkan & menangguhkan konten',
+        'audio.upload' => 'Mengunggah rekaman qari (draf, karantina)',
         'users.manage' => 'Mengelola pengguna & peran',
         'settings.manage' => 'Mengubah konfigurasi aplikasi',
         'audit.view' => 'Melihat log audit',

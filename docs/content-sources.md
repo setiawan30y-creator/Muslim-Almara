@@ -8,6 +8,9 @@
 | `almara-doa-dzikir` | 18 doa + 12 dzikir | Kompilasi tim; rujukan hadis per item; ayat diambil dari dataset Kemenag | Wajib review reviewer agama |
 | `hijri-tabular` | Kalender Hijriah | Perhitungan aritmetika (urfi) | Dapat berbeda ±1 hari dari isbat |
 
+| Qari ALMARA (`quran_reciters`, `quran_audio_tracks`) | Rekaman murattal milik platform | Unggahan admin; dasar hak dicatat per qari | Wajib review; bukan suara tiruan AI; checksum SHA-256 & versi |
+| Quran.Foundation (tidak disimpan) | Audio qari berlisensi + penanda ayat | Content API v4 (OAuth2 client credentials) | Atribusi wajib; cache ≤ 1 minggu (aplikasi: 1 hari); tidak untuk offline; redistribusi/sublisensi butuh lisensi komersial — lihat [Developer Terms](https://api-docs.quran.foundation/legal/developer-terms/) |
+
 Metode jadwal sholat: parameter publik masing-masing otoritas (Kemenag RI, MWL, Umm al-Qura, Egypt, ISNA, Karachi, JAKIM, MUIS). Validasi terhadap jadwal resmi setempat sebelum produksi.
 
 ## Perintah

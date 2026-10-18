@@ -65,6 +65,10 @@ $paths = [
     'language' => '<path d="M4 5h9M8.5 3v2M6 5c.5 3 2.5 5.5 5 7M11 5c-.8 3.5-3 6.5-6.5 8"/><path d="m13 21 4-10 4 10M14.5 17.5h5"/>',
     'repeat' => '<path d="M17 2l3 3-3 3"/><path d="M4 11V9a4 4 0 0 1 4-4h12M7 22l-3-3 3-3"/><path d="M20 13v2a4 4 0 0 1-4 4H4"/>',
     'filter' => '<path d="M4 5h16l-6 8v6l-4-2v-4L4 5Z"/>',
+    'play' => '<path d="M7 4.5v15l12.5-7.5L7 4.5Z" fill="currentColor"/>',
+    'pause' => '<rect x="6.5" y="4.5" width="4" height="15" rx="1" fill="currentColor"/><rect x="13.5" y="4.5" width="4" height="15" rx="1" fill="currentColor"/>',
+    'headphones' => '<path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="5" height="7" rx="2"/><rect x="16" y="14" width="5" height="7" rx="2"/>',
+    'upload' => '<path d="M12 16V5m-5 5 5-5 5 5"/><path d="M5 20h14"/>',
     'x' => '<path d="M6 6l12 12M18 6 6 18"/>',
     'brand' => '<path d="M12 2.5 14.6 6l4.2-.6-.6 4.2L21.5 12l-3.3 2.4.6 4.2-4.2-.6L12 21.5 9.4 18l-4.2.6.6-4.2L2.5 12l3.3-2.4-.6-4.2 4.2.6L12 2.5Z"/><path d="M14.2 9.3a3.4 3.4 0 1 0 0 5.4 4.2 4.2 0 1 1 0-5.4Z" fill="currentColor" stroke="none"/>',
 ];

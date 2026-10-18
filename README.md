@@ -7,21 +7,22 @@ Dibangun dengan **Laravel 13** mengikuti *ALMARA MUSLIM — Blueprint Teknis & R
 
 ## Status rilis
 
-Versi **2.0.0** mencakup Rilis Pertama (MVP, blueprint §1.1) + *Pengaturan Tampilan & Tema*:
+Versi **2.1.0** mencakup Rilis Pertama (MVP, blueprint §1.1) + *Pengaturan Tampilan & Tema*:
 
 | Area | Isi |
 |---|---|
 | Navigasi | Beranda · Qur'an · Belajar · Ibadah · Profil |
 | Beranda | Salam & lokasi, sholat berikutnya + hitung mundur, aksi cepat, lanjutkan bacaan, target tilawah, ayat harian, hari besar, catatan — kartu dapat diurutkan/disembunyikan |
 | Al-Qur'an | 114 surah & 30 juz, terjemahan & tafsir Kemenag, pencarian, bookmark, catatan pribadi, tandai dibaca, unduh offline, pilihan mode baca |
+| Audio qari | Pemutar murattal (putar dari ayat, sorot ayat, mode per ayat, ulang); **Qari ALMARA** (rekaman sendiri: unggah → karantina → review → terbit) & qari berlisensi **Quran.Foundation** |
 | Ibadah | Jadwal sholat (8 metode, mazhab Asar, koreksi menit), kiblat + kalibrasi, dzikir & doa bersumber, tasbih, kalender Hijriah, zakat |
 | Akun | Daftar/masuk, reset sandi, verifikasi email, progres & target, ekspor & hapus data |
 | Pengaturan | Tampilan & Tema (Terang/Gelap/Sistem, 5 aksen, ukuran teks UI/Arab/terjemahan, pratinjau, reset), Al-Qur'an, Jadwal Sholat, Beranda |
-| Admin | Peran admin/editor/reviewer, alur draft → review → terbit, versi konten, sumber & lisensi, pengguna, konfigurasi, log audit |
+| Admin | Peran admin/editor/reviewer, alur draft → review → terbit, versi konten, audio qari, sumber & lisensi, pengguna, konfigurasi, log audit |
 | API | `/api/v1` format `{data, meta}` — lihat `docs/api.md` |
 | PWA | Manifest, service worker berversi, offline, halaman pribadi tidak pernah dicache |
 
-Modul tahap berikutnya (Tajwid, Translate, Umroh & Haji, Ziarah Kubur, Qari & audio, Hafalan, Premium/Iklan, Cuaca & Masjid Terdekat, TWA) mengikuti roadmap blueprint §13.
+Modul tahap berikutnya (Tajwid, Translate, Umroh & Haji, Ziarah Kubur, Hafalan, Premium/Iklan, Cuaca & Masjid Terdekat, TWA) mengikuti roadmap blueprint §13.
 
 ## Instalasi lokal (Laragon, PowerShell)
 
@@ -57,7 +58,7 @@ Doa & dzikir awal masuk berstatus **Menunggu review** dan baru tampil setelah di
 php artisan test
 ```
 
-79 test mencakup perhitungan sholat/kiblat/Hijriah, integritas dataset, autentikasi, isolasi data pribadi (IDOR), alur review admin, preferensi tema, API, dan PWA.
+85 test mencakup perhitungan sholat/kiblat/Hijriah, integritas dataset, autentikasi, isolasi data pribadi (IDOR), alur review admin, audio qari, preferensi tema, API, dan PWA.
 
 ## Konfigurasi `.env`
 
@@ -69,6 +70,17 @@ php artisan test
 | `HIJRI_ADJUSTMENT` | `0` | Koreksi tanggal Hijriah |
 | `ALMARA_MUSHAF_EDITION` | kosong | Aktifkan Mushaf penuh setelah aset berlisensi tersedia |
 | `SANCTUM_STATEFUL_DOMAINS` | localhost… | Domain yang memakai sesi untuk API |
+| `ALMARA_AUDIO_DISK` | `local` | Disk privat rekaman Qari ALMARA (`storage/app/private`) |
+| `ALMARA_AUDIO_MAX_MB` / `ALMARA_AUDIO_MAX_MINUTES` | `150` / `240` | Batas unggah rekaman |
+| `QF_ENABLED`, `QF_CLIENT_ID`, `QF_CLIENT_SECRET` | nonaktif | Qari berlisensi Quran.Foundation (kredensial hanya di server) |
+| `QF_ENV` | `production` | `prelive` hanya berisi surah 1–2 |
+| `QF_MOCK` | `false` | Mode simulasi pemutar (nada uji) tanpa kredensial |
+
+## Audio qari
+
+1. **Qari ALMARA** — Admin → *Audio qari* → *Tambah qari* (isi dasar hak penggunaan) → *Unggah rekaman* per surah (MP3/M4A/OGG/WAV). Berkas masuk karantina berstatus draf, dicek tanda tangan berkas, ukuran, durasi, dan checksum SHA-256. Opsional: penanda waktu per ayat (`ayat mulai selesai`) untuk sorot ayat & mode per ayat. Ajukan review → reviewer lain menyetujui → terbit; versi lama otomatis diarsipkan. Rekaman terbit dapat diputar tanpa login dengan dukungan HTTP Range.
+   Naikkan batas unggah PHP agar rekaman besar dapat diunggah (Laragon: Menu → PHP → php.ini): `upload_max_filesize = 200M`, `post_max_size = 210M`, `max_execution_time = 300`, lalu *Reload*.
+2. **Quran.Foundation** — daftar di Developer Console (https://api-docs.quran.foundation), isi `QF_ENABLED=true`, `QF_CLIENT_ID`, `QF_CLIENT_SECRET`, lalu `php artisan config:clear`. Atribusi *"Quran data provided by Quran.Foundation"* tampil otomatis; data di-cache ≤ 1 hari (batas penyedia 1 minggu) dan tidak disediakan untuk offline. Penggunaan komersial/penyewaan aplikasi: pastikan sesuai Developer Terms penyedia.
 
 Nilai bawaan metode/kota/Hijriah juga dapat diubah di **Admin → Konfigurasi**.
 

@@ -180,6 +180,7 @@ class MeController extends ApiController
             'show_transliteration' => ['sometimes', 'boolean'],
             'show_tafsir' => ['sometimes', 'boolean'],
             'audio_mode' => ['sometimes', Rule::in(['surah', 'verse'])],
+            'reciter' => ['sometimes', 'nullable', 'string', 'regex:'.\App\Services\Quran\Audio\AudioCatalog::KEY_PATTERN],
         ]);
 
         return $this->ok($prefs->saveQuran($data));

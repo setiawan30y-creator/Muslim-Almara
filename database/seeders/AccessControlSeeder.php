@@ -10,8 +10,8 @@ use Illuminate\Database\Seeder;
 class AccessControlSeeder extends Seeder
 {
     public const ROLES = [
-        Role::ADMIN => ['Admin platform', ['admin.access', 'content.edit', 'content.review', 'content.publish', 'users.manage', 'settings.manage', 'audit.view']],
-        Role::EDITOR => ['Editor konten', ['admin.access', 'content.edit']],
+        Role::ADMIN => ['Admin platform', ['admin.access', 'content.edit', 'content.review', 'content.publish', 'audio.upload', 'users.manage', 'settings.manage', 'audit.view']],
+        Role::EDITOR => ['Editor konten', ['admin.access', 'content.edit', 'audio.upload']],
         Role::REVIEWER => ['Reviewer agama', ['admin.access', 'content.review', 'content.publish']],
     ];
 

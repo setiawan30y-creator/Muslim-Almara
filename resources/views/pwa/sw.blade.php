@@ -24,7 +24,9 @@ const PRECACHE = [
 const WARM_PAGES = ['/', '/al-quran', '/jadwal-sholat', '/kiblat', '/doa-dzikir', '/ibadah', '/belajar', '/tasbih', '/kalender'];
 
 const PRIVATE_PATHS = [/^\/admin/, /^\/profil/, /^\/masuk/, /^\/daftar/, /^\/keluar/, /^\/lupa-sandi/, /^\/reset-sandi/, /^\/verifikasi-email/,
-    /^\/api\/v1\/me/, /^\/api\/v1\/user/, /^\/api\/v1\/auth/, /^\/api\/v1\/quran\/reading-preferences/, /^\/pengaturan/];
+    /^\/api\/v1\/me/, /^\/api\/v1\/user/, /^\/api\/v1\/auth/, /^\/api\/v1\/quran\/reading-preferences/, /^\/pengaturan/,
+    // Audio: data penyedia tidak boleh disimpan permanen; berkas besar & permintaan Range tidak dicache.
+    /^\/api\/v1\/quran\/audio/, /^\/al-quran\/audio/];
 
 function isPrivate(url) {
     return PRIVATE_PATHS.some((re) => re.test(url.pathname));

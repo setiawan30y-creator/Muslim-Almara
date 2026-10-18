@@ -53,7 +53,11 @@ class SettingsController extends Controller
 
     public function quran()
     {
-        return view('pages.settings.quran', ['current' => $this->prefs->quran(), 'mushafAvailable' => PreferenceService::mushafAvailable()]);
+        return view('pages.settings.quran', [
+            'current' => $this->prefs->quran(),
+            'mushafAvailable' => PreferenceService::mushafAvailable(),
+            'reciters' => app(\App\Services\Quran\Audio\AudioCatalog::class)->reciters(),
+        ]);
     }
 
     public function saveQuran(Request $request)
@@ -64,6 +68,7 @@ class SettingsController extends Controller
             'show_transliteration' => ['sometimes', 'boolean'],
             'show_tafsir' => ['sometimes', 'boolean'],
             'audio_mode' => ['sometimes', Rule::in(['surah', 'verse'])],
+            'reciter' => ['sometimes', 'nullable', 'string', 'regex:'.\App\Services\Quran\Audio\AudioCatalog::KEY_PATTERN],
         ]);
         // checkbox yang tidak dicentang tidak terkirim pada form biasa
         if (! $request->expectsJson()) {

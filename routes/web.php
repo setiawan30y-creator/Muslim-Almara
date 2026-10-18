@@ -31,6 +31,9 @@ Route::prefix('al-quran')->name('quran.')->controller(QuranController::class)->g
     Route::get('/cari', 'search')->middleware('throttle:search')->name('search');
     Route::get('/{nomor}', 'show')->whereNumber('nomor')->name('show');
 });
+// Audio qari (streaming publik dengan dukungan Range)
+Route::get('/al-quran/audio/rekaman/{track}', [\App\Http\Controllers\Quran\AudioController::class, 'stream'])->whereNumber('track')->name('quran.audio.stream');
+Route::get('/al-quran/audio/simulasi/{surah}.wav', [\App\Http\Controllers\Quran\AudioController::class, 'sample'])->whereNumber('surah')->name('quran.audio.sample');
 
 // Ibadah harian
 Route::get('/jadwal-sholat', [PrayerController::class, 'index'])->name('prayer');
@@ -106,6 +109,15 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'can:admin.access'])
         ->whereIn('type', ['doa', 'dzikir'])->whereNumber('id')
         ->whereIn('action', ['submit', 'approve', 'publish', 'approve-publish', 'reject', 'suspend'])->name('content.transition');
     Route::post('/konten/{type}/massal', [Admin\ContentController::class, 'bulk'])->whereIn('type', ['doa', 'dzikir'])->name('content.bulk');
+
+    Route::get('/audio', [Admin\AudioController::class, 'index'])->name('audio.index');
+    Route::post('/audio', [Admin\AudioController::class, 'store'])->name('audio.store');
+    Route::get('/audio/{track}', [Admin\AudioController::class, 'show'])->whereNumber('track')->name('audio.show');
+    Route::put('/audio/{track}/penanda', [Admin\AudioController::class, 'segments'])->whereNumber('track')->name('audio.segments');
+    Route::post('/audio/{track}/{action}', [Admin\AudioController::class, 'transition'])->whereNumber('track')
+        ->whereIn('action', ['submit', 'approve', 'publish', 'approve-publish', 'reject', 'suspend', 'delete'])->name('audio.transition');
+    Route::post('/qari', [Admin\AudioController::class, 'storeReciter'])->name('audio.reciters.store');
+    Route::put('/qari/{reciter}', [Admin\AudioController::class, 'updateReciter'])->name('audio.reciters.update');
 
     Route::get('/sumber', [Admin\SourceController::class, 'index'])->name('sources');
     Route::post('/sumber/{source}/tinjau', [Admin\SourceController::class, 'markReviewed'])->name('sources.review');

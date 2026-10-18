@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class QuranReadingPreference extends Model
 {
     
-    protected $fillable = ['user_id', 'reading_mode', 'show_translation', 'show_transliteration', 'audio_mode', 'show_tafsir'];
+    protected $fillable = ['user_id', 'reading_mode', 'show_translation', 'show_transliteration', 'audio_mode', 'reciter', 'show_tafsir'];
 
     protected function casts(): array
     {

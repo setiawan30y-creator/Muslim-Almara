@@ -46,6 +46,7 @@ class PreferenceService
         'show_translation' => true,
         'show_transliteration' => false,
         'audio_mode' => 'surah',
+        'reciter' => null,
         'show_tafsir' => true,
     ];
 
@@ -141,6 +142,9 @@ class PreferenceService
         }
         if (in_array($in['audio_mode'] ?? null, ['surah', 'verse'], true)) {
             $out['audio_mode'] = $in['audio_mode'];
+        }
+        if (is_string($in['reciter'] ?? null) && preg_match(\App\Services\Quran\Audio\AudioCatalog::KEY_PATTERN, $in['reciter'])) {
+            $out['reciter'] = $in['reciter'];
         }
         foreach (['show_translation', 'show_transliteration', 'show_tafsir'] as $k) {
             if (array_key_exists($k, $in)) {

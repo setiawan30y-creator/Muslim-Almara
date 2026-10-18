@@ -12,6 +12,8 @@ Basis: `/api/v1` · format (blueprint §7.1): berhasil `{"data": …, "meta": {�
 | GET | `/quran/verses/{id}` | detail ayat |
 | GET | `/quran/search?q=` | cari di terjemahan atau rujukan `2:255` |
 | GET | `/quran/translations` | daftar terjemahan + atribusi |
+| GET | `/quran/audio/reciters?surah=` | daftar qari (`almara:{slug}` / `qf:{id}`), `meta.default` = qari pilihan pengguna |
+| GET | `/quran/audio/surah/{surah}?reciter=` | `url` audio, `segments` (`ayah`, `start_ms`, `end_ms`), `attribution`, `offline_allowed`; 404 bila belum tersedia; `Cache-Control: no-store` |
 | GET | `/prayer/methods` | metode perhitungan |
 | GET | `/prayer/times?city=|lat=&lng=&tz=&date=&method=&asr=&offsets[subuh]=` | jadwal + metode & lokasi di `meta` |
 | GET | `/qibla?lat=&lng=` | azimut & jarak |
@@ -39,6 +41,6 @@ Web memakai sesi (cookie) — domain harus terdaftar di `SANCTUM_STATEFUL_DOMAIN
 | GET/PUT | `/me/reading-goals` |
 | GET | `/me/data-export` · POST `/me/delete-account` (`password`) |
 | GET/PUT | `/user/appearance-preferences` |
-| GET/PUT | `/quran/reading-preferences` |
+| GET/PUT | `/quran/reading-preferences` (termasuk `audio_mode`, `reciter`) |
 
 Semua endpoint pribadi dibatasi ke pemilik akun (Policy) dan diuji terhadap IDOR (`tests/Feature/PersonalDataTest.php`).

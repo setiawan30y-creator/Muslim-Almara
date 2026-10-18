@@ -3,6 +3,7 @@
     $n = $surah->number;
     $showBasmalah = ! in_array($n, [1, 9]);
     $auth = auth()->check();
+    $hasAudio = (bool) $audio['current'];
 @endphp
 <x-layouts.app title="Surah {{ $surah->name_latin }}" description="Surah {{ $surah->name_latin }} ({{ $surah->name_translation }}) — {{ $surah->ayah_count }} ayat, {{ $surah->revelationLabel() }}.">
     <x-page-head :title="$n.'. '.$surah->name_latin" subtitle="{{ $surah->name_translation }} · {{ $surah->ayah_count }} ayat · {{ $surah->revelationLabel() }}" :back="route('quran.index')" />
@@ -41,6 +42,7 @@
                 <article class="ayah" id="ayat-{{ $v->ayah_number }}" data-verse-id="{{ $v->id }}" data-ayah="{{ $v->ayah_number }}">
                     <div class="ayah__bar">
                         <span class="ayah__num">{{ $n }}:{{ $v->ayah_number }}</span>
+                        @if ($hasAudio)<button type="button" class="icon-btn" data-play-ayah="{{ $v->ayah_number }}" aria-label="Putar murattal mulai ayat {{ $v->ayah_number }}" title="Putar dari ayat ini"><x-icon name="play" /></button>@endif
                         <button type="button" class="icon-btn {{ $bm ? 'is-on' : '' }}" data-bookmark aria-pressed="{{ $bm ? 'true' : 'false' }}" aria-label="Bookmark ayat {{ $v->ayah_number }}" title="Bookmark"><x-icon name="bookmark" /></button>
                         <button type="button" class="icon-btn" data-mark-read aria-label="Tandai dibaca sampai ayat {{ $v->ayah_number }}" title="Tandai dibaca sampai sini"><x-icon name="check-circle" /></button>
                         <button type="button" class="icon-btn" data-note aria-label="Catatan untuk ayat {{ $v->ayah_number }}" title="Catatan pribadi"><x-icon name="note" /></button>
@@ -68,8 +70,38 @@
             @if ($prev)<a class="btn btn--outline" href="{{ route('quran.show', $prev->number) }}"><x-icon name="chevron-left" />{{ $prev->name_latin }}</a>@else<span></span>@endif
             @if ($next)<a class="btn btn--tonal" href="{{ route('quran.show', $next->number) }}">{{ $next->name_latin }}<x-icon name="chevron-right" /></a>@endif
         </nav>
+        @if (! $hasAudio)
+            <p class="small muted" style="margin:0">Audio murattal untuk surah ini belum tersedia.</p>
+        @endif
         <p class="small muted">Teks: {{ $source?->name ?? 'Kemenag RI' }} · versi {{ $verses->first()?->version }}. Terjemahan & tafsir: Kementerian Agama RI.</p>
     </div>
+
+    @if ($hasAudio)
+        {{-- Pemutar murattal (blueprint §4.12 / Dua Mode: audio_mode surah|verse) --}}
+        <section class="player no-print" data-audio data-surah="{{ $n }}" data-surah-name="{{ $surah->name_latin }}"
+                 data-api="{{ url('/api/v1/quran/audio/surah/'.$n) }}" data-mode="{{ $prefs['audio_mode'] }}" aria-label="Pemutar murattal">
+            <div class="player__row">
+                <button type="button" class="player__play" data-audio-play aria-label="Putar murattal"><x-icon name="play" class="i-play" /><x-icon name="pause" class="i-pause" /></button>
+                <div class="player__info">
+                    <div class="player__title"><b>{{ $surah->name_latin }}</b> <span class="muted" data-audio-ayah></span></div>
+                    <label for="qari" class="sr-only">Pilih qari</label>
+                    <select id="qari" class="player__select" data-audio-reciter>
+                        @foreach ($audio['reciters'] as $r)
+                            <option value="{{ $r['key'] }}" @selected($audio['current'] === $r['key']) @disabled(! $r['available'])>{{ $r['name'] }}{{ $r['style'] ? ' · '.$r['style'] : '' }}{{ $r['available'] ? '' : ' (belum ada surah ini)' }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <button type="button" class="icon-btn" data-audio-mode aria-pressed="{{ $prefs['audio_mode'] === 'verse' ? 'true' : 'false' }}" title="Mode per ayat" aria-label="Mode per ayat"><x-icon name="list" /></button>
+                <button type="button" class="icon-btn" data-audio-repeat aria-pressed="false" title="Ulang" aria-label="Ulang"><x-icon name="repeat" /></button>
+            </div>
+            <div class="player__seek">
+                <span class="tabular small" data-audio-cur>0:00</span>
+                <input type="range" min="0" max="0" step="0.1" value="0" data-audio-seek aria-label="Posisi murattal">
+                <span class="tabular small" data-audio-dur>--:--</span>
+            </div>
+            <p class="player__note small muted" data-audio-note hidden></p>
+        </section>
+    @endif
 
     <dialog class="dialog" data-note-dialog>
         <form method="dialog" data-note-form>
