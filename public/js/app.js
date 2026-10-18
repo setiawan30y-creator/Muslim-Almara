@@ -221,4 +221,135 @@
         $('[data-last-read-text]', box).textContent = 'QS. ' + last.nama + ' · ayat ' + last.ayat;
         box.hidden = false;
     });
+
+    // =====================================================================
+    // PWA — service worker, pemasangan, status jaringan, simpan offline
+    // =====================================================================
+    var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    var swSupported = 'serviceWorker' in navigator;
+    var secure = window.isSecureContext;
+
+    if (swSupported && secure) {
+        window.addEventListener('load', function () {
+            navigator.serviceWorker.register('/sw.js', { scope: '/' }).then(function (reg) {
+                // Versi baru tersedia: aktifkan lalu muat ulang sekali.
+                reg.addEventListener('updatefound', function () {
+                    var nw = reg.installing;
+                    if (!nw) return;
+                    nw.addEventListener('statechange', function () {
+                        if (nw.state === 'installed' && navigator.serviceWorker.controller) {
+                            toast('Versi baru tersedia, memperbarui…');
+                            nw.postMessage('SKIP_WAITING');
+                        }
+                    });
+                });
+            }).catch(function () {});
+            var refreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', function () {
+                if (refreshing || !navigator.serviceWorker.controller) return;
+                refreshing = true;
+                location.reload();
+            });
+        });
+    }
+
+    // Tombol & kartu "Pasang"
+    var deferredPrompt = null;
+    var installBtns = $$('[data-install], [data-install-action]');
+    var installCard = $('[data-install-card]');
+    var dismissed = store.get('ma-install-dismissed', 0);
+    var cardAllowed = !isStandalone && (Date.now() - dismissed > 14 * 86400000);
+
+    function showInstall(show) {
+        installBtns.forEach(function (b) { b.hidden = !show; });
+        if (installCard) installCard.hidden = !(show && cardAllowed);
+    }
+    window.addEventListener('beforeinstallprompt', function (e) {
+        e.preventDefault();
+        deferredPrompt = e;
+        showInstall(true);
+        updatePwaState();
+    });
+    window.addEventListener('appinstalled', function () {
+        deferredPrompt = null;
+        showInstall(false);
+        toast('Aplikasi berhasil dipasang');
+        updatePwaState();
+    });
+    installBtns.forEach(function (b) {
+        b.addEventListener('click', function () {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then(function () { deferredPrompt = null; showInstall(false); });
+        });
+    });
+    var dismissBtn = $('[data-install-dismiss]');
+    if (dismissBtn) dismissBtn.addEventListener('click', function () { store.set('ma-install-dismissed', Date.now()); if (installCard) installCard.hidden = true; });
+
+    // iOS Safari tidak punya prompt otomatis: tampilkan petunjuk manual.
+    if (isIOS && !isStandalone && installCard && cardAllowed) {
+        var hint = $('[data-install-hint]', installCard);
+        if (hint) hint.textContent = 'Ketuk tombol Bagikan di Safari, lalu pilih “Tambahkan ke Layar Utama”.';
+        var act = $('[data-install-action]', installCard);
+        if (act) act.remove();
+        installCard.hidden = false;
+    }
+
+    function updatePwaState() {
+        var el = $('[data-pwa-state]');
+        if (!el) return;
+        if (isStandalone) el.textContent = 'Aplikasi sudah terpasang dan berjalan dalam mode aplikasi.';
+        else if (!secure) el.textContent = 'Pemasangan & mode offline membutuhkan HTTPS (atau localhost). Buka situs melalui alamat https agar bisa dipasang.';
+        else if (deferredPrompt) el.textContent = 'Perangkat ini mendukung pemasangan. Pasang agar bisa dibuka dari layar utama dan tetap berjalan saat offline.';
+        else if (isIOS) el.textContent = 'Di iPhone/iPad: ketuk Bagikan di Safari, lalu “Tambahkan ke Layar Utama”.';
+        else el.textContent = 'Gunakan menu peramban (⋮) lalu pilih “Instal aplikasi” atau “Tambahkan ke layar utama”. Halaman yang pernah dibuka tersimpan untuk dipakai offline.';
+    }
+    updatePwaState();
+
+    // Status jaringan
+    var net = $('[data-net-status]');
+    function netUpdate() { if (net) net.hidden = navigator.onLine; }
+    window.addEventListener('online', function () { netUpdate(); toast('Kembali online'); });
+    window.addEventListener('offline', netUpdate);
+    netUpdate();
+
+    // Simpan seluruh surah untuk dibaca offline
+    var qo = $('[data-quran-offline]');
+    if (qo && swSupported && secure && 'caches' in window) {
+        qo.hidden = false;
+        var urls = qo.getAttribute('data-urls').split(',');
+        var btn = $('[data-qo-start]', qo), bar = $('[data-qo-bar]', qo), text = $('[data-qo-text]', qo);
+        caches.open('ma-pages-v1').then(function (c) { return Promise.all(urls.map(function (u) { return c.match(u); })); }).then(function (hits) {
+            var n = hits.filter(Boolean).length;
+            if (n === urls.length) { text.textContent = 'Seluruh 114 surah sudah tersimpan di perangkat ini.'; btn.innerHTML = 'Perbarui'; }
+            else if (n > 0) text.textContent = n + ' dari 114 surah sudah tersimpan. Simpan sisanya untuk dibaca tanpa internet.';
+        });
+        btn.addEventListener('click', function () {
+            if (!navigator.onLine) { toast('Sambungkan ke internet terlebih dahulu.'); return; }
+            btn.setAttribute('aria-disabled', 'true');
+            bar.hidden = false;
+            var done = 0, failed = 0, i = 0;
+            caches.open('ma-pages-v1').then(function (cache) {
+                function worker() {
+                    if (i >= urls.length) return Promise.resolve();
+                    var u = urls[i++];
+                    return fetch(u, { credentials: 'same-origin' }).then(function (r) { if (!r.ok) throw 0; return cache.put(u, r); })
+                        .catch(function () { failed++; })
+                        .then(function () {
+                            done++;
+                            $('span', bar).style.width = (done / urls.length * 100) + '%';
+                            text.textContent = 'Menyimpan… ' + done + '/' + urls.length;
+                            return worker();
+                        });
+                }
+                return Promise.all([worker(), worker(), worker(), worker()]);
+            }).then(function () {
+                btn.removeAttribute('aria-disabled');
+                text.textContent = failed ? (urls.length - failed) + ' surah tersimpan, ' + failed + ' gagal. Coba lagi.' : 'Selesai! Seluruh 114 surah bisa dibaca tanpa internet.';
+                toast(failed ? 'Sebagian surah gagal disimpan' : 'Al-Qur\'an tersimpan untuk offline');
+                if (!failed) btn.innerHTML = 'Perbarui';
+            });
+        });
+    }
 })();

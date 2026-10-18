@@ -41,6 +41,16 @@
             </div>
         </nav>
 
+        <div class="card install-card" data-install-card hidden>
+            <img src="{{ asset('icons/icon-192.png') }}" alt="" width="48" height="48">
+            <div class="grow">
+                <b style="display:block">Pasang {{ config('app.name') }}</b>
+                <span class="small muted" data-install-hint>Buka lebih cepat dari layar utama dan tetap bisa dipakai saat offline.</span>
+            </div>
+            <button type="button" class="btn btn--sm" data-install-action>Pasang</button>
+            <button type="button" class="icon-btn" data-install-dismiss aria-label="Tutup"><x-icon name="x" /></button>
+        </div>
+
         <div data-last-read="{{ url('/al-quran/__N__') }}" hidden>
             <a href="#" class="card" style="display:flex;align-items:center;gap:14px">
                 <span class="shortcut__ico" style="flex:none"><x-icon name="bookmark" /></span>

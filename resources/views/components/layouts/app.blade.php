@@ -17,6 +17,14 @@
     <meta property="og:description" content="{{ $description ?? 'Pendamping ibadah harian: jadwal sholat, Al-Qur\'an, kiblat, doa, dan lainnya.' }}">
     <meta property="og:url" content="{{ url()->current() }}">
     <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+    <link rel="manifest" href="{{ url('/manifest.webmanifest') }}">
+    <link rel="apple-touch-icon" href="{{ asset('icons/apple-touch-icon.png') }}">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="{{ config('app.name') }}">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="application-name" content="{{ config('app.name') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
@@ -60,6 +68,7 @@
                     <x-icon name="pin" /><span>{{ $loc['nama'] }}</span>
                 </a>
             @endif
+            <button type="button" class="btn btn--sm" data-install hidden><x-icon name="download" />Pasang</button>
             <button type="button" class="icon-btn" data-theme-toggle aria-label="Ganti tema terang/gelap"><x-icon name="theme" /></button>
         </div>
     </div>
@@ -112,6 +121,7 @@
 </nav>
 
 <div class="toast" role="status" aria-live="polite" data-toast></div>
+<div class="net-status" role="status" aria-live="polite" data-net-status hidden><x-icon name="info" />Offline — menampilkan data tersimpan</div>
 
 <dialog class="dialog" data-confirm>
     <h2 data-confirm-title>Konfirmasi</h2>

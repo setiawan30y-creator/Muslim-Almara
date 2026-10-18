@@ -14,6 +14,17 @@
             </a>
         </div>
 
+        <section class="card" id="offline" data-quran-offline data-urls="{{ collect($surahs)->map(fn ($s) => route('quran.show', $s['nomor'], false))->implode(',') }}" hidden>
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                <div style="flex:1;min-width:200px">
+                    <b>Baca tanpa internet</b>
+                    <span class="small muted" style="display:block" data-qo-text>Simpan seluruh 114 surah (±20 MB) di perangkat ini.</span>
+                </div>
+                <button type="button" class="btn btn--tonal btn--sm" data-qo-start><x-icon name="download" />Simpan semua</button>
+            </div>
+            <div class="progress" style="margin-top:12px" hidden data-qo-bar><span></span></div>
+        </section>
+
         <div class="input-wrap">
             <x-icon name="search" />
             <label for="cari-surah" class="sr-only">Cari surah</label>

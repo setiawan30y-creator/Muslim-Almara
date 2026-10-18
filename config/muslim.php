@@ -18,7 +18,7 @@ return [
 
     'data_path' => resource_path('data'),
 
-    'version' => '1.0.0',
+    'version' => '1.1.0',
 
     'developer' => '@2026-Alifiandra',
 ];

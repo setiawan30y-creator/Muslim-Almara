@@ -23,6 +23,15 @@
                 </a>
             @endforeach
         </div>
+        <section class="card" aria-labelledby="pwa-h">
+            <h2 id="pwa-h"><x-icon name="phone" style="width:20px;height:20px;display:inline;vertical-align:-4px;color:var(--color-primary)" /> Aplikasi &amp; offline</h2>
+            <p class="small muted" data-pwa-state>Memeriksa dukungan aplikasi…</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button type="button" class="btn btn--sm" data-install-action hidden><x-icon name="download" />Pasang aplikasi</button>
+                <a href="{{ route('quran.index') }}#offline" class="btn btn--tonal btn--sm"><x-icon name="book" />Simpan Al-Qur'an untuk offline</a>
+            </div>
+        </section>
+
         <div class="card card--list">
             <ul class="list">
                 <li><button type="button" class="list-row" data-theme-toggle style="width:100%;background:none;border:0;font:inherit;cursor:pointer;text-align:left"><x-icon name="theme" style="width:22px;height:22px;color:var(--color-primary)" /><span class="list-row__main list-row__title">Tema terang / gelap</span><x-icon name="chevron-right" style="width:20px;height:20px;color:var(--color-text-muted)" /></button></li>

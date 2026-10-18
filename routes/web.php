@@ -3,6 +3,7 @@
 use App\Http\Controllers\FeatureController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PrayerTimeController;
+use App\Http\Controllers\PwaController;
 use App\Http\Controllers\QuranController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,5 +27,10 @@ Route::get('/menu', [FeatureController::class, 'menu'])->name('menu');
 Route::view('/tentang', 'pages.static.tentang')->name('about');
 Route::view('/kebijakan-privasi', 'pages.static.privasi')->name('privacy');
 Route::view('/syarat-ketentuan', 'pages.static.syarat')->name('terms');
+
+// PWA
+Route::get('/manifest.webmanifest', [PwaController::class, 'manifest'])->name('pwa.manifest');
+Route::get('/sw.js', [PwaController::class, 'serviceWorker'])->name('pwa.sw');
+Route::get('/offline', [PwaController::class, 'offline'])->name('offline');
 
 Route::get('/sitemap.xml', [FeatureController::class, 'sitemap'])->name('sitemap');
