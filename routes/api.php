@@ -1,17 +1,61 @@
 <?php
 
-use App\Http\Controllers\Api\V1\ApiController;
+use App\Http\Controllers\Api\V1;
 use Illuminate\Support\Facades\Route;
 
-// REST API v1 — @2026-Alifiandra
+// REST API v1 (blueprint §7) — dipakai web, PWA, dan TWA. @2026-Alifiandra
 
-Route::prefix('v1')->middleware('throttle:120,1')->name('api.v1.')->group(function () {
-    Route::get('/jadwal-sholat', [ApiController::class, 'prayerTimes'])->name('prayer');
-    Route::get('/kota', [ApiController::class, 'cities'])->name('cities');
-    Route::get('/surat', [ApiController::class, 'surahs'])->name('surahs');
-    Route::get('/surat/{nomor}', [ApiController::class, 'surah'])->whereNumber('nomor')->name('surah');
-    Route::get('/doa', [ApiController::class, 'doa'])->name('doa');
-    Route::get('/asmaul-husna', [ApiController::class, 'asmaulHusna'])->name('asmaul-husna');
-    Route::get('/hijriah', [ApiController::class, 'hijri'])->name('hijri');
-    Route::get('/kiblat', [ApiController::class, 'qibla'])->name('qibla');
+Route::prefix('v1')->name('api.v1.')->middleware('throttle:api')->group(function () {
+    Route::get('/health', V1\HealthController::class)->name('health');
+
+    // Al-Qur'an
+    Route::get('/quran/surahs', [V1\QuranController::class, 'surahs'])->name('quran.surahs');
+    Route::get('/quran/surahs/{number}', [V1\QuranController::class, 'surah'])->whereNumber('number')->name('quran.surah');
+    Route::get('/quran/verses', [V1\QuranController::class, 'verses'])->name('quran.verses');
+    Route::get('/quran/verses/{id}', [V1\QuranController::class, 'verse'])->whereNumber('id')->name('quran.verse');
+    Route::get('/quran/search', [V1\QuranController::class, 'search'])->middleware('throttle:search')->name('quran.search');
+    Route::get('/quran/translations', [V1\QuranController::class, 'translations'])->name('quran.translations');
+
+    // Ibadah harian
+    Route::get('/prayer/methods', [V1\PrayerController::class, 'methods'])->name('prayer.methods');
+    Route::get('/prayer/times', [V1\PrayerController::class, 'times'])->name('prayer.times');
+    Route::get('/qibla', [V1\PrayerController::class, 'qibla'])->name('qibla');
+    Route::get('/{type}/categories', [V1\WorshipContentController::class, 'categories'])->whereIn('type', ['dhikr', 'dua'])->name('worship.categories');
+    Route::get('/{type}/items', [V1\WorshipContentController::class, 'items'])->whereIn('type', ['dhikr', 'dua'])->name('worship.items');
+    Route::get('/islamic-events', [V1\WorshipContentController::class, 'events'])->name('events');
+
+    // Autentikasi token
+    Route::middleware('throttle:auth')->group(function () {
+        Route::post('/auth/register', [V1\AuthController::class, 'register'])->name('auth.register');
+        Route::post('/auth/login', [V1\AuthController::class, 'login'])->name('auth.login');
+    });
+
+    // Data pribadi
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/auth/logout', [V1\AuthController::class, 'logout'])->name('auth.logout');
+        Route::get('/me', [V1\MeController::class, 'show'])->name('me');
+        Route::patch('/me', [V1\MeController::class, 'update'])->name('me.update');
+
+        Route::get('/me/bookmarks', [V1\MeController::class, 'bookmarks'])->name('me.bookmarks');
+        Route::post('/me/bookmarks', [V1\MeController::class, 'storeBookmark'])->name('me.bookmarks.store');
+        Route::delete('/me/bookmarks/{bookmark}', [V1\MeController::class, 'destroyBookmark'])->name('me.bookmarks.destroy');
+
+        Route::get('/me/notes', [V1\MeController::class, 'notes'])->name('me.notes');
+        Route::post('/me/notes', [V1\MeController::class, 'storeNote'])->name('me.notes.store');
+        Route::patch('/me/notes/{note}', [V1\MeController::class, 'updateNote'])->name('me.notes.update');
+        Route::delete('/me/notes/{note}', [V1\MeController::class, 'destroyNote'])->name('me.notes.destroy');
+
+        Route::get('/me/reading-progress', [V1\MeController::class, 'readingProgress'])->name('me.progress');
+        Route::put('/me/reading-progress', [V1\MeController::class, 'updateReadingProgress'])->name('me.progress.update');
+        Route::get('/me/reading-goals', [V1\MeController::class, 'readingGoals'])->name('me.goals');
+        Route::put('/me/reading-goals', [V1\MeController::class, 'updateReadingGoals'])->name('me.goals.update');
+
+        Route::get('/me/data-export', [V1\MeController::class, 'export'])->name('me.export');
+        Route::post('/me/delete-account', [V1\MeController::class, 'deleteAccount'])->name('me.delete');
+
+        Route::get('/user/appearance-preferences', [V1\MeController::class, 'appearance'])->name('user.appearance');
+        Route::put('/user/appearance-preferences', [V1\MeController::class, 'updateAppearance'])->name('user.appearance.update');
+        Route::get('/quran/reading-preferences', [V1\MeController::class, 'quranPreferences'])->name('quran.preferences');
+        Route::put('/quran/reading-preferences', [V1\MeController::class, 'updateQuranPreferences'])->name('quran.preferences.update');
+    });
 });

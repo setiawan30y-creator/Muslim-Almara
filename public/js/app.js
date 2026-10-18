@@ -1,5 +1,6 @@
 /*!
- * Muslim Almara — interaksi ringan tanpa framework.
+ * ALMARA MUSLIM — interaksi ringan tanpa framework (progressive enhancement:
+ * semua fitur inti tetap berjalan tanpa JavaScript lewat formulir biasa).
  * @2026-Alifiandra
  */
 (function () {
@@ -44,17 +45,123 @@
     }
     window.MA.confirm = confirmDialog;
 
-    // ---------- Tema ----------
+    // ---------- HTTP helper (CSRF untuk rute web, XSRF untuk API Sanctum) ----------
+    var csrf = (document.querySelector('meta[name="csrf-token"]') || {}).content || '';
+    function xsrf() { var m = document.cookie.match(/(?:^|; )XSRF-TOKEN=([^;]+)/); return m ? decodeURIComponent(m[1]) : ''; }
+    function http(method, url, body) {
+        var headers = { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': csrf, 'X-XSRF-TOKEN': xsrf() };
+        if (body !== undefined) headers['Content-Type'] = 'application/json';
+        return fetch(url, { method: method, headers: headers, credentials: 'same-origin', body: body !== undefined ? JSON.stringify(body) : undefined })
+            .then(function (r) {
+                return r.json().catch(function () { return {}; }).then(function (j) {
+                    if (!r.ok) { var e = new Error(j.message || 'Permintaan gagal'); e.status = r.status; e.body = j; throw e; }
+                    return j;
+                });
+            });
+    }
+    window.MA.http = http;
+    function needLogin() {
+        toast('Masuk untuk memakai fitur ini — data tersimpan privat di akun Anda.');
+        setTimeout(function () { if (window.ALMARA && ALMARA.routes) location.href = ALMARA.routes.login; }, 1600);
+    }
+    function failed(e) { if (e && e.status === 401) return needLogin(); toast(e && e.status === 422 ? (e.message || 'Isian tidak valid') : 'Gagal menyimpan. Periksa koneksi Anda.'); }
+
+    // ---------- Tampilan & tema (pratinjau langsung, simpan tanpa muat ulang) ----------
+    var root = document.documentElement;
+    function currentAppearance() {
+        return {
+            theme_mode: root.dataset.themeMode || 'system',
+            accent_color: root.dataset.accent || 'hijau',
+            interface_text_size: root.dataset.uiSize || 'normal',
+            reading_text_size: root.dataset.readingSize || 'normal',
+            translation_text_size: root.dataset.translationSize || 'normal'
+        };
+    }
+    function applyAppearance(a) {
+        root.dataset.themeMode = a.theme_mode;
+        if (a.theme_mode === 'system') root.removeAttribute('data-theme'); else root.dataset.theme = a.theme_mode;
+        root.dataset.accent = a.accent_color;
+        root.dataset.uiSize = a.interface_text_size;
+        root.dataset.readingSize = a.reading_text_size;
+        root.dataset.translationSize = a.translation_text_size;
+    }
+    function saveAppearance(a, quiet) {
+        if (!window.ALMARA) return Promise.resolve();
+        return http('POST', ALMARA.routes.appearance, a).then(function (r) {
+            if (!quiet) toast(r.meta && r.meta.stored === 'account' ? 'Tersimpan di akun Anda' : 'Tersimpan di perangkat ini');
+        }).catch(failed);
+    }
+    window.MA.appearance = { current: currentAppearance, apply: applyAppearance, save: saveAppearance };
+
     $$('[data-theme-toggle]').forEach(function (btn) {
         btn.addEventListener('click', function () {
-            var root = document.documentElement;
-            var current = root.dataset.theme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-            var next = current === 'dark' ? 'light' : 'dark';
-            root.dataset.theme = next;
-            try { localStorage.setItem('ma-theme', next); } catch (e) {}
-            toast(next === 'dark' ? 'Tema gelap aktif' : 'Tema terang aktif');
+            var a = currentAppearance();
+            var dark = root.dataset.theme ? root.dataset.theme === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+            a.theme_mode = dark ? 'light' : 'dark';
+            applyAppearance(a);
+            saveAppearance(a, true);
+            toast(a.theme_mode === 'dark' ? 'Tema gelap aktif' : 'Tema terang aktif');
         });
     });
+
+    var apForm = $('[data-appearance-form]');
+    if (apForm) {
+        var readForm = function () {
+            var a = currentAppearance();
+            ['theme_mode', 'accent_color', 'interface_text_size', 'reading_text_size', 'translation_text_size'].forEach(function (k) {
+                var el = $('input[name="' + k + '"]:checked', apForm); if (el) a[k] = el.value;
+            });
+            return a;
+        };
+        apForm.addEventListener('change', function () { applyAppearance(readForm()); });
+        apForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            var a = readForm(); applyAppearance(a); saveAppearance(a);
+            setTimeout(function () { $$('[data-loading]', apForm).forEach(function (b) { b.removeAttribute('aria-disabled'); if (b.dataset.label) b.innerHTML = b.dataset.label; }); }, 0);
+        });
+        var reset = $('[data-appearance-reset]', apForm);
+        if (reset) reset.addEventListener('click', function () {
+            var d = JSON.parse(apForm.getAttribute('data-defaults'));
+            Object.keys(d).forEach(function (k) { var el = $('input[name="' + k + '"][value="' + d[k] + '"]', apForm); if (el) el.checked = true; });
+            applyAppearance(d); saveAppearance(d);
+        });
+    }
+
+    // ---------- Formulir: cegah kirim ganda & konfirmasi aksi destruktif ----------
+    document.addEventListener('submit', function (e) {
+        var form = e.target;
+        var msg = form.getAttribute('data-confirm-submit');
+        if (msg && !form.dataset.confirmed) {
+            e.preventDefault();
+            confirmDialog('Konfirmasi', msg).then(function (ok) { if (ok) { form.dataset.confirmed = '1'; form.requestSubmit ? form.requestSubmit() : form.submit(); } });
+            return;
+        }
+        if (e.defaultPrevented) return;
+        $$('[data-loading]', form).forEach(function (b) { b.setAttribute('aria-disabled', 'true'); b.dataset.label = b.innerHTML; b.innerHTML = 'Memproses…'; });
+    }, true);
+    window.addEventListener('pageshow', function () { $$('[data-loading][aria-disabled]').forEach(function (b) { b.removeAttribute('aria-disabled'); if (b.dataset.label) b.innerHTML = b.dataset.label; }); });
+
+    $$('[data-check-all]').forEach(function (all) {
+        all.addEventListener('change', function () { $$('input[name="ids[]"]', all.closest('form')).forEach(function (c) { c.checked = all.checked; }); });
+    });
+
+    // ---------- Urutkan kartu beranda ----------
+    var sortable = $('[data-sortable]');
+    if (sortable) sortable.addEventListener('click', function (e) {
+        var b = e.target.closest('[data-move]'); if (!b) return;
+        var li = b.closest('li');
+        if (b.dataset.move === 'up' && li.previousElementSibling) li.parentNode.insertBefore(li, li.previousElementSibling);
+        if (b.dataset.move === 'down' && li.nextElementSibling) li.parentNode.insertBefore(li.nextElementSibling, li);
+        b.focus();
+    });
+
+    // ---------- Tampilkan/sembunyikan Latin (doa & dzikir) ----------
+    var latin = $('[data-toggle-latin]');
+    if (latin) {
+        var hideLatin = store.get('almara-hide-latin', false);
+        latin.checked = !hideLatin; document.body.classList.toggle('hide-latin', hideLatin);
+        latin.addEventListener('change', function () { document.body.classList.toggle('hide-latin', !latin.checked); store.set('almara-hide-latin', !latin.checked); });
+    }
 
     // ---------- Hitung mundur sholat ----------
     var countdowns = $$('[data-countdown]');
@@ -170,51 +277,112 @@
     if (reader) {
         var surahNo = parseInt(reader.getAttribute('data-surah'), 10);
         var surahName = reader.getAttribute('data-surah-name');
-        var markCurrent = function () {
-            var last = store.get('ma-last-read', null);
+        var authed = !!(window.ALMARA && ALMARA.auth);
+        var ayahOf = function (el) { var a = el.closest('.ayah'); return { el: a, id: +a.dataset.verseId, ayah: +a.dataset.ayah }; };
+
+        var markLocal = function () {
+            var last = store.get('almara-last-read', null);
             $$('.ayah.is-marked', reader).forEach(function (a) { a.classList.remove('is-marked'); });
-            if (last && last.surah === surahNo) {
-                var el = document.getElementById('ayat-' + last.ayat);
-                if (el) el.classList.add('is-marked');
-            }
+            if (last && last.surah === surahNo) { var el = document.getElementById('ayat-' + last.ayat); if (el) el.classList.add('is-marked'); }
         };
-        markCurrent();
+        markLocal();
+
         reader.addEventListener('click', function (e) {
-            var b = e.target.closest('[data-mark]');
-            if (!b) return;
-            var ayat = parseInt(b.getAttribute('data-mark'), 10);
-            store.set('ma-last-read', { surah: surahNo, nama: surahName, ayat: ayat, at: Date.now() });
-            markCurrent();
-            toast('Ditandai: ' + surahName + ' ayat ' + ayat);
+            var bm = e.target.closest('[data-bookmark]');
+            if (bm) {
+                if (!authed) return needLogin();
+                var v = ayahOf(bm), on = bm.getAttribute('aria-pressed') === 'true';
+                if (on) {
+                    http('GET', '/api/v1/me/bookmarks?per_page=100').then(function (r) {
+                        var hit = (r.data || []).filter(function (b) { return b.verse_id === v.id; })[0];
+                        return hit ? http('DELETE', '/api/v1/me/bookmarks/' + hit.id) : null;
+                    }).then(function () { bm.setAttribute('aria-pressed', 'false'); bm.classList.remove('is-on'); toast('Bookmark dihapus'); }).catch(failed);
+                } else {
+                    http('POST', '/api/v1/me/bookmarks', { verse_id: v.id }).then(function () {
+                        bm.setAttribute('aria-pressed', 'true'); bm.classList.add('is-on'); toast('Ayat ' + v.ayah + ' disimpan ke bookmark');
+                    }).catch(failed);
+                }
+                return;
+            }
+            var mr = e.target.closest('[data-mark-read]');
+            if (mr) {
+                var w = ayahOf(mr);
+                var last = store.get('almara-last-read', null);
+                store.set('almara-last-read', { surah: surahNo, nama: surahName, ayat: w.ayah, at: Date.now() });
+                markLocal();
+                if (!authed) { toast('Ditandai: ' + surahName + ' ayat ' + w.ayah + ' (di perangkat ini)'); return; }
+                var from = last && last.surah === surahNo && last.ayat < w.ayah ? last.ayat + 1 : 1;
+                http('PUT', '/api/v1/me/reading-progress', { verse_id: w.id, mark_read: true, from_ayah: from }).then(function (r) {
+                    var s = r.data && r.data.stats;
+                    toast(s && s.target ? 'Tercatat. Hari ini ' + s.today + '/' + s.target + ' ayat' : 'Tercatat dibaca sampai ayat ' + w.ayah);
+                }).catch(failed);
+                return;
+            }
+            var nt = e.target.closest('[data-note]');
+            if (nt) {
+                if (!authed) return needLogin();
+                var x = ayahOf(nt), dlg = $('[data-note-dialog]');
+                if (!dlg || typeof dlg.showModal !== 'function') return;
+                $('[data-note-ref]', dlg).textContent = 'QS. ' + surahName + ': ' + x.ayah;
+                $('[data-note-body]', dlg).value = '';
+                dlg.dataset.verseId = x.id; dlg.showModal();
+                $('[data-note-body]', dlg).focus();
+            }
         });
 
-        // Ukuran huruf Arab
-        var sizes = [1.5, 1.7, 1.9, 2.2, 2.5, 2.9];
-        var currentSize = function () { var v = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--arabic-size')); return isNaN(v) ? 1.9 : v; };
-        $$('[data-font]').forEach(function (b) {
+        var noteDlg = $('[data-note-dialog]');
+        if (noteDlg) {
+            $('[data-note-cancel]', noteDlg).addEventListener('click', function () { noteDlg.close(); });
+            $('[data-note-form]', noteDlg).addEventListener('submit', function (e) {
+                e.preventDefault();
+                var body = $('[data-note-body]', noteDlg).value.trim();
+                if (!body) return;
+                http('POST', '/api/v1/me/notes', { verse_id: +noteDlg.dataset.verseId, body: body }).then(function () { noteDlg.close(); toast('Catatan tersimpan (privat)'); }).catch(failed);
+            });
+        }
+
+        // Ukuran huruf Arab → preferensi tampilan (tersimpan)
+        var sizes = ['kecil', 'normal', 'besar', 'sangat-besar'];
+        $$('[data-reading-size]').forEach(function (b) {
             b.addEventListener('click', function () {
-                var cur = currentSize(), dir = b.getAttribute('data-font') === 'up' ? 1 : -1;
-                var idx = sizes.reduce(function (best, s, i) { return Math.abs(s - cur) < Math.abs(sizes[best] - cur) ? i : best; }, 0);
-                var next = sizes[Math.max(0, Math.min(sizes.length - 1, idx + dir))];
-                document.documentElement.style.setProperty('--arabic-size', next + 'rem');
-                try { localStorage.setItem('ma-arabic-size', next); } catch (e) {}
+                var a = currentAppearance(), i = sizes.indexOf(a.reading_text_size);
+                i = Math.max(0, Math.min(sizes.length - 1, (i < 0 ? 1 : i) + (b.dataset.readingSize === 'up' ? 1 : -1)));
+                a.reading_text_size = sizes[i]; applyAppearance(a); saveAppearance(a, true);
             });
         });
 
-        // Tampilkan / sembunyikan terjemahan
-        var trBtn = $('[data-toggle-tr]');
-        var applyTr = function (hide) { document.body.classList.toggle('hide-tr', hide); if (trBtn) trBtn.setAttribute('aria-pressed', hide ? 'false' : 'true'); };
-        applyTr(store.get('ma-hide-tr', false));
-        if (trBtn) trBtn.addEventListener('click', function () { var hide = !document.body.classList.contains('hide-tr'); store.set('ma-hide-tr', hide); applyTr(hide); });
+        // Terjemahan & tafsir → preferensi Al-Qur'an (tersimpan)
+        $$('[data-pref-toggle]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var key = b.dataset.prefToggle, on = b.getAttribute('aria-pressed') !== 'true';
+                b.setAttribute('aria-pressed', on ? 'true' : 'false');
+                var sel = key === 'show_translation' ? '.ayah__tr' : '.tafsir';
+                $$(sel, reader).forEach(function (el) { el.hidden = !on; });
+                var payload = {}; payload[key] = on;
+                if (window.ALMARA) http('POST', ALMARA.routes.quranPrefs, payload).catch(failed);
+            });
+        });
 
-        // Lompat ke ayat
         var jump = $('[data-jump]');
         if (jump) jump.addEventListener('change', function () { var el = document.getElementById('ayat-' + jump.value); if (el) el.scrollIntoView({ behavior: 'smooth' }); });
     }
 
+    // ---------- Hapus bookmark/catatan dari halaman profil ----------
+    document.addEventListener('click', function (e) {
+        var b = e.target.closest('[data-bookmark-delete], [data-note-delete]');
+        if (!b) return;
+        var isNote = b.hasAttribute('data-note-delete'), id = b.getAttribute(isNote ? 'data-note-delete' : 'data-bookmark-delete');
+        confirmDialog('Hapus?', isNote ? 'Catatan ini akan dihapus permanen.' : 'Bookmark ini akan dihapus.').then(function (ok) {
+            if (!ok) return;
+            http('DELETE', '/api/v1/me/' + (isNote ? 'notes/' : 'bookmarks/') + id).then(function () {
+                var row = b.closest('[data-note-row], [data-bookmark-row]'); if (row) row.remove(); toast('Dihapus');
+            }).catch(failed);
+        });
+    });
+
     // ---------- Lanjutkan membaca (beranda & daftar surah) ----------
     $$('[data-last-read]').forEach(function (box) {
-        var last = store.get('ma-last-read', null);
+        var last = store.get('almara-last-read', null) || store.get('ma-last-read', null);
         if (!last || !last.surah) return;
         var link = $('a', box);
         link.href = box.getAttribute('data-last-read').replace('__N__', last.surah) + '#ayat-' + last.ayat;
@@ -232,7 +400,7 @@
 
     if (swSupported && secure) {
         window.addEventListener('load', function () {
-            navigator.serviceWorker.register('/sw.js', { scope: '/' }).then(function (reg) {
+            navigator.serviceWorker.register('/service-worker.js', { scope: '/' }).then(function (reg) {
                 // Versi baru tersedia: aktifkan lalu muat ulang sekali.
                 reg.addEventListener('updatefound', function () {
                     var nw = reg.installing;
@@ -245,6 +413,7 @@
                     });
                 });
             }).catch(function () {});
+            if (window.ALMARA && ALMARA.clearPrivateCache && navigator.serviceWorker.controller) navigator.serviceWorker.controller.postMessage('CLEAR_PRIVATE');
             var refreshing = false;
             navigator.serviceWorker.addEventListener('controllerchange', function () {
                 if (refreshing || !navigator.serviceWorker.controller) return;
@@ -258,7 +427,7 @@
     var deferredPrompt = null;
     var installBtns = $$('[data-install], [data-install-action]');
     var installCard = $('[data-install-card]');
-    var dismissed = store.get('ma-install-dismissed', 0);
+    var dismissed = store.get('almara-install-dismissed', 0);
     var cardAllowed = !isStandalone && (Date.now() - dismissed > 14 * 86400000);
 
     function showInstall(show) {
@@ -285,7 +454,7 @@
         });
     });
     var dismissBtn = $('[data-install-dismiss]');
-    if (dismissBtn) dismissBtn.addEventListener('click', function () { store.set('ma-install-dismissed', Date.now()); if (installCard) installCard.hidden = true; });
+    if (dismissBtn) dismissBtn.addEventListener('click', function () { store.set('almara-install-dismissed', Date.now()); if (installCard) installCard.hidden = true; });
 
     // iOS Safari tidak punya prompt otomatis: tampilkan petunjuk manual.
     if (isIOS && !isStandalone && installCard && cardAllowed) {
@@ -320,21 +489,30 @@
         qo.hidden = false;
         var urls = qo.getAttribute('data-urls').split(',');
         var btn = $('[data-qo-start]', qo), bar = $('[data-qo-bar]', qo), text = $('[data-qo-text]', qo);
-        caches.open('ma-pages-v1').then(function (c) { return Promise.all(urls.map(function (u) { return c.match(u); })); }).then(function (hits) {
+        caches.open('almara-pages-v2').then(function (c) { return Promise.all(urls.map(function (u) { return c.match(u); })); }).then(function (hits) {
             var n = hits.filter(Boolean).length;
             if (n === urls.length) { text.textContent = 'Seluruh 114 surah sudah tersimpan di perangkat ini.'; btn.innerHTML = 'Perbarui'; }
             else if (n > 0) text.textContent = n + ' dari 114 surah sudah tersimpan. Simpan sisanya untuk dibaca tanpa internet.';
+        });
+        var clearBtn = $('[data-qo-clear]', qo);
+        caches.open('almara-pages-v2').then(function (c) { return c.match(urls[0]); }).then(function (hit) { if (hit && clearBtn) clearBtn.hidden = false; });
+        if (clearBtn) clearBtn.addEventListener('click', function () {
+            confirmDialog('Hapus unduhan?', 'Surah yang tersimpan untuk offline akan dihapus dari perangkat ini.').then(function (ok) {
+                if (!ok) return;
+                caches.open('almara-pages-v2').then(function (c) { return Promise.all(urls.map(function (u) { return c.delete(u); })); })
+                    .then(function () { clearBtn.hidden = true; text.textContent = 'Unduhan dihapus.'; btn.innerHTML = 'Simpan semua'; toast('Unduhan offline dihapus'); });
+            });
         });
         btn.addEventListener('click', function () {
             if (!navigator.onLine) { toast('Sambungkan ke internet terlebih dahulu.'); return; }
             btn.setAttribute('aria-disabled', 'true');
             bar.hidden = false;
             var done = 0, failed = 0, i = 0;
-            caches.open('ma-pages-v1').then(function (cache) {
+            caches.open('almara-pages-v2').then(function (cache) {
                 function worker() {
                     if (i >= urls.length) return Promise.resolve();
                     var u = urls[i++];
-                    return fetch(u, { credentials: 'same-origin' }).then(function (r) { if (!r.ok) throw 0; return cache.put(u, r); })
+                    return fetch(u, { credentials: 'omit' }).then(function (r) { if (!r.ok) throw 0; return cache.put(u, r); })
                         .catch(function () { failed++; })
                         .then(function () {
                             done++;
@@ -349,6 +527,7 @@
                 text.textContent = failed ? (urls.length - failed) + ' surah tersimpan, ' + failed + ' gagal. Coba lagi.' : 'Selesai! Seluruh 114 surah bisa dibaca tanpa internet.';
                 toast(failed ? 'Sebagian surah gagal disimpan' : 'Al-Qur\'an tersimpan untuk offline');
                 if (!failed) btn.innerHTML = 'Perbarui';
+                if (clearBtn) clearBtn.hidden = false;
             });
         });
     }

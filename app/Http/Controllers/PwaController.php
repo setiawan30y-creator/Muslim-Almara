@@ -20,8 +20,8 @@ class PwaController extends Controller
         $manifest = [
             'id' => '/',
             'name' => $name,
-            'short_name' => mb_strimwidth($name, 0, 14),
-            'description' => "Jadwal sholat, Al-Qur'an, arah kiblat, doa harian, dan alat bantu ibadah lainnya.",
+            'short_name' => mb_strimwidth($name, 0, 14, ''),
+            'description' => "Pendamping Muslim pribadi: Al-Qur'an, jadwal sholat, kiblat, dzikir & doa.",
             'lang' => 'id',
             'dir' => 'ltr',
             'start_url' => '/?source=pwa',
@@ -41,7 +41,7 @@ class PwaController extends Controller
                 ['name' => 'Jadwal Sholat', 'url' => '/jadwal-sholat', 'icons' => [['src' => '/icons/icon-192.png', 'sizes' => '192x192']]],
                 ["name" => "Al-Qur'an", 'url' => '/al-quran', 'icons' => [['src' => '/icons/icon-192.png', 'sizes' => '192x192']]],
                 ['name' => 'Arah Kiblat', 'url' => '/kiblat', 'icons' => [['src' => '/icons/icon-192.png', 'sizes' => '192x192']]],
-                ['name' => 'Tasbih', 'url' => '/tasbih', 'icons' => [['src' => '/icons/icon-192.png', 'sizes' => '192x192']]],
+                ['name' => 'Dzikir & Doa', 'url' => '/doa-dzikir', 'icons' => [['src' => '/icons/icon-192.png', 'sizes' => '192x192']]],
             ],
         ];
 
@@ -53,7 +53,7 @@ class PwaController extends Controller
     public function serviceWorker(): Response
     {
         $assets = ['css/app.css', 'js/app.js', 'favicon.svg', 'icons/icon-192.png', 'icons/icon-512.png'];
-        $hash = substr(md5(implode('|', array_map(fn ($f) => $f.@filemtime(public_path($f)), $assets)).config('muslim.version').filemtime(resource_path('views/pwa/sw.blade.php'))), 0, 10);
+        $hash = substr(md5(implode('|', array_map(fn ($f) => $f.@filemtime(public_path($f)), $assets)).config('almara.version').filemtime(resource_path('views/pwa/sw.blade.php'))), 0, 10);
 
         return response()
             ->view('pwa.sw', ['version' => $hash, 'assets' => $assets])
@@ -65,5 +65,14 @@ class PwaController extends Controller
     public function offline()
     {
         return view('pages.offline');
+    }
+
+    public function sitemap(\App\Services\Quran\QuranService $quran)
+    {
+        $urls = collect(['/', '/al-quran', '/jadwal-sholat', '/kiblat', '/doa-dzikir', '/ibadah', '/belajar', '/asmaul-husna', '/tasbih', '/kalender', '/zakat', '/tentang', '/kebijakan-privasi', '/syarat-ketentuan'])
+            ->merge($quran->surahs()->map(fn ($s) => '/al-quran/'.$s->number))
+            ->map(fn ($u) => url($u));
+
+        return response()->view('sitemap', ['urls' => $urls])->header('Content-Type', 'application/xml');
     }
 }

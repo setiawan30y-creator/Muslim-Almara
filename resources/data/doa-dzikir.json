@@ -1,0 +1,473 @@
+{
+ "source": {
+  "key": "almara-doa-dzikir",
+  "name": "Kompilasi Doa & Dzikir ALMARA",
+  "content_type": "dua_dhikr",
+  "license": "Teks doa dari hadis: domain publik; ayat Al-Qur'an & terjemahannya: Kemenag RI; transliterasi & arti doa non-Al-Qur'an disusun tim pengembang — WAJIB ditinjau reviewer agama sebelum terbit.",
+  "attribution": "Rujukan kitab hadis dicantumkan pada setiap item.",
+  "version": "2026.10.19"
+ },
+ "dua_categories": [
+  {
+   "slug": "harian",
+   "title": "Doa Harian",
+   "description": "Doa untuk aktivitas sehari-hari"
+  },
+  {
+   "slug": "ibadah",
+   "title": "Wudu, Masjid & Puasa",
+   "description": "Doa yang berkaitan dengan ibadah"
+  },
+  {
+   "slug": "perjalanan",
+   "title": "Perjalanan",
+   "description": "Doa ketika bepergian"
+  },
+  {
+   "slug": "keluarga",
+   "title": "Keluarga",
+   "description": "Doa untuk orang tua dan keluarga"
+  },
+  {
+   "slug": "quran",
+   "title": "Doa dari Al-Qur'an",
+   "description": "Doa yang diambil dari ayat Al-Qur'an"
+  }
+ ],
+ "dhikr_categories": [
+  {
+   "slug": "setelah-shalat",
+   "title": "Setelah Shalat",
+   "description": "Dzikir yang dibaca setelah shalat fardu"
+  },
+  {
+   "slug": "pagi-petang",
+   "title": "Pagi dan Petang",
+   "description": "Dzikir pagi dan petang"
+  }
+ ],
+ "dua_items": [
+  {
+   "category": "harian",
+   "slug": "sebelum-makan",
+   "title": "Sebelum Makan",
+   "arabic_text": "بِسْمِ اللّٰهِ",
+   "transliteration": "Bismillāh.",
+   "translation": "Dengan nama Allah.",
+   "source_reference": "HR. Abu Dawud no. 3767; At-Tirmidzi no. 1858",
+   "source_kind": "hadith",
+   "quran_ref": null,
+   "count_target": null,
+   "context_note": "Jika lupa di awal makan, ucapkan: “Bismillāhi awwalahū wa ākhirahū” (Dengan nama Allah di awal dan akhirnya)."
+  },
+  {
+   "category": "harian",
+   "slug": "sesudah-makan",
+   "title": "Sesudah Makan",
+   "arabic_text": "اَلْحَمْدُ لِلّٰهِ الَّذِيْ أَطْعَمَنِيْ هٰذَا وَرَزَقَنِيْهِ مِنْ غَيْرِ حَوْلٍ مِنِّيْ وَلَا قُوَّةٍ",
+   "transliteration": "Al-ḥamdu lillāhil-ladzī aṭ‘amanī hādzā wa razaqanīhi min ghairi ḥaulin minnī wa lā quwwah.",
+   "translation": "Segala puji bagi Allah yang telah memberiku makanan ini dan merezekikannya kepadaku tanpa daya dan kekuatan dariku.",
+   "source_reference": "HR. Abu Dawud no. 4023; At-Tirmidzi no. 3458; Ibnu Majah no. 3285",
+   "source_kind": "hadith",
+   "quran_ref": null,
+   "count_target": null,
+   "context_note": null
+  },
+  {
+   "category": "harian",
+   "slug": "sebelum-tidur",
+   "title": "Sebelum Tidur",
+   "arabic_text": "بِاسْمِكَ اللّٰهُمَّ أَمُوْتُ وَأَحْيَا",
+   "transliteration": "Bismikallāhumma amūtu wa aḥyā.",
+   "translation": "Dengan nama-Mu, ya Allah, aku mati dan aku hidup.",
+   "source_reference": "HR. Al-Bukhari no. 6324",
+   "source_kind": "hadith",
+   "quran_ref": null,
+   "count_target": null,
+   "context_note": null
+  },
+  {
+   "category": "harian",
+   "slug": "bangun-tidur",
+   "title": "Bangun Tidur",
+   "arabic_text": "اَلْحَمْدُ لِلّٰهِ الَّذِيْ أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُوْرُ",
+   "transliteration": "Al-ḥamdu lillāhil-ladzī aḥyānā ba‘da mā amātanā wa ilaihin-nusyūr.",
+   "translation": "Segala puji bagi Allah yang telah menghidupkan kami setelah mematikan kami, dan kepada-Nya kami akan dibangkitkan.",
+   "source_reference": "HR. Al-Bukhari no. 6324",
+   "source_kind": "hadith",
+   "quran_ref": null,
+   "count_target": null,
+   "context_note": null
+  },
+  {
+   "category": "harian",
+   "slug": "masuk-kamar-mandi",
+   "title": "Masuk Kamar Mandi",
+   "arabic_text": "اَللّٰهُمَّ إِنِّيْ أَعُوْذُ بِكَ مِنَ الْخُبُثِ وَالْخَبَائِثِ",
+   "transliteration": "Allāhumma innī a‘ūdzu bika minal-khubutsi wal-khabā'its.",
+   "translation": "Ya Allah, sesungguhnya aku berlindung kepada-Mu dari setan laki-laki dan setan perempuan.",
+   "source_reference": "HR. Al-Bukhari no. 142; Muslim no. 375",
+   "source_kind": "hadith",
+   "quran_ref": null,
+   "count_target": null,
+   "context_note": "Dibaca sebelum masuk."
+  },
+  {
+   "category": "harian",
+   "slug": "keluar-kamar-mandi",
+   "title": "Keluar Kamar Mandi",
+   "arabic_text": "غُفْرَانَكَ",
+   "transliteration": "Ghufrānak.",
+   "translation": "Aku memohon ampunan-Mu.",
+   "source_reference": "HR. Abu Dawud no. 30; At-Tirmidzi no. 7",
+   "source_kind": "hadith",
+   "quran_ref": null,
+   "count_target": null,
+   "context_note": null
+  },
+  {
+   "category": "harian",
+   "slug": "keluar-rumah",
+   "title": "Keluar Rumah",
+   "arabic_text": "بِسْمِ اللّٰهِ تَوَكَّلْتُ عَلَى اللّٰهِ، لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللّٰهِ",
+   "transliteration": "Bismillāhi tawakkaltu ‘alallāh, lā ḥaula wa lā quwwata illā billāh.",
+   "translation": "Dengan nama Allah, aku bertawakal kepada Allah. Tiada daya dan kekuatan kecuali dengan pertolongan Allah.",
+   "source_reference": "HR. Abu Dawud no. 5095; At-Tirmidzi no. 3426",
+   "source_kind": "hadith",
+   "quran_ref": null,
+   "count_target": null,
+   "context_note": null
+  },
+  {
+   "category": "harian",
+   "slug": "ketika-bersin",
+   "title": "Ketika Bersin",
+   "arabic_text": "اَلْحَمْدُ لِلّٰهِ",
+   "transliteration": "Al-ḥamdu lillāh.",
+   "translation": "Segala puji bagi Allah.",
+   "source_reference": "HR. Al-Bukhari no. 6224",
+   "source_kind": "hadith",
+   "quran_ref": null,
+   "count_target": null,
+   "context_note": "Yang mendengar menjawab “Yarḥamukallāh” (semoga Allah merahmatimu)."
+  },
+  {
+   "category": "ibadah",
+   "slug": "sesudah-wudu",
+   "title": "Sesudah Wudu",
+   "arabic_text": "أَشْهَدُ أَنْ لَا إِلٰهَ إِلَّا اللّٰهُ وَحْدَهُ لَا شَرِيْكَ لَهُ، وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُوْلُهُ",
+   "transliteration": "Asyhadu an lā ilāha illallāhu waḥdahū lā syarīka lah, wa asyhadu anna muḥammadan ‘abduhū wa rasūluh.",
+   "translation": "Aku bersaksi bahwa tiada tuhan selain Allah semata, tiada sekutu bagi-Nya, dan aku bersaksi bahwa Muhammad adalah hamba dan utusan-Nya.",
+   "source_reference": "HR. Muslim no. 234",
+   "source_kind": "hadith",
+   "quran_ref": null,
+   "count_target": null,
+   "context_note": null
+  },
+  {
+   "category": "ibadah",
+   "slug": "masuk-masjid",
+   "title": "Masuk Masjid",
+   "arabic_text": "اَللّٰهُمَّ افْتَحْ لِيْ أَبْوَابَ رَحْمَتِكَ",
+   "transliteration": "Allāhummaftaḥ lī abwāba raḥmatik.",
+   "translation": "Ya Allah, bukakanlah untukku pintu-pintu rahmat-Mu.",
+   "source_reference": "HR. Muslim no. 713",
+   "source_kind": "hadith",
+   "quran_ref": null,
+   "count_target": null,
+   "context_note": null
+  },
+  {
+   "category": "ibadah",
+   "slug": "keluar-masjid",
+   "title": "Keluar Masjid",
+   "arabic_text": "اَللّٰهُمَّ إِنِّيْ أَسْأَلُكَ مِنْ فَضْلِكَ",
+   "transliteration": "Allāhumma innī as'aluka min faḍlik.",
+   "translation": "Ya Allah, sesungguhnya aku memohon karunia-Mu.",
+   "source_reference": "HR. Muslim no. 713",
+   "source_kind": "hadith",
+   "quran_ref": null,
+   "count_target": null,
+   "context_note": null
+  },
+  {
+   "category": "ibadah",
+   "slug": "berbuka-puasa",
+   "title": "Berbuka Puasa",
+   "arabic_text": "ذَهَبَ الظَّمَأُ وَابْتَلَّتِ الْعُرُوْقُ وَثَبَتَ الْأَجْرُ إِنْ شَاءَ اللّٰهُ",
+   "transliteration": "Dzahabaẓ-ẓama'u wabtallatil-‘urūqu wa tsabatal-ajru in syā'allāh.",
+   "translation": "Telah hilang rasa haus, urat-urat telah basah, dan pahala telah tetap, insya Allah.",
+   "source_reference": "HR. Abu Dawud no. 2357",
+   "source_kind": "hadith",
+   "quran_ref": null,
+   "count_target": null,
+   "context_note": "Dibaca setelah berbuka."
+  },
+  {
+   "category": "perjalanan",
+   "slug": "naik-kendaraan",
+   "title": "Naik Kendaraan",
+   "arabic_text": "سُبْحٰنَ الَّذِيْ سَخَّرَ لَنَا هٰذَا وَمَا كُنَّا لَهٗ مُقْرِنِيْنَۙ وَاِنَّآ اِلٰى رَبِّنَا لَمُنْقَلِبُوْنَ",
+   "transliteration": "Subḥānal-ladzī sakhkhara lanā hādzā wa mā kunnā lahū muqrinīn, wa innā ilā rabbinā lamunqalibūn.",
+   "translation": "Mahasuci (Allah) yang telah menundukkan (kendaraan) ini bagi kami, padahal kami sebelumnya tidak mampu menguasainya, dan sesungguhnya kami akan kembali kepada Tuhan kami.",
+   "source_reference": "QS. Az-Zukhruf: 13–14; HR. Muslim no. 1342",
+   "source_kind": "quran",
+   "quran_ref": [
+    43,
+    13
+   ],
+   "count_target": null,
+   "context_note": null
+  },
+  {
+   "category": "keluarga",
+   "slug": "untuk-kedua-orang-tua",
+   "title": "Untuk Kedua Orang Tua",
+   "arabic_text": "رَّبِّ ارْحَمْهُمَا كَمَا رَبَّيٰنِيْ صَغِيْرًاۗ",
+   "transliteration": "Rabbir-ḥamhumā kamā rabbayānī ṣaghīrā.",
+   "translation": "Wahai Tuhanku, sayangilah keduanya sebagaimana mereka berdua telah mendidik aku pada waktu kecil.",
+   "source_reference": "QS. Al-Isra': 24",
+   "source_kind": "quran",
+   "quran_ref": [
+    17,
+    24
+   ],
+   "count_target": null,
+   "context_note": null
+  },
+  {
+   "category": "keluarga",
+   "slug": "pasangan-dan-keturunan",
+   "title": "Pasangan dan Keturunan",
+   "arabic_text": "رَبَّنَا هَبْ لَنَا مِنْ اَزْوَاجِنَا وَذُرِّيّٰتِنَا قُرَّةَ اَعْيُنٍ وَّاجْعَلْنَا لِلْمُتَّقِيْنَ اِمَامًا",
+   "transliteration": "Rabbanā hab lanā min azwājinā wa dzurriyyātinā qurrata a‘yuniw waj‘alnā lil-muttaqīna imāmā.",
+   "translation": "Ya Tuhan kami, anugerahkanlah kepada kami pasangan kami dan keturunan kami sebagai penyenang hati (kami), dan jadikanlah kami pemimpin bagi orang-orang yang bertakwa.",
+   "source_reference": "QS. Al-Furqan: 74",
+   "source_kind": "quran",
+   "quran_ref": [
+    25,
+    74
+   ],
+   "count_target": null,
+   "context_note": null
+  },
+  {
+   "category": "quran",
+   "slug": "kebaikan-dunia-akhirat",
+   "title": "Kebaikan Dunia dan Akhirat",
+   "arabic_text": "رَبَّنَآ اٰتِنَا فِى الدُّنْيَا حَسَنَةً وَّفِى الْاٰخِرَةِ حَسَنَةً وَّقِنَا عَذَابَ النَّارِ",
+   "transliteration": "Rabbanā ātinā fid-dun-yā ḥasanataw wa fil-ākhirati ḥasanataw wa qinā ‘adzāban-nār.",
+   "translation": "Ya Tuhan kami, berilah kami kebaikan di dunia dan kebaikan di akhirat, dan lindungilah kami dari azab neraka.",
+   "source_reference": "QS. Al-Baqarah: 201",
+   "source_kind": "quran",
+   "quran_ref": [
+    2,
+    201
+   ],
+   "count_target": null,
+   "context_note": null
+  },
+  {
+   "category": "quran",
+   "slug": "tambahan-ilmu",
+   "title": "Memohon Tambahan Ilmu",
+   "arabic_text": "رَّبِّ زِدْنِيْ عِلْمًا",
+   "transliteration": "Rabbi zidnī ‘ilmā.",
+   "translation": "Ya Tuhanku, tambahkanlah ilmu kepadaku.",
+   "source_reference": "QS. Taha: 114",
+   "source_kind": "quran",
+   "quran_ref": [
+    20,
+    114
+   ],
+   "count_target": null,
+   "context_note": null
+  },
+  {
+   "category": "quran",
+   "slug": "keteguhan-hati",
+   "title": "Keteguhan Hati",
+   "arabic_text": "رَبَّنَا لَا تُزِغْ قُلُوْبَنَا بَعْدَ اِذْ هَدَيْتَنَا وَهَبْ لَنَا مِنْ لَّدُنْكَ رَحْمَةً ۚاِنَّكَ اَنْتَ الْوَهَّابُ",
+   "transliteration": "Rabbanā lā tuzigh qulūbanā ba‘da idz hadaitanā wa hab lanā mil ladunka raḥmah, innaka antal-wahhāb.",
+   "translation": "Ya Tuhan kami, janganlah Engkau condongkan hati kami kepada kesesatan setelah Engkau berikan petunjuk kepada kami, dan karuniakanlah kepada kami rahmat dari sisi-Mu; sesungguhnya Engkau Maha Pemberi.",
+   "source_reference": "QS. Ali 'Imran: 8",
+   "source_kind": "quran",
+   "quran_ref": [
+    3,
+    8
+   ],
+   "count_target": null,
+   "context_note": null
+  }
+ ],
+ "dhikr_items": [
+  {
+   "category": "setelah-shalat",
+   "slug": "istighfar-setelah-shalat",
+   "title": "Istighfar",
+   "arabic_text": "أَسْتَغْفِرُ اللّٰهَ",
+   "transliteration": "Astaghfirullāh.",
+   "translation": "Aku memohon ampun kepada Allah.",
+   "source_reference": "HR. Muslim no. 591",
+   "source_kind": "hadith",
+   "quran_ref": null,
+   "count_target": 3,
+   "context_note": "Dibaca tiga kali setelah salam."
+  },
+  {
+   "category": "setelah-shalat",
+   "slug": "allahumma-antas-salam",
+   "title": "Allāhumma Antas-Salām",
+   "arabic_text": "اَللّٰهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ، تَبَارَكْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ",
+   "transliteration": "Allāhumma antas-salām wa minkas-salām, tabārakta yā dzal-jalāli wal-ikrām.",
+   "translation": "Ya Allah, Engkaulah As-Salām (Yang Maha Sejahtera) dan dari-Mu kesejahteraan. Mahaberkah Engkau, wahai Pemilik keagungan dan kemuliaan.",
+   "source_reference": "HR. Muslim no. 591",
+   "source_kind": "hadith",
+   "quran_ref": null,
+   "count_target": 1,
+   "context_note": null
+  },
+  {
+   "category": "setelah-shalat",
+   "slug": "ayat-kursi",
+   "title": "Ayat Kursi",
+   "arabic_text": "اَللّٰهُ لَآ اِلٰهَ اِلَّا هُوَۚ اَلْحَيُّ الْقَيُّوْمُ ەۚ لَا تَأْخُذُهٗ سِنَةٌ وَّلَا نَوْمٌۗ  لَهٗ مَا فِى السَّمٰوٰتِ وَمَا فِى الْاَرْضِۗ مَنْ ذَا الَّذِيْ يَشْفَعُ عِنْدَهٗٓ اِلَّا بِاِذْنِهٖۗ يَعْلَمُ مَا بَيْنَ اَيْدِيْهِمْ وَمَا خَلْفَهُمْۚ وَلَا يُحِيْطُوْنَ بِشَيْءٍ مِّنْ عِلْمِهٖٓ اِلَّا بِمَا شَاۤءَۚ وَسِعَ كُرْسِيُّهُ السَّمٰوٰتِ وَالْاَرْضَۚ وَلَا يَـُٔوْدُهٗ حِفْظُهُمَاۚ وَهُوَ الْعَلِيُّ الْعَظِيْمُ",
+   "transliteration": "Allāhu lā ilāha illā huwal-ḥayyul-qayyūm, lā ta'khudzuhū sinatuw wa lā naum, lahū mā fis-samāwāti wa mā fil-arḍ, man dzal-ladzī yasyfa‘u ‘indahū illā bi'idznih, ya‘lamu mā baina aidīhim wa mā khalfahum, wa lā yuḥīṭūna bisyai'im min ‘ilmihī illā bimā syā', wasi‘a kursiyyuhus-samāwāti wal-arḍ, wa lā ya'ūduhū ḥifẓuhumā, wa huwal-‘aliyyul-‘aẓīm.",
+   "translation": "Allah, tidak ada tuhan selain Dia. Yang Mahahidup, Yang terus menerus mengurus (makhluk-Nya), tidak mengantuk dan tidak tidur. Milik-Nya apa yang ada di langit dan apa yang ada di bumi. Tidak ada yang dapat memberi syafaat di sisi-Nya tanpa izin-Nya. Dia mengetahui apa yang di hadapan mereka dan apa yang di belakang mereka, dan mereka tidak mengetahui sesuatu apa pun tentang ilmu-Nya melainkan apa yang Dia kehendaki. Kursi-Nya meliputi langit dan bumi. Dan Dia tidak merasa berat memelihara keduanya, dan Dia Mahatinggi, Mahabesar.",
+   "source_reference": "QS. Al-Baqarah: 255; anjuran membacanya setelah shalat: HR. An-Nasa'i, As-Sunan Al-Kubra no. 9928",
+   "source_kind": "quran",
+   "quran_ref": [
+    2,
+    255
+   ],
+   "count_target": 1,
+   "context_note": null
+  },
+  {
+   "category": "setelah-shalat",
+   "slug": "tasbih-33",
+   "title": "Tasbih",
+   "arabic_text": "سُبْحَانَ اللّٰهِ",
+   "transliteration": "Subḥānallāh.",
+   "translation": "Mahasuci Allah.",
+   "source_reference": "HR. Muslim no. 597",
+   "source_kind": "hadith",
+   "quran_ref": null,
+   "count_target": 33,
+   "context_note": null
+  },
+  {
+   "category": "setelah-shalat",
+   "slug": "tahmid-33",
+   "title": "Tahmid",
+   "arabic_text": "اَلْحَمْدُ لِلّٰهِ",
+   "transliteration": "Al-ḥamdu lillāh.",
+   "translation": "Segala puji bagi Allah.",
+   "source_reference": "HR. Muslim no. 597",
+   "source_kind": "hadith",
+   "quran_ref": null,
+   "count_target": 33,
+   "context_note": null
+  },
+  {
+   "category": "setelah-shalat",
+   "slug": "takbir-33",
+   "title": "Takbir",
+   "arabic_text": "اَللّٰهُ أَكْبَرُ",
+   "transliteration": "Allāhu akbar.",
+   "translation": "Allah Mahabesar.",
+   "source_reference": "HR. Muslim no. 597",
+   "source_kind": "hadith",
+   "quran_ref": null,
+   "count_target": 33,
+   "context_note": null
+  },
+  {
+   "category": "setelah-shalat",
+   "slug": "tahlil-penutup",
+   "title": "Tahlil Penutup (genap 100)",
+   "arabic_text": "لَا إِلٰهَ إِلَّا اللّٰهُ وَحْدَهُ لَا شَرِيْكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلٰى كُلِّ شَيْءٍ قَدِيْرٌ",
+   "transliteration": "Lā ilāha illallāhu waḥdahū lā syarīka lah, lahul-mulku wa lahul-ḥamdu wa huwa ‘alā kulli syai'in qadīr.",
+   "translation": "Tiada tuhan selain Allah semata, tiada sekutu bagi-Nya. Milik-Nya kerajaan dan milik-Nya segala puji, dan Dia Mahakuasa atas segala sesuatu.",
+   "source_reference": "HR. Muslim no. 597",
+   "source_kind": "hadith",
+   "quran_ref": null,
+   "count_target": 1,
+   "context_note": "Penyempurna hitungan menjadi seratus setelah tasbih, tahmid, dan takbir masing-masing 33 kali."
+  },
+  {
+   "category": "pagi-petang",
+   "slug": "al-ikhlas",
+   "title": "Surah Al-Ikhlas",
+   "arabic_text": "قُلْ هُوَ اللّٰهُ اَحَدٌۚ ﴿1﴾ اَللّٰهُ الصَّمَدُۚ ﴿2﴾ لَمْ يَلِدْ وَلَمْ يُوْلَدْۙ ﴿3﴾ وَلَمْ يَكُنْ لَّهٗ كُفُوًا اَحَدٌ ࣖ ﴿4﴾",
+   "transliteration": "Qul huwallāhu aḥad. Allāhuṣ-ṣamad. Lam yalid wa lam yūlad. Wa lam yakul lahū kufuwan aḥad.",
+   "translation": "(1) Katakanlah (Muhammad), “Dialah Allah, Yang Maha Esa. (2) Allah tempat meminta segala sesuatu. (3) (Allah) tidak beranak dan tidak pula diperanakkan. (4) Dan tidak ada sesuatu yang setara dengan Dia.”",
+   "source_reference": "QS. Al-Ikhlas: 1–4; anjuran pagi & petang: HR. Abu Dawud no. 5082; At-Tirmidzi no. 3575",
+   "source_kind": "quran",
+   "quran_ref": [
+    112,
+    1
+   ],
+   "count_target": 3,
+   "context_note": "Dibaca tiga kali pada pagi dan petang, bersama Al-Falaq dan An-Nas."
+  },
+  {
+   "category": "pagi-petang",
+   "slug": "al-falaq",
+   "title": "Surah Al-Falaq",
+   "arabic_text": "قُلْ اَعُوْذُ بِرَبِّ الْفَلَقِۙ ﴿1﴾ مِنْ شَرِّ مَا خَلَقَۙ ﴿2﴾ وَمِنْ شَرِّ غَاسِقٍ اِذَا وَقَبَۙ ﴿3﴾ وَمِنْ شَرِّ النَّفّٰثٰتِ فِى الْعُقَدِۙ ﴿4﴾ وَمِنْ شَرِّ حَاسِدٍ اِذَا حَسَدَ ࣖ ﴿5﴾",
+   "transliteration": "Qul a‘ūdzu birabbil-falaq. Min syarri mā khalaq. Wa min syarri ghāsiqin idzā waqab. Wa min syarrin-naffātsāti fil-‘uqad. Wa min syarri ḥāsidin idzā ḥasad.",
+   "translation": "(1) Katakanlah, “Aku berlindung kepada Tuhan yang menguasai subuh (fajar), (2) dari kejahatan (makhluk yang) Dia ciptakan, (3) dan dari kejahatan malam apabila telah gelap gulita, (4) dan dari kejahatan (perempuan-perempuan) penyihir yang meniup pada buhul-buhul (talinya), (5) dan dari kejahatan orang yang dengki apabila dia dengki.”",
+   "source_reference": "QS. Al-Falaq: 1–5; HR. Abu Dawud no. 5082; At-Tirmidzi no. 3575",
+   "source_kind": "quran",
+   "quran_ref": [
+    113,
+    1
+   ],
+   "count_target": 3,
+   "context_note": null
+  },
+  {
+   "category": "pagi-petang",
+   "slug": "an-nas",
+   "title": "Surah An-Nas",
+   "arabic_text": "قُلْ اَعُوْذُ بِرَبِّ النَّاسِۙ ﴿1﴾ مَلِكِ النَّاسِۙ ﴿2﴾ اِلٰهِ النَّاسِۙ ﴿3﴾ مِنْ شَرِّ الْوَسْوَاسِ ەۙ الْخَنَّاسِۖ ﴿4﴾ الَّذِيْ يُوَسْوِسُ فِيْ صُدُوْرِ النَّاسِۙ ﴿5﴾ مِنَ الْجِنَّةِ وَالنَّاسِ ࣖ ﴿6﴾",
+   "transliteration": "Qul a‘ūdzu birabbin-nās. Malikin-nās. Ilāhin-nās. Min syarril-waswāsil-khannās. Alladzī yuwaswisu fī ṣudūrin-nās. Minal-jinnati wan-nās.",
+   "translation": "(1) Katakanlah, “Aku berlindung kepada Tuhannya manusia, (2) Raja manusia, (3) sembahan manusia, (4) dari kejahatan (bisikan) setan yang bersembunyi, (5) yang membisikkan (kejahatan) ke dalam dada manusia, (6) dari (golongan) jin dan manusia.”",
+   "source_reference": "QS. An-Nas: 1–6; HR. Abu Dawud no. 5082; At-Tirmidzi no. 3575",
+   "source_kind": "quran",
+   "quran_ref": [
+    114,
+    1
+   ],
+   "count_target": 3,
+   "context_note": null
+  },
+  {
+   "category": "pagi-petang",
+   "slug": "bismillahilladzi-la-yadhurru",
+   "title": "Perlindungan dengan Nama Allah",
+   "arabic_text": "بِسْمِ اللّٰهِ الَّذِيْ لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ، وَهُوَ السَّمِيْعُ الْعَلِيْمُ",
+   "transliteration": "Bismillāhil-ladzī lā yaḍurru ma‘asmihī syai'un fil-arḍi wa lā fis-samā', wa huwas-samī‘ul-‘alīm.",
+   "translation": "Dengan nama Allah yang bersama nama-Nya tidak ada sesuatu pun di bumi maupun di langit yang dapat membahayakan, dan Dia Maha Mendengar lagi Maha Mengetahui.",
+   "source_reference": "HR. Abu Dawud no. 5088; At-Tirmidzi no. 3388",
+   "source_kind": "hadith",
+   "quran_ref": null,
+   "count_target": 3,
+   "context_note": "Dibaca tiga kali pada pagi dan petang."
+  },
+  {
+   "category": "pagi-petang",
+   "slug": "sayyidul-istighfar",
+   "title": "Sayyidul Istighfar",
+   "arabic_text": "اَللّٰهُمَّ أَنْتَ رَبِّيْ لَا إِلٰهَ إِلَّا أَنْتَ، خَلَقْتَنِيْ وَأَنَا عَبْدُكَ، وَأَنَا عَلٰى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوْذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوْءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوْءُ بِذَنْبِيْ فَاغْفِرْ لِيْ، فَإِنَّهُ لَا يَغْفِرُ الذُّنُوْبَ إِلَّا أَنْتَ",
+   "transliteration": "Allāhumma anta rabbī lā ilāha illā ant, khalaqtanī wa ana ‘abduk, wa ana ‘alā ‘ahdika wa wa‘dika mastaṭa‘t, a‘ūdzu bika min syarri mā ṣana‘t, abū'u laka bini‘matika ‘alayy, wa abū'u bidzanbī faghfir lī, fa innahū lā yaghfirudz-dzunūba illā ant.",
+   "translation": "Ya Allah, Engkau Tuhanku, tiada tuhan selain Engkau. Engkau telah menciptakanku dan aku adalah hamba-Mu. Aku berada di atas perjanjian dan janji-Mu semampuku. Aku berlindung kepada-Mu dari keburukan perbuatanku. Aku mengakui nikmat-Mu kepadaku dan aku mengakui dosaku, maka ampunilah aku. Sesungguhnya tiada yang mengampuni dosa selain Engkau.",
+   "source_reference": "HR. Al-Bukhari no. 6306",
+   "source_kind": "hadith",
+   "quran_ref": null,
+   "count_target": 1,
+   "context_note": "Dibaca pada pagi dan petang."
+  }
+ ]
+}

@@ -2,24 +2,22 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\QuranVerse;
+use App\Services\Quran\QuranImporter;
 use Illuminate\Database\Seeder;
 
+// Seeder pengembangan — tanpa kredensial atau data pribadi nyata (blueprint §12). @2026-Alifiandra
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $this->call([AccessControlSeeder::class, PrayerMethodSeeder::class, IslamicEventSeeder::class]);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        if (QuranVerse::query()->count() === 0) {
+            $this->command?->info("Mengimpor dataset Al-Qur'an (sekali saja)…");
+            app(QuranImporter::class)->import();
+        }
+
+        $this->call(WorshipContentSeeder::class);
     }
 }

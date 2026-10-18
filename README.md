@@ -1,66 +1,55 @@
-# Muslim Almara
+# ALMARA MUSLIM
 
-Pendamping ibadah harian berbasis web — **mobile-first, Material-inspired**, dibangun dengan Laravel 13.
+Pendamping Muslim pribadi — Al-Qur'an, jadwal sholat, kiblat, dzikir & doa, kalender Hijriah, progres ibadah privat, dan PWA yang dapat dipasang.
+Dibangun dengan **Laravel 13** mengikuti *ALMARA MUSLIM — Blueprint Teknis & Roadmap Implementasi*.
 
 > Dikembangkan oleh **@2026-Alifiandra**
 
-## Fitur
+## Status rilis
 
-| Fitur | Rute | Keterangan |
-|---|---|---|
-| Beranda | `/` | Sholat berikutnya + hitung mundur, jadwal hari ini, ayat harian, hari besar Islam |
-| Jadwal Sholat | `/jadwal-sholat` | Harian & bulanan; metode Kemenag RI (Subuh 20°, Isya 18°, ihtiyat 2 menit) |
-| Pilih Lokasi | `/lokasi` | 48 kota atau GPS perangkat (disimpan di cookie pengguna) |
-| Al-Qur'an | `/al-quran`, `/al-quran/{1-114}` | Teks Arab, terjemahan & tafsir ringkas Kemenag, penanda terakhir dibaca, ukuran huruf |
-| Arah Kiblat | `/kiblat` | Derajat dari utara sejati, jarak ke Ka'bah, kompas sensor perangkat |
-| Doa Harian | `/doa` | Arab, latin, arti, dan sumber dalil |
-| Asmaul Husna | `/asmaul-husna` | 99 nama Allah |
-| Tasbih Digital | `/tasbih` | Target 33/99/100/bebas, getar, tersimpan di perangkat |
-| Kalender Hijriah | `/kalender` | Kalender ganda Masehi–Hijriah + hari besar Islam |
-| Kalkulator Zakat | `/zakat` | Maal, penghasilan, fitrah (nisab 85 g emas) |
+Versi **2.0.0** mencakup Rilis Pertama (MVP, blueprint §1.1) + *Pengaturan Tampilan & Tema*:
 
-Semua data (Al-Qur'an, doa, kota) disertakan di `resources/data`, sehingga aplikasi **tidak bergantung pada API eksternal** dan **tidak membutuhkan database** untuk berjalan.
+| Area | Isi |
+|---|---|
+| Navigasi | Beranda · Qur'an · Belajar · Ibadah · Profil |
+| Beranda | Salam & lokasi, sholat berikutnya + hitung mundur, aksi cepat, lanjutkan bacaan, target tilawah, ayat harian, hari besar, catatan — kartu dapat diurutkan/disembunyikan |
+| Al-Qur'an | 114 surah & 30 juz, terjemahan & tafsir Kemenag, pencarian, bookmark, catatan pribadi, tandai dibaca, unduh offline, pilihan mode baca |
+| Ibadah | Jadwal sholat (8 metode, mazhab Asar, koreksi menit), kiblat + kalibrasi, dzikir & doa bersumber, tasbih, kalender Hijriah, zakat |
+| Akun | Daftar/masuk, reset sandi, verifikasi email, progres & target, ekspor & hapus data |
+| Pengaturan | Tampilan & Tema (Terang/Gelap/Sistem, 5 aksen, ukuran teks UI/Arab/terjemahan, pratinjau, reset), Al-Qur'an, Jadwal Sholat, Beranda |
+| Admin | Peran admin/editor/reviewer, alur draft → review → terbit, versi konten, sumber & lisensi, pengguna, konfigurasi, log audit |
+| API | `/api/v1` format `{data, meta}` — lihat `docs/api.md` |
+| PWA | Manifest, service worker berversi, offline, halaman pribadi tidak pernah dicache |
 
-### REST API `/api/v1`
+Modul tahap berikutnya (Tajwid, Translate, Umroh & Haji, Ziarah Kubur, Qari & audio, Hafalan, Premium/Iklan, Cuaca & Masjid Terdekat, TWA) mengikuti roadmap blueprint §13.
 
-Format respons: `{"success": true, "data": ...}` · rate limit 120 request/menit.
+## Instalasi lokal (Laragon, PowerShell)
 
-```
-GET /api/v1/jadwal-sholat?kota=jakarta&tanggal=2026-10-18
-GET /api/v1/jadwal-sholat?lat=-6.2&lng=106.8&tz=7
-GET /api/v1/kota
-GET /api/v1/surat
-GET /api/v1/surat/{nomor}?tafsir=1
-GET /api/v1/doa
-GET /api/v1/asmaul-husna
-GET /api/v1/hijriah?tanggal=2026-10-18
-GET /api/v1/kiblat?lat=-6.2&lng=106.8
-```
-
-## Instalasi (Laragon / Windows, PowerShell)
+Prasyarat: PHP 8.3+ (8.4 disarankan), Composer, MySQL, Git.
 
 ```powershell
-cd C:\laragon\www
-git clone https://github.com/setiawan30y-creator/Muslim-Almara.git
-cd Muslim-Almara
+cd C:\laragon\www\Muslim-Almara
 composer install
 Copy-Item .env.example .env
 php artisan key:generate
+# Buat database kosong "almara_muslim" (HeidiSQL/Laragon), lalu:
+php artisan migrate --seed
+php artisan almara:quran:validate
 php artisan serve
 ```
 
-Buka http://127.0.0.1:8000 — atau, setelah *Reload* di Laragon, http://muslim-almara.test.
+Buka http://127.0.0.1:8000 (atau http://muslim-almara.test setelah *Reload* Laragon).
 
-Database **tidak wajib** (sesi & cache memakai file). Jika nanti fitur akun ditambahkan, buat database `muslim_almara` lalu jalankan `php artisan migrate`.
+### Menjadikan akun Anda admin & meninjau konten
 
-### Pengaturan `.env`
+```powershell
+# 1) Daftar akun melalui /daftar, lalu:
+php artisan almara:make-admin email-anda@domain.com
+# 2) (Disarankan) daftarkan akun kedua sebagai reviewer agama:
+php artisan almara:make-admin reviewer@domain.com --role=reviewer
+```
 
-| Kunci | Bawaan | Fungsi |
-|---|---|---|
-| `MUSLIM_DEFAULT_CITY` | `jakarta` | Kota bawaan (slug dari `resources/data/kota.json`) |
-| `HIJRI_ADJUSTMENT` | `0` | Koreksi tanggal Hijriah (hari) agar sesuai penetapan resmi |
-| `PRAYER_FAJR_ANGLE` / `PRAYER_ISHA_ANGLE` | `20` / `18` | Sudut Subuh/Isya |
-| `PRAYER_IHTIYAT` | `2` | Menit pengaman |
+Doa & dzikir awal masuk berstatus **Menunggu review** dan baru tampil setelah disetujui di **Admin → Doa/Dzikir** (blueprint §5.3).
 
 ### Pengujian
 
@@ -68,31 +57,32 @@ Database **tidak wajib** (sesi & cache memakai file). Jika nanti fitur akun dita
 php artisan test
 ```
 
-## Struktur
+79 test mencakup perhitungan sholat/kiblat/Hijriah, integritas dataset, autentikasi, isolasi data pribadi (IDOR), alur review admin, preferensi tema, API, dan PWA.
 
-```
-app/Services/PrayerTimeService.php   perhitungan waktu sholat (astronomis)
-app/Services/HijriCalendar.php       konversi Masehi ⇄ Hijriah, hari besar
-app/Services/QiblaService.php        arah & jarak kiblat
-app/Services/ContentRepository.php   data Al-Qur'an, doa, Asmaul Husna, kota
-app/Support/Location.php             penentuan lokasi (query → cookie → bawaan)
-public/css/app.css                   design system (token warna, tema terang/gelap)
-public/js/app.js                     interaksi ringan tanpa framework
-resources/views/components/          layout, ikon, page-head, empty state
-resources/views/pages/               halaman
-```
+## Konfigurasi `.env`
+
+| Kunci | Bawaan | Fungsi |
+|---|---|---|
+| `APP_NAME` | `ALMARA MUSLIM` | Nama aplikasi (juga di manifest PWA) |
+| `ALMARA_DEFAULT_CITY` | `jakarta` | Kota bawaan |
+| `ALMARA_PRAYER_METHOD` | `kemenag` | Metode jadwal bawaan |
+| `HIJRI_ADJUSTMENT` | `0` | Koreksi tanggal Hijriah |
+| `ALMARA_MUSHAF_EDITION` | kosong | Aktifkan Mushaf penuh setelah aset berlisensi tersedia |
+| `SANCTUM_STATEFUL_DOMAINS` | localhost… | Domain yang memakai sesi untuk API |
+
+Nilai bawaan metode/kota/Hijriah juga dapat diubah di **Admin → Konfigurasi**.
+
+## PWA & HTTPS
+
+PWA aktif di HTTPS atau `localhost`/`127.0.0.1`. Untuk `muslim-almara.test`, aktifkan SSL Laragon (Menu → Apache → SSL → Enabled). Untuk HP, gunakan domain HTTPS atau tunnel aman.
+
+## Dokumentasi
+
+`docs/architecture.md` · `docs/api.md` · `docs/content-sources.md` · `docs/security.md` · `docs/deployment.md` · `docs/adr/`
 
 ## Sumber data
 
-- Teks & terjemahan Al-Qur'an serta tafsir ringkas: Kementerian Agama RI (quran.kemenag.go.id), melalui [rioastamal/quran-json](https://github.com/rioastamal/quran-json) (MIT).
-- Jadwal sholat, kiblat, dan kalender Hijriah: dihitung secara lokal; hasil bersifat perkiraan.
-
-## Roadmap
-
-1. Akun pengguna (bookmark & preferensi tersinkron)
-2. Audio murottal
-3. Notifikasi adzan (PWA / Flutter)
-4. Aplikasi Flutter Android/iOS memakai API `/api/v1`
+Teks, terjemahan & tafsir Al-Qur'an: Kementerian Agama RI via [rioastamal/quran-json](https://github.com/rioastamal/quran-json) (MIT). Periksa ketentuan redistribusi sebelum produksi — lihat `docs/content-sources.md`.
 
 ---
-© 2026 Muslim Almara · @2026-Alifiandra
+© 2026 ALMARA MUSLIM · @2026-Alifiandra

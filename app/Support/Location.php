@@ -2,22 +2,23 @@
 
 namespace App\Support;
 
-use App\Services\ContentRepository;
+use App\Services\Content\StaticContent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 
 /**
  * Menentukan lokasi pengguna: query (?kota= atau ?lat=&lng=&tz=) → cookie → kota bawaan.
- * Lokasi hanya disimpan di cookie peramban pengguna, tidak di server.
+ * Lokasi hanya disimpan di cookie peramban pengguna (terenkripsi), tidak di database (blueprint §3.2, §6.3).
+ * Sumber lokasi ditandai: kota manual, perangkat (GPS), atau bawaan aplikasi.
  *
  * @2026-Alifiandra
  */
 class Location
 {
-    public const COOKIE = 'ma_lokasi';
+    public const COOKIE = 'almara_lokasi';
 
-    /** @return array{nama: string, slug: string|null, lat: float, lng: float, tz: float, custom: bool} */
-    public static function resolve(Request $request, ContentRepository $content, bool $remember = true): array
+    /** @return array{nama: string, slug: string|null, lat: float, lng: float, tz: float, custom: bool, basis: string} */
+    public static function resolve(Request $request, StaticContent $content, bool $remember = true): array
     {
         $loc = null;
 
@@ -29,7 +30,7 @@ class Location
             if ($lat >= -90 && $lat <= 90 && $lng >= -180 && $lng <= 180) {
                 $tz = $request->filled('tz') ? (float) $request->query('tz') : round($lng / 15);
                 $tz = max(-12, min(14, $tz));
-                $loc = ['nama' => 'Lokasi Anda', 'slug' => null, 'lat' => round($lat, 4), 'lng' => round($lng, 4), 'tz' => $tz, 'custom' => true];
+                $loc = ['nama' => 'Lokasi perangkat', 'slug' => null, 'lat' => round($lat, 3), 'lng' => round($lng, 3), 'tz' => $tz, 'custom' => true, 'basis' => 'device'];
             }
         }
 
@@ -49,16 +50,17 @@ class Location
                     'lng' => (float) $data['lng'],
                     'tz' => (float) $data['tz'],
                     'custom' => (bool) ($data['custom'] ?? false),
+                    'basis' => in_array($data['basis'] ?? null, ['device', 'manual'], true) ? $data['basis'] : 'manual',
                 ];
             }
         }
 
-        return $loc ?? self::fromCity($content->city(config('muslim.default_city')) ?? $content->cities()[0]);
+        return $loc ?? ['basis' => 'default'] + self::fromCity($content->city(\App\Models\AppSetting::get('location.default_city', config('almara.default_city'))) ?? $content->cities()[0]);
     }
 
     /** @param array<string, mixed> $city */
     public static function fromCity(array $city): array
     {
-        return ['nama' => $city['nama'], 'slug' => $city['slug'], 'lat' => (float) $city['lat'], 'lng' => (float) $city['lng'], 'tz' => (float) $city['tz'], 'custom' => false];
+        return ['nama' => $city['nama'], 'slug' => $city['slug'], 'lat' => (float) $city['lat'], 'lng' => (float) $city['lng'], 'tz' => (float) $city['tz'], 'custom' => false, 'basis' => 'manual'];
     }
 }
