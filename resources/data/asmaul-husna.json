@@ -1,0 +1,596 @@
+[
+ {
+  "nomor": 1,
+  "latin": "Ar-Rahman",
+  "arab": "الرَّحْمٰنُ",
+  "arti": "Yang Maha Pengasih"
+ },
+ {
+  "nomor": 2,
+  "latin": "Ar-Rahim",
+  "arab": "الرَّحِيْمُ",
+  "arti": "Yang Maha Penyayang"
+ },
+ {
+  "nomor": 3,
+  "latin": "Al-Malik",
+  "arab": "الْمَلِكُ",
+  "arti": "Yang Maha Merajai"
+ },
+ {
+  "nomor": 4,
+  "latin": "Al-Quddus",
+  "arab": "الْقُدُّوْسُ",
+  "arti": "Yang Maha Suci"
+ },
+ {
+  "nomor": 5,
+  "latin": "As-Salam",
+  "arab": "السَّلَامُ",
+  "arti": "Yang Maha Memberi Kesejahteraan"
+ },
+ {
+  "nomor": 6,
+  "latin": "Al-Mu'min",
+  "arab": "الْمُؤْمِنُ",
+  "arti": "Yang Maha Memberi Keamanan"
+ },
+ {
+  "nomor": 7,
+  "latin": "Al-Muhaimin",
+  "arab": "الْمُهَيْمِنُ",
+  "arti": "Yang Maha Pemelihara"
+ },
+ {
+  "nomor": 8,
+  "latin": "Al-'Aziz",
+  "arab": "الْعَزِيْزُ",
+  "arti": "Yang Maha Perkasa"
+ },
+ {
+  "nomor": 9,
+  "latin": "Al-Jabbar",
+  "arab": "الْجَبَّارُ",
+  "arti": "Yang Memiliki Mutlak Kegagahan"
+ },
+ {
+  "nomor": 10,
+  "latin": "Al-Mutakabbir",
+  "arab": "الْمُتَكَبِّرُ",
+  "arti": "Yang Maha Megah"
+ },
+ {
+  "nomor": 11,
+  "latin": "Al-Khaliq",
+  "arab": "الْخَالِقُ",
+  "arti": "Yang Maha Pencipta"
+ },
+ {
+  "nomor": 12,
+  "latin": "Al-Bari'",
+  "arab": "الْبَارِئُ",
+  "arti": "Yang Maha Mengadakan"
+ },
+ {
+  "nomor": 13,
+  "latin": "Al-Musawwir",
+  "arab": "الْمُصَوِّرُ",
+  "arti": "Yang Maha Membentuk Rupa"
+ },
+ {
+  "nomor": 14,
+  "latin": "Al-Ghaffar",
+  "arab": "الْغَفَّارُ",
+  "arti": "Yang Maha Pengampun"
+ },
+ {
+  "nomor": 15,
+  "latin": "Al-Qahhar",
+  "arab": "الْقَهَّارُ",
+  "arti": "Yang Maha Memaksa"
+ },
+ {
+  "nomor": 16,
+  "latin": "Al-Wahhab",
+  "arab": "الْوَهَّابُ",
+  "arti": "Yang Maha Pemberi Karunia"
+ },
+ {
+  "nomor": 17,
+  "latin": "Ar-Razzaq",
+  "arab": "الرَّزَّاقُ",
+  "arti": "Yang Maha Pemberi Rezeki"
+ },
+ {
+  "nomor": 18,
+  "latin": "Al-Fattah",
+  "arab": "الْفَتَّاحُ",
+  "arti": "Yang Maha Pembuka Rahmat"
+ },
+ {
+  "nomor": 19,
+  "latin": "Al-'Alim",
+  "arab": "الْعَلِيْمُ",
+  "arti": "Yang Maha Mengetahui"
+ },
+ {
+  "nomor": 20,
+  "latin": "Al-Qabid",
+  "arab": "الْقَابِضُ",
+  "arti": "Yang Maha Menyempitkan"
+ },
+ {
+  "nomor": 21,
+  "latin": "Al-Basit",
+  "arab": "الْبَاسِطُ",
+  "arti": "Yang Maha Melapangkan"
+ },
+ {
+  "nomor": 22,
+  "latin": "Al-Khafid",
+  "arab": "الْخَافِضُ",
+  "arti": "Yang Maha Merendahkan"
+ },
+ {
+  "nomor": 23,
+  "latin": "Ar-Rafi'",
+  "arab": "الرَّافِعُ",
+  "arti": "Yang Maha Meninggikan"
+ },
+ {
+  "nomor": 24,
+  "latin": "Al-Mu'izz",
+  "arab": "الْمُعِزُّ",
+  "arti": "Yang Maha Memuliakan"
+ },
+ {
+  "nomor": 25,
+  "latin": "Al-Mudzill",
+  "arab": "الْمُذِلُّ",
+  "arti": "Yang Maha Menghinakan"
+ },
+ {
+  "nomor": 26,
+  "latin": "As-Sami'",
+  "arab": "السَّمِيْعُ",
+  "arti": "Yang Maha Mendengar"
+ },
+ {
+  "nomor": 27,
+  "latin": "Al-Basir",
+  "arab": "الْبَصِيْرُ",
+  "arti": "Yang Maha Melihat"
+ },
+ {
+  "nomor": 28,
+  "latin": "Al-Hakam",
+  "arab": "الْحَكَمُ",
+  "arti": "Yang Maha Menetapkan"
+ },
+ {
+  "nomor": 29,
+  "latin": "Al-'Adl",
+  "arab": "الْعَدْلُ",
+  "arti": "Yang Maha Adil"
+ },
+ {
+  "nomor": 30,
+  "latin": "Al-Latif",
+  "arab": "اللَّطِيْفُ",
+  "arti": "Yang Maha Lembut"
+ },
+ {
+  "nomor": 31,
+  "latin": "Al-Khabir",
+  "arab": "الْخَبِيْرُ",
+  "arti": "Yang Maha Mengenal"
+ },
+ {
+  "nomor": 32,
+  "latin": "Al-Halim",
+  "arab": "الْحَلِيْمُ",
+  "arti": "Yang Maha Penyantun"
+ },
+ {
+  "nomor": 33,
+  "latin": "Al-'Azim",
+  "arab": "الْعَظِيْمُ",
+  "arti": "Yang Maha Agung"
+ },
+ {
+  "nomor": 34,
+  "latin": "Al-Ghafur",
+  "arab": "الْغَفُوْرُ",
+  "arti": "Yang Maha Memberi Pengampunan"
+ },
+ {
+  "nomor": 35,
+  "latin": "Asy-Syakur",
+  "arab": "الشَّكُوْرُ",
+  "arti": "Yang Maha Pembalas Budi"
+ },
+ {
+  "nomor": 36,
+  "latin": "Al-'Aliyy",
+  "arab": "الْعَلِيُّ",
+  "arti": "Yang Maha Tinggi"
+ },
+ {
+  "nomor": 37,
+  "latin": "Al-Kabir",
+  "arab": "الْكَبِيْرُ",
+  "arti": "Yang Maha Besar"
+ },
+ {
+  "nomor": 38,
+  "latin": "Al-Hafiz",
+  "arab": "الْحَفِيْظُ",
+  "arti": "Yang Maha Memelihara"
+ },
+ {
+  "nomor": 39,
+  "latin": "Al-Muqit",
+  "arab": "الْمُقِيْتُ",
+  "arti": "Yang Maha Pemberi Kecukupan"
+ },
+ {
+  "nomor": 40,
+  "latin": "Al-Hasib",
+  "arab": "الْحَسِيْبُ",
+  "arti": "Yang Maha Membuat Perhitungan"
+ },
+ {
+  "nomor": 41,
+  "latin": "Al-Jalil",
+  "arab": "الْجَلِيْلُ",
+  "arti": "Yang Maha Luhur"
+ },
+ {
+  "nomor": 42,
+  "latin": "Al-Karim",
+  "arab": "الْكَرِيْمُ",
+  "arti": "Yang Maha Pemurah"
+ },
+ {
+  "nomor": 43,
+  "latin": "Ar-Raqib",
+  "arab": "الرَّقِيْبُ",
+  "arti": "Yang Maha Mengawasi"
+ },
+ {
+  "nomor": 44,
+  "latin": "Al-Mujib",
+  "arab": "الْمُجِيْبُ",
+  "arti": "Yang Maha Mengabulkan"
+ },
+ {
+  "nomor": 45,
+  "latin": "Al-Wasi'",
+  "arab": "الْوَاسِعُ",
+  "arti": "Yang Maha Luas"
+ },
+ {
+  "nomor": 46,
+  "latin": "Al-Hakim",
+  "arab": "الْحَكِيْمُ",
+  "arti": "Yang Maha Bijaksana"
+ },
+ {
+  "nomor": 47,
+  "latin": "Al-Wadud",
+  "arab": "الْوَدُوْدُ",
+  "arti": "Yang Maha Mengasihi"
+ },
+ {
+  "nomor": 48,
+  "latin": "Al-Majid",
+  "arab": "الْمَجِيْدُ",
+  "arti": "Yang Maha Mulia"
+ },
+ {
+  "nomor": 49,
+  "latin": "Al-Ba'its",
+  "arab": "الْبَاعِثُ",
+  "arti": "Yang Maha Membangkitkan"
+ },
+ {
+  "nomor": 50,
+  "latin": "Asy-Syahid",
+  "arab": "الشَّهِيْدُ",
+  "arti": "Yang Maha Menyaksikan"
+ },
+ {
+  "nomor": 51,
+  "latin": "Al-Haqq",
+  "arab": "الْحَقُّ",
+  "arti": "Yang Maha Benar"
+ },
+ {
+  "nomor": 52,
+  "latin": "Al-Wakil",
+  "arab": "الْوَكِيْلُ",
+  "arti": "Yang Maha Memelihara Urusan"
+ },
+ {
+  "nomor": 53,
+  "latin": "Al-Qawiyy",
+  "arab": "الْقَوِيُّ",
+  "arti": "Yang Maha Kuat"
+ },
+ {
+  "nomor": 54,
+  "latin": "Al-Matin",
+  "arab": "الْمَتِيْنُ",
+  "arti": "Yang Maha Kokoh"
+ },
+ {
+  "nomor": 55,
+  "latin": "Al-Waliyy",
+  "arab": "الْوَلِيُّ",
+  "arti": "Yang Maha Melindungi"
+ },
+ {
+  "nomor": 56,
+  "latin": "Al-Hamid",
+  "arab": "الْحَمِيْدُ",
+  "arti": "Yang Maha Terpuji"
+ },
+ {
+  "nomor": 57,
+  "latin": "Al-Muhsi",
+  "arab": "الْمُحْصِيْ",
+  "arti": "Yang Maha Menghitung"
+ },
+ {
+  "nomor": 58,
+  "latin": "Al-Mubdi'",
+  "arab": "الْمُبْدِئُ",
+  "arti": "Yang Maha Memulai"
+ },
+ {
+  "nomor": 59,
+  "latin": "Al-Mu'id",
+  "arab": "الْمُعِيْدُ",
+  "arti": "Yang Maha Mengembalikan Kehidupan"
+ },
+ {
+  "nomor": 60,
+  "latin": "Al-Muhyi",
+  "arab": "الْمُحْيِيْ",
+  "arti": "Yang Maha Menghidupkan"
+ },
+ {
+  "nomor": 61,
+  "latin": "Al-Mumit",
+  "arab": "الْمُمِيْتُ",
+  "arti": "Yang Maha Mematikan"
+ },
+ {
+  "nomor": 62,
+  "latin": "Al-Hayy",
+  "arab": "الْحَيُّ",
+  "arti": "Yang Maha Hidup"
+ },
+ {
+  "nomor": 63,
+  "latin": "Al-Qayyum",
+  "arab": "الْقَيُّوْمُ",
+  "arti": "Yang Maha Mandiri"
+ },
+ {
+  "nomor": 64,
+  "latin": "Al-Wajid",
+  "arab": "الْوَاجِدُ",
+  "arti": "Yang Maha Penemu"
+ },
+ {
+  "nomor": 65,
+  "latin": "Al-Majid",
+  "arab": "الْمَاجِدُ",
+  "arti": "Yang Maha Mulia"
+ },
+ {
+  "nomor": 66,
+  "latin": "Al-Wahid",
+  "arab": "الْوَاحِدُ",
+  "arti": "Yang Maha Tunggal"
+ },
+ {
+  "nomor": 67,
+  "latin": "Al-Ahad",
+  "arab": "الْاَحَدُ",
+  "arti": "Yang Maha Esa"
+ },
+ {
+  "nomor": 68,
+  "latin": "As-Samad",
+  "arab": "الصَّمَدُ",
+  "arti": "Yang Maha Dibutuhkan, Tempat Meminta"
+ },
+ {
+  "nomor": 69,
+  "latin": "Al-Qadir",
+  "arab": "الْقَادِرُ",
+  "arti": "Yang Maha Menentukan"
+ },
+ {
+  "nomor": 70,
+  "latin": "Al-Muqtadir",
+  "arab": "الْمُقْتَدِرُ",
+  "arti": "Yang Maha Berkuasa"
+ },
+ {
+  "nomor": 71,
+  "latin": "Al-Muqaddim",
+  "arab": "الْمُقَدِّمُ",
+  "arti": "Yang Maha Mendahulukan"
+ },
+ {
+  "nomor": 72,
+  "latin": "Al-Mu'akhkhir",
+  "arab": "الْمُؤَخِّرُ",
+  "arti": "Yang Maha Mengakhirkan"
+ },
+ {
+  "nomor": 73,
+  "latin": "Al-Awwal",
+  "arab": "الْاَوَّلُ",
+  "arti": "Yang Maha Awal"
+ },
+ {
+  "nomor": 74,
+  "latin": "Al-Akhir",
+  "arab": "الْاٰخِرُ",
+  "arti": "Yang Maha Akhir"
+ },
+ {
+  "nomor": 75,
+  "latin": "Az-Zahir",
+  "arab": "الظَّاهِرُ",
+  "arti": "Yang Maha Nyata"
+ },
+ {
+  "nomor": 76,
+  "latin": "Al-Batin",
+  "arab": "الْبَاطِنُ",
+  "arti": "Yang Maha Gaib"
+ },
+ {
+  "nomor": 77,
+  "latin": "Al-Wali",
+  "arab": "الْوَالِيْ",
+  "arti": "Yang Maha Memerintah"
+ },
+ {
+  "nomor": 78,
+  "latin": "Al-Muta'ali",
+  "arab": "الْمُتَعَالِيْ",
+  "arti": "Yang Maha Tinggi"
+ },
+ {
+  "nomor": 79,
+  "latin": "Al-Barr",
+  "arab": "الْبَرُّ",
+  "arti": "Yang Maha Penderma"
+ },
+ {
+  "nomor": 80,
+  "latin": "At-Tawwab",
+  "arab": "التَّوَّابُ",
+  "arti": "Yang Maha Penerima Tobat"
+ },
+ {
+  "nomor": 81,
+  "latin": "Al-Muntaqim",
+  "arab": "الْمُنْتَقِمُ",
+  "arti": "Yang Maha Pemberi Balasan"
+ },
+ {
+  "nomor": 82,
+  "latin": "Al-'Afuww",
+  "arab": "الْعَفُوُّ",
+  "arti": "Yang Maha Pemaaf"
+ },
+ {
+  "nomor": 83,
+  "latin": "Ar-Ra'uf",
+  "arab": "الرَّءُوْفُ",
+  "arti": "Yang Maha Pengasuh"
+ },
+ {
+  "nomor": 84,
+  "latin": "Malikul Mulk",
+  "arab": "مَالِكُ الْمُلْكِ",
+  "arti": "Yang Maha Penguasa Kerajaan"
+ },
+ {
+  "nomor": 85,
+  "latin": "Dzul Jalali wal Ikram",
+  "arab": "ذُو الْجَلَالِ وَالْاِكْرَامِ",
+  "arti": "Yang Maha Pemilik Kebesaran dan Kemuliaan"
+ },
+ {
+  "nomor": 86,
+  "latin": "Al-Muqsit",
+  "arab": "الْمُقْسِطُ",
+  "arti": "Yang Maha Pemberi Keadilan"
+ },
+ {
+  "nomor": 87,
+  "latin": "Al-Jami'",
+  "arab": "الْجَامِعُ",
+  "arti": "Yang Maha Mengumpulkan"
+ },
+ {
+  "nomor": 88,
+  "latin": "Al-Ghaniyy",
+  "arab": "الْغَنِيُّ",
+  "arti": "Yang Maha Kaya"
+ },
+ {
+  "nomor": 89,
+  "latin": "Al-Mughni",
+  "arab": "الْمُغْنِيْ",
+  "arti": "Yang Maha Pemberi Kekayaan"
+ },
+ {
+  "nomor": 90,
+  "latin": "Al-Mani'",
+  "arab": "الْمَانِعُ",
+  "arti": "Yang Maha Mencegah"
+ },
+ {
+  "nomor": 91,
+  "latin": "Ad-Darr",
+  "arab": "الضَّارُّ",
+  "arti": "Yang Maha Penimpa Kemudaratan"
+ },
+ {
+  "nomor": 92,
+  "latin": "An-Nafi'",
+  "arab": "النَّافِعُ",
+  "arti": "Yang Maha Memberi Manfaat"
+ },
+ {
+  "nomor": 93,
+  "latin": "An-Nur",
+  "arab": "النُّوْرُ",
+  "arti": "Yang Maha Bercahaya"
+ },
+ {
+  "nomor": 94,
+  "latin": "Al-Hadi",
+  "arab": "الْهَادِيْ",
+  "arti": "Yang Maha Pemberi Petunjuk"
+ },
+ {
+  "nomor": 95,
+  "latin": "Al-Badi'",
+  "arab": "الْبَدِيْعُ",
+  "arti": "Yang Maha Pencipta Tiada Bandingan"
+ },
+ {
+  "nomor": 96,
+  "latin": "Al-Baqi",
+  "arab": "الْبَاقِيْ",
+  "arti": "Yang Maha Kekal"
+ },
+ {
+  "nomor": 97,
+  "latin": "Al-Warits",
+  "arab": "الْوَارِثُ",
+  "arti": "Yang Maha Pewaris"
+ },
+ {
+  "nomor": 98,
+  "latin": "Ar-Rasyid",
+  "arab": "الرَّشِيْدُ",
+  "arti": "Yang Maha Pandai"
+ },
+ {
+  "nomor": 99,
+  "latin": "As-Sabur",
+  "arab": "الصَّبُوْرُ",
+  "arti": "Yang Maha Sabar"
+ }
+]

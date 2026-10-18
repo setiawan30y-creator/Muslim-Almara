@@ -1,0 +1,338 @@
+[
+ {
+  "slug": "jakarta",
+  "nama": "Jakarta",
+  "lat": -6.2088,
+  "lng": 106.8456,
+  "tz": 7
+ },
+ {
+  "slug": "bandung",
+  "nama": "Bandung",
+  "lat": -6.9175,
+  "lng": 107.6191,
+  "tz": 7
+ },
+ {
+  "slug": "surabaya",
+  "nama": "Surabaya",
+  "lat": -7.2575,
+  "lng": 112.7521,
+  "tz": 7
+ },
+ {
+  "slug": "semarang",
+  "nama": "Semarang",
+  "lat": -6.9667,
+  "lng": 110.4167,
+  "tz": 7
+ },
+ {
+  "slug": "yogyakarta",
+  "nama": "Yogyakarta",
+  "lat": -7.7956,
+  "lng": 110.3695,
+  "tz": 7
+ },
+ {
+  "slug": "surakarta",
+  "nama": "Surakarta",
+  "lat": -7.5755,
+  "lng": 110.8243,
+  "tz": 7
+ },
+ {
+  "slug": "malang",
+  "nama": "Malang",
+  "lat": -7.9666,
+  "lng": 112.6326,
+  "tz": 7
+ },
+ {
+  "slug": "bogor",
+  "nama": "Bogor",
+  "lat": -6.595,
+  "lng": 106.8166,
+  "tz": 7
+ },
+ {
+  "slug": "depok",
+  "nama": "Depok",
+  "lat": -6.4025,
+  "lng": 106.7942,
+  "tz": 7
+ },
+ {
+  "slug": "tangerang",
+  "nama": "Tangerang",
+  "lat": -6.1783,
+  "lng": 106.6319,
+  "tz": 7
+ },
+ {
+  "slug": "bekasi",
+  "nama": "Bekasi",
+  "lat": -6.2383,
+  "lng": 106.9756,
+  "tz": 7
+ },
+ {
+  "slug": "serang",
+  "nama": "Serang",
+  "lat": -6.12,
+  "lng": 106.1503,
+  "tz": 7
+ },
+ {
+  "slug": "cirebon",
+  "nama": "Cirebon",
+  "lat": -6.732,
+  "lng": 108.5523,
+  "tz": 7
+ },
+ {
+  "slug": "tasikmalaya",
+  "nama": "Tasikmalaya",
+  "lat": -7.3274,
+  "lng": 108.2207,
+  "tz": 7
+ },
+ {
+  "slug": "banda-aceh",
+  "nama": "Banda Aceh",
+  "lat": 5.5483,
+  "lng": 95.3238,
+  "tz": 7
+ },
+ {
+  "slug": "medan",
+  "nama": "Medan",
+  "lat": 3.5952,
+  "lng": 98.6722,
+  "tz": 7
+ },
+ {
+  "slug": "padang",
+  "nama": "Padang",
+  "lat": -0.9471,
+  "lng": 100.4172,
+  "tz": 7
+ },
+ {
+  "slug": "pekanbaru",
+  "nama": "Pekanbaru",
+  "lat": 0.5071,
+  "lng": 101.4478,
+  "tz": 7
+ },
+ {
+  "slug": "batam",
+  "nama": "Batam",
+  "lat": 1.0456,
+  "lng": 104.0305,
+  "tz": 7
+ },
+ {
+  "slug": "tanjungpinang",
+  "nama": "Tanjungpinang",
+  "lat": 0.9186,
+  "lng": 104.4554,
+  "tz": 7
+ },
+ {
+  "slug": "jambi",
+  "nama": "Jambi",
+  "lat": -1.6101,
+  "lng": 103.6131,
+  "tz": 7
+ },
+ {
+  "slug": "palembang",
+  "nama": "Palembang",
+  "lat": -2.9761,
+  "lng": 104.7754,
+  "tz": 7
+ },
+ {
+  "slug": "bengkulu",
+  "nama": "Bengkulu",
+  "lat": -3.8004,
+  "lng": 102.2655,
+  "tz": 7
+ },
+ {
+  "slug": "pangkalpinang",
+  "nama": "Pangkalpinang",
+  "lat": -2.1316,
+  "lng": 106.1169,
+  "tz": 7
+ },
+ {
+  "slug": "bandar-lampung",
+  "nama": "Bandar Lampung",
+  "lat": -5.3971,
+  "lng": 105.2668,
+  "tz": 7
+ },
+ {
+  "slug": "pontianak",
+  "nama": "Pontianak",
+  "lat": -0.0263,
+  "lng": 109.3425,
+  "tz": 7
+ },
+ {
+  "slug": "palangka-raya",
+  "nama": "Palangka Raya",
+  "lat": -2.2136,
+  "lng": 113.9108,
+  "tz": 7
+ },
+ {
+  "slug": "banjarmasin",
+  "nama": "Banjarmasin",
+  "lat": -3.3186,
+  "lng": 114.5944,
+  "tz": 8
+ },
+ {
+  "slug": "balikpapan",
+  "nama": "Balikpapan",
+  "lat": -1.2379,
+  "lng": 116.8529,
+  "tz": 8
+ },
+ {
+  "slug": "samarinda",
+  "nama": "Samarinda",
+  "lat": -0.5022,
+  "lng": 117.1536,
+  "tz": 8
+ },
+ {
+  "slug": "denpasar",
+  "nama": "Denpasar",
+  "lat": -8.6705,
+  "lng": 115.2126,
+  "tz": 8
+ },
+ {
+  "slug": "mataram",
+  "nama": "Mataram",
+  "lat": -8.5833,
+  "lng": 116.1167,
+  "tz": 8
+ },
+ {
+  "slug": "kupang",
+  "nama": "Kupang",
+  "lat": -10.1772,
+  "lng": 123.607,
+  "tz": 8
+ },
+ {
+  "slug": "makassar",
+  "nama": "Makassar",
+  "lat": -5.1477,
+  "lng": 119.4327,
+  "tz": 8
+ },
+ {
+  "slug": "kendari",
+  "nama": "Kendari",
+  "lat": -3.9985,
+  "lng": 122.513,
+  "tz": 8
+ },
+ {
+  "slug": "palu",
+  "nama": "Palu",
+  "lat": -0.8917,
+  "lng": 119.8707,
+  "tz": 8
+ },
+ {
+  "slug": "mamuju",
+  "nama": "Mamuju",
+  "lat": -2.6748,
+  "lng": 118.8885,
+  "tz": 8
+ },
+ {
+  "slug": "gorontalo",
+  "nama": "Gorontalo",
+  "lat": 0.5435,
+  "lng": 123.0568,
+  "tz": 8
+ },
+ {
+  "slug": "manado",
+  "nama": "Manado",
+  "lat": 1.4748,
+  "lng": 124.8421,
+  "tz": 8
+ },
+ {
+  "slug": "ambon",
+  "nama": "Ambon",
+  "lat": -3.6954,
+  "lng": 128.1814,
+  "tz": 9
+ },
+ {
+  "slug": "ternate",
+  "nama": "Ternate",
+  "lat": 0.7893,
+  "lng": 127.3779,
+  "tz": 9
+ },
+ {
+  "slug": "sorong",
+  "nama": "Sorong",
+  "lat": -0.8762,
+  "lng": 131.2558,
+  "tz": 9
+ },
+ {
+  "slug": "manokwari",
+  "nama": "Manokwari",
+  "lat": -0.8615,
+  "lng": 134.062,
+  "tz": 9
+ },
+ {
+  "slug": "jayapura",
+  "nama": "Jayapura",
+  "lat": -2.5337,
+  "lng": 140.7181,
+  "tz": 9
+ },
+ {
+  "slug": "kuala-lumpur",
+  "nama": "Kuala Lumpur",
+  "lat": 3.139,
+  "lng": 101.6869,
+  "tz": 8
+ },
+ {
+  "slug": "singapura",
+  "nama": "Singapura",
+  "lat": 1.3521,
+  "lng": 103.8198,
+  "tz": 8
+ },
+ {
+  "slug": "makkah",
+  "nama": "Makkah",
+  "lat": 21.4225,
+  "lng": 39.8262,
+  "tz": 3
+ },
+ {
+  "slug": "madinah",
+  "nama": "Madinah",
+  "lat": 24.4672,
+  "lng": 39.6024,
+  "tz": 3
+ }
+]
