@@ -46,6 +46,19 @@ Route::get('/kalender', [ToolsController::class, 'calendar'])->name('calendar');
 Route::get('/zakat', [ToolsController::class, 'zakat'])->name('zakat');
 Route::get('/asmaul-husna', [ToolsController::class, 'asmaulHusna'])->name('asmaul-husna');
 
+// Panduan bersumber (Tajwid, Umroh, Haji, Ziarah)
+Route::get('/panduan', [\App\Http\Controllers\Learning\GuideController::class, 'index'])->name('guide.index');
+Route::get('/panduan/{modul}', [\App\Http\Controllers\Learning\GuideController::class, 'module'])->whereIn('modul', ['tajwid', 'umroh', 'haji', 'ziarah'])->name('guide.module');
+Route::get('/panduan/{modul}/{slug}', [\App\Http\Controllers\Learning\GuideController::class, 'show'])->whereIn('modul', ['tajwid', 'umroh', 'haji', 'ziarah'])->name('guide.show');
+
+// Hafalan & Murojaah
+Route::get('/hafalan', [\App\Http\Controllers\Learning\HafalanController::class, 'index'])->name('hafalan');
+Route::get('/hafalan/{nomor}', [\App\Http\Controllers\Learning\HafalanController::class, 'practice'])->whereNumber('nomor')->name('hafalan.practice');
+
+// Terjemah & frasa, masjid terdekat
+Route::get('/terjemah', \App\Http\Controllers\Learning\TranslateController::class)->name('translate');
+Route::view('/masjid-terdekat', 'pages.masjid.index')->name('mosques');
+
 // Pengaturan (tamu: tersimpan di perangkat; login: tersimpan di akun)
 Route::prefix('pengaturan')->name('settings.')->controller(SettingsController::class)->group(function () {
     Route::get('/', 'index')->name('index');
@@ -91,6 +104,11 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/bookmark', [LibraryController::class, 'bookmarks'])->name('bookmarks');
         Route::get('/catatan', [LibraryController::class, 'notes'])->name('notes');
+        Route::post('/catatan', [LibraryController::class, 'storeNote'])->name('notes.store');
+        Route::put('/catatan/{note}/tag', [LibraryController::class, 'updateNoteTags'])->whereNumber('note')->name('notes.tags');
+        Route::post('/koleksi', [LibraryController::class, 'storeCollection'])->name('collections.store');
+        Route::delete('/koleksi/{collection}', [LibraryController::class, 'destroyCollection'])->whereNumber('collection')->name('collections.destroy');
+        Route::put('/bookmark/{bookmark}/koleksi', [LibraryController::class, 'moveBookmark'])->whereNumber('bookmark')->name('bookmarks.move');
         Route::get('/progres', [LibraryController::class, 'progress'])->name('progress');
         Route::post('/progres/target', [LibraryController::class, 'saveGoal'])->name('goal');
     });
@@ -100,15 +118,15 @@ Route::middleware('auth')->group(function () {
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'can:admin.access'])->group(function () {
     Route::get('/', Admin\DashboardController::class)->name('dashboard');
 
-    Route::get('/konten/{type}', [Admin\ContentController::class, 'index'])->whereIn('type', ['doa', 'dzikir'])->name('content.index');
-    Route::get('/konten/{type}/baru', [Admin\ContentController::class, 'create'])->whereIn('type', ['doa', 'dzikir'])->name('content.create');
-    Route::post('/konten/{type}', [Admin\ContentController::class, 'store'])->whereIn('type', ['doa', 'dzikir'])->name('content.store');
-    Route::get('/konten/{type}/{id}', [Admin\ContentController::class, 'edit'])->whereIn('type', ['doa', 'dzikir'])->whereNumber('id')->name('content.edit');
-    Route::put('/konten/{type}/{id}', [Admin\ContentController::class, 'update'])->whereIn('type', ['doa', 'dzikir'])->whereNumber('id')->name('content.update');
+    Route::get('/konten/{type}', [Admin\ContentController::class, 'index'])->whereIn('type', ['doa', 'dzikir', 'panduan'])->name('content.index');
+    Route::get('/konten/{type}/baru', [Admin\ContentController::class, 'create'])->whereIn('type', ['doa', 'dzikir', 'panduan'])->name('content.create');
+    Route::post('/konten/{type}', [Admin\ContentController::class, 'store'])->whereIn('type', ['doa', 'dzikir', 'panduan'])->name('content.store');
+    Route::get('/konten/{type}/{id}', [Admin\ContentController::class, 'edit'])->whereIn('type', ['doa', 'dzikir', 'panduan'])->whereNumber('id')->name('content.edit');
+    Route::put('/konten/{type}/{id}', [Admin\ContentController::class, 'update'])->whereIn('type', ['doa', 'dzikir', 'panduan'])->whereNumber('id')->name('content.update');
     Route::post('/konten/{type}/{id}/{action}', [Admin\ContentController::class, 'transition'])
-        ->whereIn('type', ['doa', 'dzikir'])->whereNumber('id')
+        ->whereIn('type', ['doa', 'dzikir', 'panduan'])->whereNumber('id')
         ->whereIn('action', ['submit', 'approve', 'publish', 'approve-publish', 'reject', 'suspend'])->name('content.transition');
-    Route::post('/konten/{type}/massal', [Admin\ContentController::class, 'bulk'])->whereIn('type', ['doa', 'dzikir'])->name('content.bulk');
+    Route::post('/konten/{type}/massal', [Admin\ContentController::class, 'bulk'])->whereIn('type', ['doa', 'dzikir', 'panduan'])->name('content.bulk');
 
     Route::get('/audio', [Admin\AudioController::class, 'index'])->name('audio.index');
     Route::post('/audio', [Admin\AudioController::class, 'store'])->name('audio.store');

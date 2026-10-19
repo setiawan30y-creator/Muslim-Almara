@@ -7,7 +7,7 @@ Dibangun dengan **Laravel 13** mengikuti *ALMARA MUSLIM — Blueprint Teknis & R
 
 ## Status rilis
 
-Versi **2.1.0** mencakup Rilis Pertama (MVP, blueprint §1.1) + *Pengaturan Tampilan & Tema*:
+Versi **2.2.0** mencakup Rilis Pertama (MVP, blueprint §1.1) + *Pengaturan Tampilan & Tema*:
 
 | Area | Isi |
 |---|---|
@@ -15,14 +15,15 @@ Versi **2.1.0** mencakup Rilis Pertama (MVP, blueprint §1.1) + *Pengaturan Tamp
 | Beranda | Salam & lokasi, sholat berikutnya + hitung mundur, aksi cepat, lanjutkan bacaan, target tilawah, ayat harian, hari besar, catatan — kartu dapat diurutkan/disembunyikan |
 | Al-Qur'an | 114 surah & 30 juz, terjemahan & tafsir Kemenag, pencarian, bookmark, catatan pribadi, tandai dibaca, unduh offline, pilihan mode baca |
 | Audio qari | Pemutar murattal (putar dari ayat, sorot ayat, mode per ayat, ulang); **Qari ALMARA** (rekaman sendiri: unggah → karantina → review → terbit) & qari berlisensi **Quran.Foundation** |
-| Ibadah | Jadwal sholat (8 metode, mazhab Asar, koreksi menit), kiblat + kalibrasi, dzikir & doa bersumber, tasbih, kalender Hijriah, zakat |
+| Ibadah | Jadwal sholat (8 metode, mazhab Asar, koreksi menit), kiblat + kalibrasi, masjid terdekat (OpenStreetMap), dzikir & doa bersumber, tasbih, kalender Hijriah, zakat, panduan Umroh, Haji & Ziarah Kubur |
+| Belajar | Tajwid bertingkat + latihan, Hafalan & Murojaah (pengulangan berjarak), Terjemah & Frasa (offline + layanan opsional), Jurnal bertag & koleksi ayat |
 | Akun | Daftar/masuk, reset sandi, verifikasi email, progres & target, ekspor & hapus data |
 | Pengaturan | Tampilan & Tema (Terang/Gelap/Sistem, 5 aksen, ukuran teks UI/Arab/terjemahan, pratinjau, reset), Al-Qur'an, Jadwal Sholat, Beranda |
 | Admin | Peran admin/editor/reviewer, alur draft → review → terbit, versi konten, audio qari, sumber & lisensi, pengguna, konfigurasi, log audit |
 | API | `/api/v1` format `{data, meta}` — lihat `docs/api.md` |
 | PWA | Manifest, service worker berversi, offline, halaman pribadi tidak pernah dicache |
 
-Modul tahap berikutnya (Tajwid, Translate, Umroh & Haji, Ziarah Kubur, Hafalan, Premium/Iklan, Cuaca & Masjid Terdekat, TWA) mengikuti roadmap blueprint §13.
+Belum diaktifkan: Mushaf penuh & transliterasi per ayat (menunggu dataset berlisensi), Premium/Iklan, cuaca, notifikasi push, TWA.
 
 ## Instalasi lokal (Laragon, PowerShell)
 
@@ -50,7 +51,7 @@ php artisan almara:make-admin email-anda@domain.com
 php artisan almara:make-admin reviewer@domain.com --role=reviewer
 ```
 
-Doa & dzikir awal masuk berstatus **Menunggu review** dan baru tampil setelah disetujui di **Admin → Doa/Dzikir** (blueprint §5.3).
+Doa, dzikir, dan materi panduan (Tajwid, Umroh, Haji, Ziarah) masuk berstatus **Menunggu review** dan baru tampil setelah disetujui di **Admin → Doa / Dzikir / Panduan** (blueprint §5.3). Gunakan tindakan massal *Setujui & terbitkan* setelah memeriksa isinya.
 
 ### Pengujian
 
@@ -58,7 +59,7 @@ Doa & dzikir awal masuk berstatus **Menunggu review** dan baru tampil setelah di
 php artisan test
 ```
 
-85 test mencakup perhitungan sholat/kiblat/Hijriah, integritas dataset, autentikasi, isolasi data pribadi (IDOR), alur review admin, audio qari, preferensi tema, API, dan PWA.
+92 test mencakup perhitungan sholat/kiblat/Hijriah, integritas dataset, autentikasi, isolasi data pribadi (IDOR), alur review admin, audio qari, panduan, hafalan, terjemah, jurnal & koleksi, preferensi tema, API, dan PWA.
 
 ## Konfigurasi `.env`
 
@@ -75,6 +76,8 @@ php artisan test
 | `QF_ENABLED`, `QF_CLIENT_ID`, `QF_CLIENT_SECRET` | nonaktif | Qari berlisensi Quran.Foundation (kredensial hanya di server) |
 | `QF_ENV` | `production` | `prelive` hanya berisi surah 1–2 |
 | `QF_MOCK` | `false` | Mode simulasi pemutar (nada uji) tanpa kredensial |
+| `TRANSLATE_URL`, `TRANSLATE_API_KEY` | kosong | Terjemah teks bebas via layanan kompatibel LibreTranslate (frasa offline tetap tersedia) |
+| `OVERPASS_URL` | overpass-api.de | Sumber data masjid terdekat (OpenStreetMap) |
 
 ## Audio qari
 

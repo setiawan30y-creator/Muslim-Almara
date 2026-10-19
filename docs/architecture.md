@@ -40,9 +40,16 @@ Klien API (token Sanctum) ──> /api/v1 ─────────┘        
 - **Panel admin** (§8.5): peran admin/editor/reviewer, draft → review → terbit, versi konten, log audit, sumber & lisensi, konfigurasi.
 - **PWA** (§9.1): manifest, service worker berversi, cache terpisah, halaman pribadi tidak pernah dicache.
 
-## Modul tahap berikutnya (belum diaktifkan)
+## Modul lanjutan (aktif sejak 2.2.0)
 
-Sesuai roadmap §13 dan karena membutuhkan konten berlisensi/review ahli atau penyedia eksternal: Tajwid (§4.13), Translate (§4.14–4.15), Panduan Umroh & Haji (§4.9), Ziarah Kubur, Qari & audio (§4.12), Hafalan/Murojaah (§4.9.1), Premium & iklan, Cuaca & Masjid Terdekat, notifikasi push, TWA. Kartu "Segera" pada tab Belajar/Ibadah menandai posisinya.
+- **Panduan** (`/panduan/{tajwid|umroh|haji|ziarah}`): tabel `guide_categories` + `guide_items`, tipe konten `panduan` pada alur review yang sama dengan doa/dzikir; contoh ayat diambil dari teks Kemenag di database; latihan pilihan ganda (`quiz_json`). Data awal `resources/data/panduan.json` masuk berstatus *review*.
+- **Qari & audio** (§4.12): Qari ALMARA + Quran.Foundation — lihat README.
+- **Hafalan & Murojaah** (§4.9.1): `user_memorizations`, pengulangan berjarak (lupa/ragu/lancar), data pribadi, termasuk ekspor.
+- **Terjemah & Frasa** (§4.14–4.15): frasa offline `resources/data/frasa.json` + terjemah teks opsional lewat layanan kompatibel LibreTranslate (`TRANSLATE_URL`).
+- **Masjid terdekat**: OpenStreetMap via Overpass API dari peramban + peta Leaflet.
+- **Jurnal & Koleksi**: tag pada `user_notes`, `user_collections` untuk bookmark.
+
+Belum diaktifkan: Mushaf penuh & transliterasi per ayat (menunggu dataset berlisensi), Premium & iklan, cuaca, notifikasi push, TWA.
 
 ## Keputusan arsitektur
 

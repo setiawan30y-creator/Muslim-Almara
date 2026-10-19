@@ -7,6 +7,7 @@
             <a href="{{ route('admin.dashboard') }}" @if (request()->routeIs('admin.dashboard')) aria-current="page" @endif><x-icon name="layout" />Ringkasan</a>
             <a href="{{ route('admin.content.index', 'doa') }}" @if (request()->routeIs('admin.content.*') && request()->route('type') === 'doa') aria-current="page" @endif><x-icon name="hands" />Doa</a>
             <a href="{{ route('admin.content.index', 'dzikir') }}" @if (request()->routeIs('admin.content.*') && request()->route('type') === 'dzikir') aria-current="page" @endif><x-icon name="beads" />Dzikir</a>
+            <a href="{{ route('admin.content.index', 'panduan') }}" @if (request()->routeIs('admin.content.*') && request()->route('type') === 'panduan') aria-current="page" @endif><x-icon name="learn" />Panduan</a>
             <a href="{{ route('admin.audio.index') }}" @if (request()->routeIs('admin.audio.*')) aria-current="page" @endif><x-icon name="headphones" />Audio qari</a>
             <a href="{{ route('admin.sources') }}" @if (request()->routeIs('admin.sources')) aria-current="page" @endif><x-icon name="database" />Sumber & lisensi</a>
             @if ($u->hasPermission('users.manage'))<a href="{{ route('admin.users') }}" @if (request()->routeIs('admin.users')) aria-current="page" @endif><x-icon name="users" />Pengguna</a>@endif

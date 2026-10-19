@@ -1,0 +1,390 @@
+{
+ "source": {
+  "name": "Kumpulan frasa ALMARA",
+  "note": "Disusun tim pengembang untuk membantu komunikasi sehari-hari; beberapa frasa memakai ragam percakapan Arab Teluk/Hijaz.",
+  "version": "2026.10.19"
+ },
+ "categories": [
+  {
+   "slug": "salam",
+   "title": "Salam & ucapan Islami",
+   "items": [
+    {
+     "id": "Assalamu'alaikum (salam lengkap)",
+     "ar": "السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللّٰهِ وَبَرَكَاتُهُ",
+     "latin": "Assalāmu 'alaikum wa raḥmatullāhi wa barakātuh",
+     "arti": "Semoga keselamatan, rahmat Allah, dan keberkahan-Nya tercurah kepada kalian",
+     "en": "Peace be upon you, and the mercy of Allah and His blessings"
+    },
+    {
+     "id": "Menjawab salam",
+     "ar": "وَعَلَيْكُمُ السَّلَامُ وَرَحْمَةُ اللّٰهِ وَبَرَكَاتُهُ",
+     "latin": "Wa 'alaikumus-salām wa raḥmatullāhi wa barakātuh",
+     "arti": "Dan semoga keselamatan, rahmat Allah, dan keberkahan-Nya tercurah kepada kalian juga",
+     "en": "And upon you be peace, and the mercy of Allah and His blessings"
+    },
+    {
+     "id": "Bismillah",
+     "ar": "بِسْمِ اللّٰهِ",
+     "latin": "Bismillāh",
+     "arti": "Dengan nama Allah",
+     "en": "In the name of Allah"
+    },
+    {
+     "id": "Alhamdulillah",
+     "ar": "اَلْحَمْدُ لِلّٰهِ",
+     "latin": "Alḥamdulillāh",
+     "arti": "Segala puji bagi Allah",
+     "en": "All praise is for Allah"
+    },
+    {
+     "id": "Subhanallah",
+     "ar": "سُبْحَانَ اللّٰهِ",
+     "latin": "Subḥānallāh",
+     "arti": "Mahasuci Allah",
+     "en": "Glory be to Allah"
+    },
+    {
+     "id": "Allahu akbar",
+     "ar": "اَللّٰهُ أَكْبَرُ",
+     "latin": "Allāhu akbar",
+     "arti": "Allah Mahabesar",
+     "en": "Allah is the Greatest"
+    },
+    {
+     "id": "Masya Allah",
+     "ar": "مَا شَاءَ اللّٰهُ",
+     "latin": "Mā syā'allāh",
+     "arti": "Atas kehendak Allah (ungkapan kagum)",
+     "en": "As Allah has willed"
+    },
+    {
+     "id": "Insya Allah",
+     "ar": "إِنْ شَاءَ اللّٰهُ",
+     "latin": "In syā'allāh",
+     "arti": "Jika Allah menghendaki",
+     "en": "If Allah wills"
+    },
+    {
+     "id": "Astaghfirullah",
+     "ar": "أَسْتَغْفِرُ اللّٰهَ",
+     "latin": "Astagfirullāh",
+     "arti": "Aku memohon ampun kepada Allah",
+     "en": "I seek Allah's forgiveness"
+    },
+    {
+     "id": "Jazakallahu khairan",
+     "ar": "جَزَاكَ اللّٰهُ خَيْرًا",
+     "latin": "Jazākallāhu khairan",
+     "arti": "Semoga Allah membalasmu dengan kebaikan (kepada laki-laki)",
+     "en": "May Allah reward you with good"
+    },
+    {
+     "id": "Barakallahu fiik",
+     "ar": "بَارَكَ اللّٰهُ فِيْكَ",
+     "latin": "Bārakallāhu fīk",
+     "arti": "Semoga Allah memberkahimu (kepada laki-laki)",
+     "en": "May Allah bless you"
+    },
+    {
+     "id": "Taqabbalallahu minna wa minkum",
+     "ar": "تَقَبَّلَ اللّٰهُ مِنَّا وَمِنْكُمْ",
+     "latin": "Taqabbalallāhu minnā wa minkum",
+     "arti": "Semoga Allah menerima (amal) dari kami dan dari kalian",
+     "en": "May Allah accept from us and from you"
+    },
+    {
+     "id": "Inna lillahi wa inna ilaihi raji'un",
+     "ar": "إِنَّا لِلّٰهِ وَإِنَّا إِلَيْهِ رَاجِعُوْنَ",
+     "latin": "Innā lillāhi wa innā ilaihi rāji'ūn",
+     "arti": "Sesungguhnya kami milik Allah dan kepada-Nya kami kembali",
+     "en": "Indeed we belong to Allah and to Him we return"
+    },
+    {
+     "id": "Amin",
+     "ar": "آمِيْن",
+     "latin": "Āmīn",
+     "arti": "Kabulkanlah (doa kami)",
+     "en": "Amen"
+    }
+   ]
+  },
+  {
+   "slug": "percakapan",
+   "title": "Percakapan dasar",
+   "items": [
+    {
+     "id": "Terima kasih",
+     "ar": "شُكْرًا",
+     "latin": "Syukran",
+     "arti": "Terima kasih",
+     "en": "Thank you"
+    },
+    {
+     "id": "Sama-sama",
+     "ar": "عَفْوًا",
+     "latin": "'Afwan",
+     "arti": "Sama-sama / maaf",
+     "en": "You're welcome"
+    },
+    {
+     "id": "Ya",
+     "ar": "نَعَمْ",
+     "latin": "Na'am",
+     "arti": "Ya",
+     "en": "Yes"
+    },
+    {
+     "id": "Tidak",
+     "ar": "لَا",
+     "latin": "Lā",
+     "arti": "Tidak",
+     "en": "No"
+    },
+    {
+     "id": "Apa kabar?",
+     "ar": "كَيْفَ حَالُكَ؟",
+     "latin": "Kaifa ḥāluk?",
+     "arti": "Apa kabar? (kepada laki-laki)",
+     "en": "How are you?"
+    },
+    {
+     "id": "Baik, alhamdulillah",
+     "ar": "بِخَيْرٍ، اَلْحَمْدُ لِلّٰهِ",
+     "latin": "Bikhair, alḥamdulillāh",
+     "arti": "Baik, segala puji bagi Allah",
+     "en": "Fine, praise be to Allah"
+    },
+    {
+     "id": "Siapa nama Anda?",
+     "ar": "مَا اسْمُكَ؟",
+     "latin": "Masmuk?",
+     "arti": "Siapa namamu? (kepada laki-laki)",
+     "en": "What is your name?"
+    },
+    {
+     "id": "Nama saya …",
+     "ar": "اِسْمِيْ …",
+     "latin": "Ismī …",
+     "arti": "Nama saya …",
+     "en": "My name is …"
+    },
+    {
+     "id": "Saya dari Indonesia",
+     "ar": "أَنَا مِنْ إِنْدُوْنِيْسِيَا",
+     "latin": "Ana min Indūnīsiyā",
+     "arti": "Saya dari Indonesia",
+     "en": "I am from Indonesia"
+    },
+    {
+     "id": "Saya tidak mengerti",
+     "ar": "لَا أَفْهَمُ",
+     "latin": "Lā afham",
+     "arti": "Saya tidak mengerti",
+     "en": "I don't understand"
+    },
+    {
+     "id": "Pelan-pelan, tolong",
+     "ar": "شُوَيَّةً شُوَيَّةً مِنْ فَضْلِكَ",
+     "latin": "Syuwayyah syuwayyah, min faḍlik",
+     "arti": "Pelan-pelan, tolong (bahasa sehari-hari)",
+     "en": "Slowly, please"
+    }
+   ]
+  },
+  {
+   "slug": "perjalanan",
+   "title": "Perjalanan umroh & haji",
+   "items": [
+    {
+     "id": "Di mana toilet?",
+     "ar": "أَيْنَ الْحَمَّامُ؟",
+     "latin": "Ainal-ḥammām?",
+     "arti": "Di mana kamar kecil?",
+     "en": "Where is the toilet?"
+    },
+    {
+     "id": "Di mana tempat wudu?",
+     "ar": "أَيْنَ مَكَانُ الْوُضُوْءِ؟",
+     "latin": "Aina makānul-wuḍū'?",
+     "arti": "Di mana tempat berwudu?",
+     "en": "Where is the ablution area?"
+    },
+    {
+     "id": "Saya mau ke Masjidil Haram",
+     "ar": "أُرِيْدُ أَنْ أَذْهَبَ إِلَى الْمَسْجِدِ الْحَرَامِ",
+     "latin": "Urīdu an adzhaba ilal-masjidil-ḥarām",
+     "arti": "Saya ingin pergi ke Masjidil Haram",
+     "en": "I want to go to Masjid al-Haram"
+    },
+    {
+     "id": "Saya mau ke Masjid Nabawi",
+     "ar": "أُرِيْدُ أَنْ أَذْهَبَ إِلَى الْمَسْجِدِ النَّبَوِيِّ",
+     "latin": "Urīdu an adzhaba ilal-masjidin-nabawī",
+     "arti": "Saya ingin pergi ke Masjid Nabawi",
+     "en": "I want to go to the Prophet's Mosque"
+    },
+    {
+     "id": "Di mana hotel ini?",
+     "ar": "أَيْنَ هٰذَا الْفُنْدُقُ؟",
+     "latin": "Aina hādzal-funduq?",
+     "arti": "Di mana hotel ini? (sambil menunjukkan kartu hotel)",
+     "en": "Where is this hotel?"
+    },
+    {
+     "id": "Saya tersesat",
+     "ar": "أَنَا تَائِهٌ",
+     "latin": "Ana tā'ih",
+     "arti": "Saya tersesat (laki-laki)",
+     "en": "I am lost"
+    },
+    {
+     "id": "Tolong bantu saya",
+     "ar": "سَاعِدْنِيْ مِنْ فَضْلِكَ",
+     "latin": "Sā'idnī min faḍlik",
+     "arti": "Tolong bantu saya",
+     "en": "Please help me"
+    },
+    {
+     "id": "Panggilkan dokter",
+     "ar": "اُطْلُبْ طَبِيْبًا مِنْ فَضْلِكَ",
+     "latin": "Uṭlub ṭabīban min faḍlik",
+     "arti": "Tolong panggilkan dokter",
+     "en": "Please call a doctor"
+    },
+    {
+     "id": "Rumah sakit",
+     "ar": "مُسْتَشْفًى",
+     "latin": "Mustasyfā",
+     "arti": "Rumah sakit",
+     "en": "Hospital"
+    },
+    {
+     "id": "Berapa harganya?",
+     "ar": "بِكَمْ هٰذَا؟",
+     "latin": "Bikam hādzā?",
+     "arti": "Berapa harga ini?",
+     "en": "How much is this?"
+    },
+    {
+     "id": "Terlalu mahal",
+     "ar": "غَالٍ جِدًّا",
+     "latin": "Ghālin jiddan",
+     "arti": "Terlalu mahal",
+     "en": "Too expensive"
+    },
+    {
+     "id": "Air minum",
+     "ar": "مَاءٌ",
+     "latin": "Mā'",
+     "arti": "Air",
+     "en": "Water"
+    },
+    {
+     "id": "Kanan",
+     "ar": "يَمِيْن",
+     "latin": "Yamīn",
+     "arti": "Kanan",
+     "en": "Right"
+    },
+    {
+     "id": "Kiri",
+     "ar": "يَسَار",
+     "latin": "Yasār",
+     "arti": "Kiri",
+     "en": "Left"
+    },
+    {
+     "id": "Berhenti di sini",
+     "ar": "قِفْ هُنَا",
+     "latin": "Qif hunā",
+     "arti": "Berhenti di sini",
+     "en": "Stop here"
+    },
+    {
+     "id": "Kapan waktu sholat?",
+     "ar": "مَتَى الصَّلَاةُ؟",
+     "latin": "Matā aṣ-ṣalāh?",
+     "arti": "Kapan waktu sholat?",
+     "en": "When is the prayer?"
+    }
+   ]
+  },
+  {
+   "slug": "angka",
+   "title": "Angka",
+   "items": [
+    {
+     "id": "Satu",
+     "ar": "وَاحِد",
+     "latin": "Wāḥid",
+     "arti": "1",
+     "en": "One"
+    },
+    {
+     "id": "Dua",
+     "ar": "اِثْنَان",
+     "latin": "Itsnān",
+     "arti": "2",
+     "en": "Two"
+    },
+    {
+     "id": "Tiga",
+     "ar": "ثَلَاثَة",
+     "latin": "Tsalātsah",
+     "arti": "3",
+     "en": "Three"
+    },
+    {
+     "id": "Empat",
+     "ar": "أَرْبَعَة",
+     "latin": "Arba'ah",
+     "arti": "4",
+     "en": "Four"
+    },
+    {
+     "id": "Lima",
+     "ar": "خَمْسَة",
+     "latin": "Khamsah",
+     "arti": "5",
+     "en": "Five"
+    },
+    {
+     "id": "Enam",
+     "ar": "سِتَّة",
+     "latin": "Sittah",
+     "arti": "6",
+     "en": "Six"
+    },
+    {
+     "id": "Tujuh",
+     "ar": "سَبْعَة",
+     "latin": "Sab'ah",
+     "arti": "7",
+     "en": "Seven"
+    },
+    {
+     "id": "Delapan",
+     "ar": "ثَمَانِيَة",
+     "latin": "Tsamāniyah",
+     "arti": "8",
+     "en": "Eight"
+    },
+    {
+     "id": "Sembilan",
+     "ar": "تِسْعَة",
+     "latin": "Tis'ah",
+     "arti": "9",
+     "en": "Nine"
+    },
+    {
+     "id": "Sepuluh",
+     "ar": "عَشَرَة",
+     "latin": "'Asyarah",
+     "arti": "10",
+     "en": "Ten"
+    }
+   ]
+  }
+ ]
+}

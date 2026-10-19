@@ -1,5 +1,5 @@
 {{-- Admin: daftar doa/dzikir — @2026-Alifiandra --}}
-@php $label = $type === 'doa' ? 'Doa' : 'Dzikir'; $u = auth()->user(); @endphp
+@php $label = ['doa' => 'Doa', 'dzikir' => 'Dzikir', 'panduan' => 'Panduan'][$type]; $u = auth()->user(); @endphp
 <x-layouts.admin :title="$label">
     <x-page-head :title="$label" subtitle="Draft → review → terbit. Pembuat tidak dapat menyetujui kontennya sendiri.">
         @if ($u->hasPermission('content.edit'))<a href="{{ route('admin.content.create', $type) }}" class="btn btn--sm"><x-icon name="plus" />Tambah</a>@endif
@@ -29,7 +29,7 @@
                         <tr>
                             <td data-label="Pilih"><input type="checkbox" name="ids[]" value="{{ $it->id }}" aria-label="Pilih {{ $it->title }}"></td>
                             <td data-label="Judul" class="wrap"><b>{{ $it->title }}</b><br><span class="small muted">{{ $it->source_reference }}</span></td>
-                            <td data-label="Kategori">{{ $it->category?->title }}</td>
+                            <td data-label="Kategori">@if ($type === 'panduan')<span class="small muted">{{ $it->category?->moduleLabel() }}</span><br>@endif{{ $it->category?->title }}</td>
                             <td data-label="Status"><x-status-badge :status="$it->review_status" /></td>
                             <td data-label="Versi" class="num">{{ $it->content_version }}</td>
                             <td data-label="Reviewer">{{ $it->reviewer?->name ?? '—' }}</td>
@@ -52,7 +52,7 @@
                     </select>
                     <button class="btn btn--sm">Jalankan</button>
                 </div>
-                <label class="check" style="margin-top:10px"><input type="checkbox" name="confirm" value="1"> <span>Saya telah memeriksa teks Arab, transliterasi, arti, dan rujukan setiap item terpilih terhadap sumbernya.</span></label>
+                <label class="check" style="margin-top:10px"><input type="checkbox" name="confirm" value="1"> <span>Saya telah memeriksa {{ $type === 'panduan' ? 'penjelasan, bacaan (bila ada),' : 'teks Arab, transliterasi, arti,' }} dan rujukan setiap item terpilih terhadap sumbernya.</span></label>
             </div>
         @endif
     </form>

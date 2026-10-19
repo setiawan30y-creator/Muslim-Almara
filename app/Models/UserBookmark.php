@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class UserBookmark extends Model
 {
     
-    protected $fillable = ['user_id', 'verse_id', 'label'];
+    protected $fillable = ['user_id', 'verse_id', 'collection_id', 'label'];
 
     protected function casts(): array
     {
@@ -19,6 +19,11 @@ class UserBookmark extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function collection(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(UserCollection::class, 'collection_id');
     }
 
     public function verse(): BelongsTo

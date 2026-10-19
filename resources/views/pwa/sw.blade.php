@@ -21,7 +21,7 @@ const PRECACHE = [
     '/manifest.webmanifest',
 ];
 
-const WARM_PAGES = ['/', '/al-quran', '/jadwal-sholat', '/kiblat', '/doa-dzikir', '/ibadah', '/belajar', '/tasbih', '/kalender'];
+const WARM_PAGES = ['/', '/al-quran', '/jadwal-sholat', '/kiblat', '/doa-dzikir', '/ibadah', '/belajar', '/tasbih', '/kalender', '/terjemah', '/panduan'];
 
 const PRIVATE_PATHS = [/^\/admin/, /^\/profil/, /^\/masuk/, /^\/daftar/, /^\/keluar/, /^\/lupa-sandi/, /^\/reset-sandi/, /^\/verifikasi-email/,
     /^\/api\/v1\/me/, /^\/api\/v1\/user/, /^\/api\/v1\/auth/, /^\/api\/v1\/quran\/reading-preferences/, /^\/pengaturan/,

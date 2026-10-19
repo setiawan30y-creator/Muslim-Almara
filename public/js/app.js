@@ -514,6 +514,210 @@
         });
     })();
 
+    // ---------- Admin: isi durasi rekaman otomatis dari metadata berkas ----------
+    $$('[data-audio-file]').forEach(function (inp) {
+        inp.addEventListener('change', function () {
+            var f = inp.files && inp.files[0], out = $('[data-audio-duration]', inp.form);
+            if (!f || !out) return;
+            var url = URL.createObjectURL(f), a = new Audio();
+            a.preload = 'metadata';
+            a.onloadedmetadata = function () { if (isFinite(a.duration) && a.duration > 0) out.value = Math.max(1, Math.round(a.duration)); URL.revokeObjectURL(url); };
+            a.onerror = function () { URL.revokeObjectURL(url); toast('Durasi tidak terbaca — isi manual'); };
+            a.src = url;
+        });
+    });
+
+    // ---------- Latihan (kuis panduan) ----------
+    $$('[data-quiz]').forEach(function (box) {
+        var qs = $$('[data-quiz-q]', box), score = $('[data-quiz-score]', box), right = 0, done = 0;
+        qs.forEach(function (q) {
+            var answer = +q.dataset.answer, fb = $('[data-quiz-fb]', q);
+            $$('[data-opt]', q).forEach(function (b) {
+                b.addEventListener('click', function () {
+                    if (q.dataset.done) return;
+                    q.dataset.done = '1'; done++;
+                    var ok = +b.dataset.opt === answer;
+                    if (ok) right++;
+                    b.classList.add(ok ? 'is-correct' : 'is-wrong');
+                    $$('[data-opt]', q).forEach(function (o) { o.setAttribute('aria-disabled', 'true'); if (+o.dataset.opt === answer) o.classList.add('is-correct'); });
+                    fb.textContent = ok ? 'Benar.' : 'Belum tepat — jawaban yang benar ditandai hijau.';
+                    score.textContent = right + '/' + qs.length + ' benar' + (done === qs.length ? (right === qs.length ? ' · masya Allah!' : ' · ulangi materi lalu coba lagi') : '');
+                });
+            });
+        });
+    });
+
+    // ---------- Hafalan: mulai latihan ----------
+    var hStart = $('[data-hafalan-start]');
+    if (hStart) {
+        var hs = $('[data-hafalan-surah]', hStart), hf = $('[data-hafalan-from]', hStart), ht = $('[data-hafalan-to]', hStart);
+        var syncMax = function () { var max = +hs.selectedOptions[0].dataset.ayat; hf.max = ht.max = max; ht.placeholder = 'akhir (' + max + ')'; };
+        hs.addEventListener('change', syncMax); syncMax();
+        hStart.addEventListener('submit', function (e) {
+            e.preventDefault();
+            var q = [], f = +hf.value || 1, t = +ht.value || 0;
+            if (f > 1) q.push('dari=' + f);
+            if (t) q.push('sampai=' + Math.max(f, t));
+            location.href = '/hafalan/' + hs.value + (q.length ? '?' + q.join('&') : '');
+        });
+    }
+
+    // ---------- Hafalan: latihan sembunyikan teks & penilaian ----------
+    var mem = $('[data-hafalan]');
+    if (mem) {
+        var setMode = function (m) { mem.classList.remove('mode-hide', 'mode-hint', 'mode-show'); mem.classList.add('mode-' + m); store.set('almara-mem-mode', m); };
+        var savedMode = store.get('almara-mem-mode', 'hide');
+        $$('[data-mem-mode]', mem).forEach(function (r) {
+            r.checked = r.value === savedMode;
+            r.addEventListener('change', function () { setMode(r.value); $$('[data-mem-reveal]', mem).forEach(function (b) { b.setAttribute('aria-pressed', 'false'); }); });
+        });
+        setMode(savedMode);
+        var trBtn = $('[data-mem-tr]', mem);
+        trBtn.addEventListener('click', function () { var on = trBtn.getAttribute('aria-pressed') !== 'true'; trBtn.setAttribute('aria-pressed', on ? 'true' : 'false'); mem.classList.toggle('hide-tr', !on); });
+        $$('[data-mem-reveal]', mem).forEach(function (b) { b.addEventListener('click', function () { b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') === 'true' ? 'false' : 'true'); }); });
+        var memLabels = { memorized: 'Hafal', learning: 'Dihafal' };
+        $$('[data-grade]', mem).forEach(function (b) {
+            b.addEventListener('click', function () {
+                var card = b.closest('[data-verse-id]');
+                $$('[data-grade]', card).forEach(function (x) { x.classList.remove('is-picked'); });
+                b.classList.add('is-picked');
+                $('[data-mem-reveal]', card).setAttribute('aria-pressed', 'true');
+                if (mem.hasAttribute('data-guest')) { card.classList.add('is-done'); toast('Masuk untuk menyimpan progres hafalan'); return; }
+                http('POST', '/api/v1/me/memorization', { verse_id: +card.dataset.verseId, grade: b.dataset.grade }).then(function (r) {
+                    var d = r.data, badge = $('[data-mem-status]', card);
+                    badge.textContent = memLabels[d.status] || 'Dihafal';
+                    badge.className = 'badge ' + (d.status === 'memorized' ? 'badge--success' : 'badge--neutral');
+                    $('[data-mem-next]', card).textContent = 'Ulang: ' + d.next_review_label;
+                    card.classList.add('is-done');
+                    var nextCard = card.nextElementSibling;
+                    if (nextCard && nextCard.scrollIntoView) nextCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }).catch(failed);
+            });
+        });
+    }
+
+    // ---------- Pelafalan (suara bawaan perangkat) ----------
+    function speak(text, lang) {
+        if (!('speechSynthesis' in window)) { toast('Perangkat tidak mendukung pelafalan'); return; }
+        var u = new SpeechSynthesisUtterance(text);
+        u.lang = lang || 'ar-SA'; u.rate = 0.85;
+        var pre = (lang || 'ar').slice(0, 2);
+        var v = speechSynthesis.getVoices().filter(function (x) { return x.lang && x.lang.toLowerCase().indexOf(pre) === 0; })[0];
+        if (v) u.voice = v; else if (pre === 'ar') toast('Suara Arab belum terpasang di perangkat ini');
+        speechSynthesis.cancel(); speechSynthesis.speak(u);
+    }
+    document.addEventListener('click', function (e) { var b = e.target.closest('[data-speak]'); if (b) speak(b.getAttribute('data-speak'), 'ar-SA'); });
+
+    // ---------- Kumpulan frasa: pencarian ----------
+    var pSearch = $('[data-phrase-search]');
+    if (pSearch) {
+        pSearch.addEventListener('input', function () {
+            var q = pSearch.value.trim().toLowerCase(), any = false;
+            $$('[data-phrase-group]').forEach(function (g) {
+                var vis = 0;
+                $$('[data-phrase]', g).forEach(function (c) { var ok = !q || c.dataset.phrase.indexOf(q) !== -1; c.hidden = !ok; if (ok) vis++; });
+                g.hidden = vis === 0; if (vis) any = true;
+            });
+            $('[data-phrase-empty]').hidden = any;
+        });
+    }
+
+    // ---------- Terjemah teks ----------
+    var trf = $('[data-translate]');
+    if (trf) {
+        var trSrc = $('[data-tr-src]', trf), trTgt = $('[data-tr-tgt]', trf), trOut = $('[data-tr-out]', trf), trText = $('[data-tr-text]', trf);
+        $('[data-tr-swap]', trf).addEventListener('click', function () { var a = trSrc.value; trSrc.value = trTgt.value; trTgt.value = a; });
+        trf.addEventListener('submit', function (e) {
+            e.preventDefault();
+            if (trSrc.value === trTgt.value) { toast('Pilih bahasa yang berbeda'); return; }
+            var btn = $('[data-tr-go]', trf); btn.disabled = true;
+            http('POST', '/api/v1/translate', { q: $('[data-tr-q]', trf).value, source: trSrc.value, target: trTgt.value })
+                .then(function (r) { trText.textContent = r.data.text; trText.lang = trTgt.value; trOut.hidden = false; })
+                .catch(function (err) { toast(err.message || 'Terjemah gagal'); })
+                .finally(function () { btn.disabled = false; });
+        });
+        $('[data-tr-speak]', trf).addEventListener('click', function () { speak(trText.textContent, { ar: 'ar-SA', en: 'en-US', id: 'id-ID' }[trText.lang] || 'id-ID'); });
+        $('[data-tr-copy]', trf).addEventListener('click', function () { if (navigator.clipboard) navigator.clipboard.writeText(trText.textContent).then(function () { toast('Disalin'); }); });
+    }
+
+    // ---------- Masjid terdekat (OpenStreetMap / Overpass) ----------
+    var mq = $('[data-mosques]');
+    if (mq) (function () {
+        var statusEl = $('[data-mosque-status]', mq), list = $('[data-mosque-list]', mq), whereEl = $('[data-mosque-where]', mq), radiusEl = $('[data-mosque-radius]', mq);
+        var pos = { lat: +mq.dataset.lat, lng: +mq.dataset.lng }, map = null, layer = null, ctl = null;
+        function dist(a, b) {
+            var R = 6371000, r = Math.PI / 180, dLat = (b.lat - a.lat) * r, dLng = (b.lng - a.lng) * r;
+            var h = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+            return 2 * R * Math.asin(Math.sqrt(h));
+        }
+        function fmtD(m) { return m < 1000 ? Math.round(m / 10) * 10 + ' m' : (m / 1000).toFixed(1).replace('.', ',') + ' km'; }
+        function pin(label, me) { return window.L.divIcon({ className: '', html: '<span class="mosque-pin' + (me ? ' mosque-pin--me' : '') + '">' + label + '</span>', iconSize: [26, 26], iconAnchor: [13, 13] }); }
+        function ensureMap() {
+            if (map || !window.L) return;
+            map = window.L.map($('[data-mosque-map]', mq), { scrollWheelZoom: false }).setView([pos.lat, pos.lng], 14);
+            window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap' }).addTo(map);
+            layer = window.L.layerGroup().addTo(map);
+        }
+        function render(items) {
+            ensureMap();
+            list.innerHTML = '';
+            if (layer) layer.clearLayers();
+            if (map) window.L.marker([pos.lat, pos.lng], { icon: pin('•', true), title: 'Lokasi Anda' }).addTo(layer);
+            items.forEach(function (m, i) {
+                var li = document.createElement('li');
+                var name = m.name || (m.kind === 'musala' ? 'Musala' : 'Masjid') + ' (tanpa nama)';
+                li.innerHTML = '<span class="num"></span><span class="info"><b></b><span class="small muted"></span></span><a class="btn btn--sm btn--outline" target="_blank" rel="noopener">Rute</a>';
+                $('.num', li).textContent = i + 1;
+                $('b', li).textContent = name;
+                $('.small', li).textContent = fmtD(m.d) + (m.addr ? ' · ' + m.addr : '');
+                $('a', li).href = 'https://www.google.com/maps/dir/?api=1&destination=' + m.lat + ',' + m.lng;
+                list.appendChild(li);
+                if (map) {
+                    var pop = document.createElement('span'); pop.textContent = name + ' · ' + fmtD(m.d);
+                    window.L.marker([m.lat, m.lng], { icon: pin(i + 1), title: name }).bindPopup(pop).addTo(layer);
+                }
+            });
+            list.hidden = !items.length;
+            if (map) {
+                var pts = [[pos.lat, pos.lng]].concat(items.slice(0, 10).map(function (m) { return [m.lat, m.lng]; }));
+                if (pts.length > 1) map.fitBounds(pts, { padding: [24, 24], maxZoom: 16 }); else map.setView([pos.lat, pos.lng], 14);
+            }
+        }
+        function load() {
+            var r = +radiusEl.value;
+            statusEl.textContent = 'Mencari masjid dalam radius ' + fmtD(r) + '…';
+            if (ctl) ctl.abort();
+            ctl = 'AbortController' in window ? new AbortController() : null;
+            var around = '(around:' + r + ',' + pos.lat + ',' + pos.lng + ')';
+            var q = '[out:json][timeout:25];(nwr["amenity"="place_of_worship"]["religion"="muslim"]' + around + ';);out center 80;';
+            fetch(mq.dataset.overpass, { method: 'POST', body: 'data=' + encodeURIComponent(q), headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, signal: ctl ? ctl.signal : undefined })
+                .then(function (res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
+                .then(function (j) {
+                    var items = (j.elements || []).map(function (el) {
+                        var lat = el.lat || (el.center && el.center.lat), lng = el.lon || (el.center && el.center.lon), t = el.tags || {};
+                        if (!lat || !lng) return null;
+                        var bt = (t.building || '') + ' ' + (t.name || '');
+                        return { lat: lat, lng: lng, name: t['name:id'] || t.name || '', kind: /mush?alla|musala|langgar|surau/i.test(bt) ? 'musala' : 'masjid',
+                            addr: [t['addr:street'], t['addr:housenumber']].filter(Boolean).join(' '), d: dist(pos, { lat: lat, lng: lng }) };
+                    }).filter(Boolean).sort(function (a, b) { return a.d - b.d; }).slice(0, 50);
+                    statusEl.textContent = items.length ? items.length + ' tempat ditemukan dalam radius ' + fmtD(r) + '.' : 'Belum ada masjid tercatat di OpenStreetMap dalam radius ini. Coba perbesar radius.';
+                    render(items);
+                })
+                .catch(function (e) { if (e.name === 'AbortError') return; statusEl.textContent = 'Data peta tidak dapat dimuat (periksa koneksi). Coba lagi sebentar.'; render([]); });
+        }
+        $('[data-mosque-locate]', mq).addEventListener('click', function () {
+            if (!navigator.geolocation) { toast('Perangkat tidak mendukung lokasi'); return; }
+            statusEl.textContent = 'Meminta izin lokasi…';
+            navigator.geolocation.getCurrentPosition(function (p) {
+                pos = { lat: +p.coords.latitude.toFixed(5), lng: +p.coords.longitude.toFixed(5) };
+                whereEl.textContent = 'Sekitar lokasi perangkat';
+                load();
+            }, function () { statusEl.textContent = 'Izin lokasi ditolak. Menampilkan sekitar ' + mq.dataset.name + '.'; load(); }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 300000 });
+        });
+        radiusEl.addEventListener('change', load);
+        if (document.readyState === 'complete') load(); else window.addEventListener('load', load);
+    })();
+
     // ---------- Hapus bookmark/catatan dari halaman profil ----------
     document.addEventListener('click', function (e) {
         var b = e.target.closest('[data-bookmark-delete], [data-note-delete]');

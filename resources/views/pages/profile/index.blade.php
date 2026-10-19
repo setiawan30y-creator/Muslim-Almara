@@ -18,8 +18,9 @@
                 <ul class="list">
                     @foreach ([
                         ['profile.progress', 'chart', 'Progres & target tilawah', 'Target harian, khatam, riwayat baca'],
-                        ['profile.bookmarks', 'bookmark', 'Bookmark ayat', 'Ayat yang Anda tandai'],
-                        ['profile.notes', 'note', 'Catatan pribadi', 'Catatan tadabur — privat'],
+                        ['profile.bookmarks', 'bookmark', 'Bookmark & koleksi', 'Ayat tersimpan per tema'],
+                        ['hafalan', 'repeat', 'Hafalan & murojaah', 'Progres hafalan & jadwal ulang'],
+                        ['profile.notes', 'note', 'Jurnal & catatan', 'Catatan tadabur & jurnal — privat'],
                         ['settings.index', 'settings', 'Pengaturan', 'Tampilan & tema, Al-Qur\'an, jadwal sholat, beranda'],
                         ['profile.edit', 'user', 'Akun', 'Nama, email, kata sandi'],
                         ['profile.data', 'shield', 'Data & privasi', 'Ekspor atau hapus data Anda'],

@@ -19,6 +19,9 @@
         <p>Server dapat mencatat data teknis (waktu akses, jenis peramban) untuk keamanan. Alamat IP pada log audit disimpan dalam bentuk hash. Log tidak memuat kata sandi, token, atau isi catatan pribadi.</p>
         <h2>Layanan pihak ketiga</h2>
         <p>Halaman memuat huruf dari Google Fonts; penyedia tersebut dapat menerima alamat IP Anda saat memuat huruf.</p>
+        <p><b>Masjid terdekat:</b> koordinat pencarian dikirim langsung dari peramban Anda ke layanan OpenStreetMap (Overpass API dan server peta), dan pustaka peta dimuat dari cdnjs. Aplikasi tidak menyimpan koordinat tersebut.</p>
+        <p><b>Terjemah teks</b> (bila diaktifkan): teks yang Anda kirim diteruskan ke layanan terjemah yang dikonfigurasi pengelola aplikasi dan tidak disimpan di database.</p>
+        <p><b>Audio qari</b> dari Quran.Foundation (bila diaktifkan) diputar langsung dari server penyedia.</p>
         <h2>Perubahan</h2>
         <p>Kebijakan ini dapat diperbarui. Perubahan berlaku sejak dipublikasikan di halaman ini.</p>
     </article>

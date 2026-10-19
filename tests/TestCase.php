@@ -25,6 +25,7 @@ abstract class TestCase extends BaseTestCase
         $this->seed([AccessControlSeeder::class, PrayerMethodSeeder::class, IslamicEventSeeder::class]);
         app(QuranImporter::class)->import(self::TEST_SURAHS, withTafsir: true);
         (new WorshipContentSeeder($publishContent ? ContentStatus::Published->value : null))->run();
+        (new \Database\Seeders\GuideContentSeeder($publishContent ? ContentStatus::Published->value : null))->run();
     }
 
     protected function userWithRole(?string $role = null): User

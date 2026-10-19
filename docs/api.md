@@ -12,6 +12,7 @@ Basis: `/api/v1` · format (blueprint §7.1): berhasil `{"data": …, "meta": {�
 | GET | `/quran/verses/{id}` | detail ayat |
 | GET | `/quran/search?q=` | cari di terjemahan atau rujukan `2:255` |
 | GET | `/quran/translations` | daftar terjemahan + atribusi |
+| POST | `/translate` `{q, source, target}` (id/ar/en) — 503 bila layanan terjemah belum dikonfigurasi |
 | GET | `/quran/audio/reciters?surah=` | daftar qari (`almara:{slug}` / `qf:{id}`), `meta.default` = qari pilihan pengguna |
 | GET | `/quran/audio/surah/{surah}?reciter=` | `url` audio, `segments` (`ayah`, `start_ms`, `end_ms`), `attribution`, `offline_allowed`; 404 bila belum tersedia; `Cache-Control: no-store` |
 | GET | `/prayer/methods` | metode perhitungan |
@@ -36,7 +37,8 @@ Web memakai sesi (cookie) — domain harus terdaftar di `SANCTUM_STATEFUL_DOMAIN
 |---|---|
 | GET/PATCH | `/me` |
 | GET/POST | `/me/bookmarks` · DELETE `/me/bookmarks/{id}` |
-| GET/POST | `/me/notes` · PATCH/DELETE `/me/notes/{id}` |
+| GET/POST | `/me/notes` · PATCH/DELETE `/me/notes/{id}` (field `tags`, dipisah koma) |
+| GET/POST/DELETE | `/me/memorization` — status hafalan; POST `{verse_id, grade: lupa\|ragu\|lancar}`; DELETE `?surah=` |
 | GET/PUT | `/me/reading-progress` (`verse_id`, `mark_read`, `from_ayah`) |
 | GET/PUT | `/me/reading-goals` |
 | GET | `/me/data-export` · POST `/me/delete-account` (`password`) |

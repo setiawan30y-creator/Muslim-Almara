@@ -16,6 +16,7 @@ class NoteResource extends JsonResource
             'surah' => $this->verse?->surah?->number,
             'ayah' => $this->verse?->ayah_number,
             'body' => $this->body,
+            'tags' => $this->tagList(),
             'updated_at' => $this->updated_at?->toIso8601String(),
         ];
     }

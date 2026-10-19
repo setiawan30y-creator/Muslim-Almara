@@ -717,3 +717,63 @@ body.hide-tafsir .tafsir { display: none; }
     .main:has(.player) { padding-bottom: 150px; }
 }
 @media print { .player { display: none; } }
+
+/* ---------- Panduan (Tajwid, Umroh, Haji, Ziarah) — @2026-Alifiandra ---------- */
+.step-list { list-style: none; margin: 0; padding: 0; }
+.step-list li + li { border-top: 1px solid var(--color-border); }
+.step-list a { display: flex; align-items: center; gap: 12px; padding: 12px 2px; color: inherit; }
+.step-list a:hover { text-decoration: none; }
+.step-list a:hover b { color: var(--color-primary); }
+.step-list a > svg { width: 20px; height: 20px; flex: none; color: var(--color-text-muted); }
+.step-list__num { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: .9rem; background: var(--color-primary-soft); color: var(--color-primary); }
+.step-list__body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.guide-body p, .guide-body ul { margin: 0 0 var(--space-3); line-height: 1.7; }
+.guide-body ul { padding-left: 1.2rem; }
+.guide-body li + li { margin-top: 4px; }
+.guide-body > :last-child { margin-bottom: 0; }
+.quiz { border: 0; padding: 0; margin: 0 0 var(--space-4); }
+.quiz legend { margin-bottom: 8px; }
+.quiz__opt { display: block; width: 100%; text-align: left; margin-bottom: 6px; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-text); font: inherit; cursor: pointer; }
+.quiz__opt:hover { border-color: var(--color-primary); }
+.quiz__opt.is-correct { border-color: var(--color-success, #1f7a4d); background: color-mix(in srgb, var(--color-success, #1f7a4d) 14%, var(--color-surface)); }
+.quiz__opt.is-wrong { border-color: var(--color-danger, #b3261e); background: color-mix(in srgb, var(--color-danger, #b3261e) 12%, var(--color-surface)); }
+.quiz__fb { margin: 4px 0 0; min-height: 1.2em; }
+
+/* ---------- Hafalan & Murojaah — @2026-Alifiandra ---------- */
+.mem-list { list-style: none; margin: 0; padding: 0; }
+.mem-list li { padding: 12px 0; }
+.mem-list li + li { border-top: 1px solid var(--color-border); }
+.mem-list__head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 6px; }
+.mem-text { display: block; width: 100%; border: 0; background: transparent; padding: 0; margin: var(--space-3) 0; cursor: pointer; color: inherit; text-align: inherit; font: inherit; }
+.mem-text .arabic { margin: 0; transition: filter .2s var(--ease), opacity .2s var(--ease); }
+[data-hafalan].mode-hide .mem-text[aria-pressed="false"] .arabic { filter: blur(9px); opacity: .55; user-select: none; }
+[data-hafalan].mode-hint .mem-text[aria-pressed="false"] .arabic { color: transparent; text-shadow: none; }
+[data-hafalan].mode-hint .mem-text[aria-pressed="false"] .arabic::before { content: attr(data-first) " …"; color: var(--color-text); }
+[data-hafalan].hide-tr .ayah__tr { display: none; }
+.mem-grades { display: flex; gap: 8px; flex-wrap: wrap; }
+.mem-grade--lupa:hover { border-color: var(--color-danger); color: var(--color-danger); }
+.mem-grade.is-picked { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.mem-ayah.is-done { background: color-mix(in srgb, var(--color-success) 6%, var(--color-surface)); }
+
+/* ---------- Terjemah & Masjid terdekat — @2026-Alifiandra ---------- */
+.phrase { display: flex; flex-direction: column; gap: 4px; }
+.phrase__ar { font-size: calc(var(--arabic-size) * .8); margin: 6px 0 2px; }
+.tr-out { border-top: 1px solid var(--color-border); padding-top: var(--space-3); }
+.tr-out__text { font-size: 1.15rem; margin: 0 0 8px; white-space: pre-wrap; }
+.tr-out__text[lang="ar"] { font-family: var(--font-arabic, inherit); font-size: 1.5rem; direction: rtl; text-align: right; }
+.mosque-map { height: 340px; padding: 0; overflow: hidden; z-index: 0; }
+.mosque-list { list-style: none; margin: 0; padding: 0; }
+.mosque-list li { display: flex; gap: 12px; align-items: center; padding: 12px 16px; }
+.mosque-list li + li { border-top: 1px solid var(--color-border); }
+.mosque-list .num { flex: none; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--color-primary-soft); color: var(--color-primary); font-weight: 800; font-size: .85rem; }
+.mosque-list .info { flex: 1; min-width: 0; }
+.mosque-list .info b { display: block; }
+.mosque-pin { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: var(--color-primary); color: #fff; font: 800 12px/1 system-ui, sans-serif; border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,.35); }
+.mosque-pin--me { background: #2563eb; }
+
+/* ---------- Jurnal & koleksi — @2026-Alifiandra ---------- */
+.note-tags { margin-top: 10px; }
+.note-tags > summary { list-style: none; cursor: pointer; display: flex; gap: 6px; flex-wrap: wrap; }
+.note-tags > summary::-webkit-details-marker { display: none; }
+.tag-pill { display: inline-flex; padding: 2px 10px; border-radius: 99px; background: var(--color-primary-soft); color: var(--color-primary); font-weight: 700; font-size: .78rem; }
+.select--sm { min-height: 34px; padding-top: 4px; padding-bottom: 4px; font-size: .85rem; max-width: 180px; }

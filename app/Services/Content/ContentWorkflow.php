@@ -23,10 +23,10 @@ use Illuminate\Validation\ValidationException;
  */
 class ContentWorkflow
 {
-    public const TYPES = ['doa' => DuaItem::class, 'dzikir' => DhikrItem::class];
+    public const TYPES = ['doa' => DuaItem::class, 'dzikir' => DhikrItem::class, 'panduan' => \App\Models\GuideItem::class];
 
     /** Kolom teks yang perubahannya wajib ditinjau ulang. */
-    public const REVIEWED_FIELDS = ['title', 'arabic_text', 'transliteration', 'translation', 'source_reference', 'source_kind', 'count_target', 'context_note', 'category_id'];
+    public const REVIEWED_FIELDS = ['title', 'arabic_text', 'transliteration', 'translation', 'source_reference', 'source_kind', 'count_target', 'context_note', 'category_id', 'body', 'example_ref', 'quiz_json'];
 
     public static function model(string $type): string
     {
@@ -107,8 +107,13 @@ class ContentWorkflow
             if (in_array($actor->id, array_filter([$item->created_by, $item->submitted_by]), true)) {
                 throw ValidationException::withMessages(['status' => 'Pembuat atau pengaju konten tidak dapat menyetujui kontennya sendiri.']);
             }
-            if (trim((string) $item->translation) === '' || trim((string) $item->transliteration) === '') {
+            // Bacaan Arab wajib disertai transliterasi & arti (Standar Wajib Bacaan); panduan tanpa bacaan cukup penjelasan.
+            $needsReading = $type !== 'panduan' || trim((string) $item->arabic_text) !== '';
+            if ($needsReading && (trim((string) $item->translation) === '' || trim((string) $item->transliteration) === '')) {
                 throw ValidationException::withMessages(['status' => 'Konten wajib memiliki transliterasi dan arti Bahasa Indonesia sebelum disetujui.']);
+            }
+            if ($type === 'panduan' && trim((string) $item->body) === '') {
+                throw ValidationException::withMessages(['status' => 'Materi panduan wajib memiliki penjelasan sebelum disetujui.']);
             }
         }
 

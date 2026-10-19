@@ -1,42 +1,29 @@
 {{-- Tab Ibadah — @2026-Alifiandra --}}
 @php
     $items = [
-        ['prayer', 'Jadwal Sholat', 'Harian & bulanan, metode dapat dipilih', 'clock', false],
-        ['qibla', 'Arah Kiblat', 'Kompas perangkat & derajat', 'compass', false],
-        ['doa', 'Dzikir & Doa', 'Arab, Latin, arti, dan sumber', 'hands', false],
-        ['tasbih', 'Tasbih Digital', 'Penghitung dzikir', 'beads', false],
-        ['calendar', 'Kalender Hijriah', 'Hari besar Islam', 'calendar', false],
-        ['zakat', 'Kalkulator Zakat', 'Maal, penghasilan, fitrah', 'coins', true],
-    ];
-    $soon = [
-        ['Panduan Ziarah Kubur', 'Adab, salam, dan doa bersumber', 'map'],
-        ['Masjid Terdekat', 'Daftar & peta masjid/musala', 'pin'],
-        ['Panduan Umroh & Haji', 'Langkah manasik & bacaan', 'kaaba'],
+        [route('prayer'), 'Jadwal Sholat', 'Harian & bulanan, metode dapat dipilih', 'clock', false],
+        [route('qibla'), 'Arah Kiblat', 'Kompas perangkat & derajat', 'compass', false],
+        [route('mosques'), 'Masjid Terdekat', 'Peta & daftar masjid/musala sekitar', 'pin', false],
+        [route('doa'), 'Dzikir & Doa', 'Arab, Latin, arti, dan sumber', 'hands', false],
+        [route('tasbih'), 'Tasbih Digital', 'Penghitung dzikir', 'beads', false],
+        [route('calendar'), 'Kalender Hijriah', 'Hari besar Islam', 'calendar', false],
+        [route('zakat'), 'Kalkulator Zakat', 'Maal, penghasilan, fitrah', 'coins', true],
+        [route('guide.module', 'umroh'), 'Panduan Umroh', 'Rukun, langkah & bacaan', 'kaaba', false],
+        [route('guide.module', 'haji'), 'Panduan Haji', 'Jenis haji & urutan hari-hari haji', 'kaaba', false],
+        [route('guide.module', 'ziarah'), 'Ziarah Kubur', 'Adab, salam, dan doa bersumber', 'map', false],
     ];
 @endphp
 <x-layouts.app title="Ibadah">
     <x-page-head title="Ibadah" subtitle="Alat bantu ibadah harian" />
     <div class="stack">
         <div class="hub-grid">
-            @foreach ($items as [$route, $label, $desc, $icon, $gold])
-                <a href="{{ route($route) }}" class="card hub-card">
+            @foreach ($items as [$href, $label, $desc, $icon, $gold])
+                <a href="{{ $href }}" class="card hub-card">
                     <span class="shortcut__ico {{ $gold ? 'shortcut__ico--gold' : '' }}"><x-icon :name="$icon" /></span>
                     <span><b style="display:block">{{ $label }}</b><span class="desc">{{ $desc }}</span></span>
                 </a>
             @endforeach
         </div>
-        <section>
-            <div class="section-head"><h2>Tahap berikutnya</h2></div>
-            <div class="hub-grid">
-                @foreach ($soon as [$label, $desc, $icon])
-                    <div class="card hub-card is-soon" aria-disabled="true">
-                        <span class="shortcut__ico"><x-icon :name="$icon" /></span>
-                        <span><b style="display:block">{{ $label }}</b><span class="desc">{{ $desc }}</span></span>
-                        <span class="badge badge--neutral" style="align-self:flex-start">Segera</span>
-                    </div>
-                @endforeach
-            </div>
-            <p class="small muted" style="margin-top:12px">Modul ini akan diterbitkan setelah konten bersumber lolos review ahli dan penyedia data terkonfigurasi.</p>
-        </section>
+        <p class="small muted">Panduan manasik dan ziarah bersifat ringkasan; ikuti arahan pembimbing ibadah dan ketentuan resmi penyelenggara.</p>
     </div>
 </x-layouts.app>

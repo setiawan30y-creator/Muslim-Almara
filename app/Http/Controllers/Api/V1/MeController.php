@@ -74,7 +74,8 @@ class MeController extends ApiController
 
     public function storeNote(Request $request)
     {
-        $data = $request->validate(['verse_id' => ['nullable', 'integer', 'exists:quran_verses,id'], 'body' => ['required', 'string', 'max:5000']]);
+        $data = $request->validate(['verse_id' => ['nullable', 'integer', 'exists:quran_verses,id'], 'body' => ['required', 'string', 'max:5000'], 'tags' => ['nullable', 'string', 'max:200']]);
+        $data['tags'] = UserNote::normalizeTags($data['tags'] ?? null);
         $n = $request->user()->notes()->create($data);
 
         return $this->ok(new NoteResource($n->load('verse.surah')), [], 201);
@@ -83,7 +84,11 @@ class MeController extends ApiController
     public function updateNote(Request $request, UserNote $note)
     {
         $this->authorize('update', $note);
-        $note->update($request->validate(['body' => ['required', 'string', 'max:5000']]));
+        $data = $request->validate(['body' => ['sometimes', 'required', 'string', 'max:5000'], 'tags' => ['sometimes', 'nullable', 'string', 'max:200']]);
+        if (array_key_exists('tags', $data)) {
+            $data['tags'] = UserNote::normalizeTags($data['tags']);
+        }
+        $note->update($data);
 
         return $this->ok(new NoteResource($note->load('verse.surah')));
     }

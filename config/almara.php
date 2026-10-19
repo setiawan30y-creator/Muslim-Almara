@@ -3,7 +3,7 @@
 // Konfigurasi ALMARA MUSLIM — @2026-Alifiandra
 
 return [
-    'version' => '2.1.0',
+    'version' => '2.2.0',
 
     // Kota bawaan (slug dari resources/data/kota.json) bila pengguna belum memilih lokasi
     'default_city' => env('ALMARA_DEFAULT_CITY', 'jakarta'),
@@ -41,6 +41,21 @@ return [
             'attribution' => 'Quran data provided by Quran.Foundation',
             'timeout' => 8,
         ],
+    ],
+
+    // Terjemah teks bebas (opsional) via layanan kompatibel LibreTranslate.
+    // Tanpa konfigurasi, halaman Terjemah tetap menyediakan kumpulan frasa offline.
+    'translate' => [
+        'url' => env('TRANSLATE_URL'),          // contoh: https://libretranslate.contoh.id
+        'api_key' => env('TRANSLATE_API_KEY'),
+        'timeout' => 10,
+        'max_chars' => 1000,
+        'languages' => ['id' => 'Indonesia', 'ar' => 'Arab', 'en' => 'Inggris'],
+    ],
+
+    // Masjid terdekat: data OpenStreetMap via Overpass API (dipanggil dari peramban pengguna).
+    'mosque_finder' => [
+        'overpass_url' => env('OVERPASS_URL', 'https://overpass-api.de/api/interpreter'),
     ],
 
     'developer' => '@2026-Alifiandra',

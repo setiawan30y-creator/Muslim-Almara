@@ -16,6 +16,7 @@ class BookmarkResource extends JsonResource
             'surah' => $this->verse?->surah?->number,
             'ayah' => $this->verse?->ayah_number,
             'label' => $this->label,
+            'collection_id' => $this->collection_id,
             'created_at' => $this->created_at?->toIso8601String(),
         ];
     }

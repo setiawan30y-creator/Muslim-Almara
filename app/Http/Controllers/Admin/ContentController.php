@@ -23,6 +23,14 @@ class ContentController extends Controller
 
     private function categories(string $type)
     {
+        if ($type === 'panduan') {
+            $order = array_keys(\App\Models\GuideCategory::MODULES);
+
+            return \App\Models\GuideCategory::query()->orderBy('sort_order')->get()
+                ->sortBy(fn ($c) => array_search($c->module, $order, true))->values()
+                ->each(fn ($c) => $c->title = $c->moduleLabel().' — '.$c->title);
+        }
+
         return ($type === 'doa' ? DuaCategory::class : DhikrCategory::class)::query()->orderBy('sort_order')->get();
     }
 
@@ -31,7 +39,7 @@ class ContentController extends Controller
         $class = ContentWorkflow::model($type);
         $status = ContentStatus::tryFrom((string) $request->query('status'));
         $q = trim((string) $request->query('q'));
-        $items = $class::query()->with(['category:id,title', 'reviewer:id,name'])
+        $items = $class::query()->with(['category', 'reviewer:id,name'])
             ->when($status, fn ($query) => $query->where('review_status', $status->value))
             ->when($q !== '', fn ($query) => $query->where(fn ($w) => $w->where('title', 'like', "%{$q}%")->orWhere('translation', 'like', "%{$q}%")))
             ->orderBy('category_id')->orderBy('sort_order')->paginate(30)->withQueryString();

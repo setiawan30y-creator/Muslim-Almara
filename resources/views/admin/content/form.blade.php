@@ -1,6 +1,7 @@
 {{-- Admin: buat/ubah doa/dzikir — @2026-Alifiandra --}}
 @php
-    $label = $type === 'doa' ? 'Doa' : 'Dzikir';
+    $label = ['doa' => 'Doa', 'dzikir' => 'Dzikir', 'panduan' => 'Panduan'][$type];
+    $guide = $type === 'panduan';
     $u = auth()->user();
     $st = $item?->review_status;
     $canEdit = $u->hasPermission('content.edit');
@@ -24,12 +25,23 @@
                     <select id="category_id" name="category_id" class="select" @disabled(! $canEdit)>@foreach ($categories as $c)<option value="{{ $c->id }}" @selected(old('category_id', $item?->category_id) == $c->id)>{{ $c->title }}</option>@endforeach</select></div>
                 <div class="field"><label for="source_kind">Jenis sumber</label>
                     <select id="source_kind" name="source_kind" class="select" @disabled(! $canEdit)>
-                        @foreach (['quran' => "Ayat Al-Qur'an", 'hadith' => 'Hadis', 'general' => 'Doa umum (tanpa atribusi khusus)'] as $k => $v)<option value="{{ $k }}" @selected(old('source_kind', $item?->source_kind ?? 'hadith') === $k)>{{ $v }}</option>@endforeach
+                        @foreach (['quran' => "Ayat Al-Qur'an", 'hadith' => 'Hadis', 'general' => $guide ? 'Kitab/rujukan fikih' : 'Doa umum (tanpa atribusi khusus)'] as $k => $v)<option value="{{ $k }}" @selected(old('source_kind', $item?->source_kind ?? 'hadith') === $k)>{{ $v }}</option>@endforeach
                     </select></div>
             </div>
-            <div class="field"><label for="arabic_text">Teks Arab</label><textarea id="arabic_text" name="arabic_text" class="input arabic-input" dir="rtl" lang="ar" required @disabled(! $canEdit)>{{ old('arabic_text', $item?->arabic_text) }}</textarea>@error('arabic_text')<span class="error">{{ $message }}</span>@enderror</div>
-            <div class="field"><label for="transliteration">Transliterasi Latin <span class="muted">(wajib)</span></label><textarea id="transliteration" name="transliteration" class="input" required @disabled(! $canEdit)>{{ old('transliteration', $item?->transliteration) }}</textarea>@error('transliteration')<span class="error">{{ $message }}</span>@enderror</div>
-            <div class="field"><label for="translation">Arti Bahasa Indonesia <span class="muted">(wajib)</span></label><textarea id="translation" name="translation" class="input" required @disabled(! $canEdit)>{{ old('translation', $item?->translation) }}</textarea>@error('translation')<span class="error">{{ $message }}</span>@enderror</div>
+            @if ($guide)
+                <div class="field"><label for="body">Penjelasan</label><textarea id="body" name="body" class="input" style="min-height:220px" required @disabled(! $canEdit)>{{ old('body', $item?->body) }}</textarea>
+                    <span class="hint">Pisahkan paragraf dengan baris kosong. Baris yang diawali "- " ditampilkan sebagai daftar.</span>@error('body')<span class="error">{{ $message }}</span>@enderror</div>
+                <div class="field"><label for="example_ref">Contoh ayat (opsional)</label><input id="example_ref" name="example_ref" class="input" style="max-width:180px" value="{{ old('example_ref', $item?->example_ref) }}" placeholder="surah:ayat" pattern="\d{1,3}:\d{1,3}" @disabled(! $canEdit)>
+                    <span class="hint">Ayat lengkap diambil dari teks Al-Qur'an Kemenag di aplikasi.</span>@error('example_ref')<span class="error">{{ $message }}</span>@enderror</div>
+                @if ($item?->quiz_json)
+                    <div class="field"><b class="small">Latihan ({{ count($item->quiz_json) }} soal)</b>
+                        <ol class="small muted" style="margin:0;padding-left:1.2rem">@foreach ($item->quiz_json as $q)<li>{{ $q['q'] }} — <b>{{ $q['options'][$q['answer']] ?? '' }}</b></li>@endforeach</ol></div>
+                @endif
+                <p class="small muted" style="margin:0">Bacaan Arab di bawah opsional; bila diisi, transliterasi & arti wajib.</p>
+            @endif
+            <div class="field"><label for="arabic_text">Teks Arab</label><textarea id="arabic_text" name="arabic_text" class="input arabic-input" dir="rtl" lang="ar" @required(! $guide) @disabled(! $canEdit)>{{ old('arabic_text', $item?->arabic_text) }}</textarea>@error('arabic_text')<span class="error">{{ $message }}</span>@enderror</div>
+            <div class="field"><label for="transliteration">Transliterasi Latin <span class="muted">({{ $guide ? 'wajib bila ada teks Arab' : 'wajib' }})</span></label><textarea id="transliteration" name="transliteration" class="input" @required(! $guide) @disabled(! $canEdit)>{{ old('transliteration', $item?->transliteration) }}</textarea>@error('transliteration')<span class="error">{{ $message }}</span>@enderror</div>
+            <div class="field"><label for="translation">Arti Bahasa Indonesia <span class="muted">({{ $guide ? 'wajib bila ada teks Arab' : 'wajib' }})</span></label><textarea id="translation" name="translation" class="input" @required(! $guide) @disabled(! $canEdit)>{{ old('translation', $item?->translation) }}</textarea>@error('translation')<span class="error">{{ $message }}</span>@enderror</div>
             <div class="form-grid form-grid--2">
                 <div class="field"><label for="source_reference">Rujukan sumber</label><input id="source_reference" name="source_reference" class="input" value="{{ old('source_reference', $item?->source_reference) }}" required maxlength="255" placeholder="Contoh: HR. Muslim no. 591" @disabled(! $canEdit)>@error('source_reference')<span class="error">{{ $message }}</span>@enderror</div>
                 <div class="field"><label for="count_target">Jumlah anjuran (opsional)</label><input id="count_target" name="count_target" type="number" min="1" max="1000" class="input" value="{{ old('count_target', $item?->count_target) }}" @disabled(! $canEdit)><span class="hint">Isi hanya bila ada dasarnya.</span></div>

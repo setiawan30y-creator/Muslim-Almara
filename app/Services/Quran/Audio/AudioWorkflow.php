@@ -77,7 +77,7 @@ class AudioWorkflow
     public static function parseSegments(?string $text, int $ayahCount, ?int $durationSeconds): array
     {
         $out = [];
-        $lines = preg_split('/\R/', trim((string) $text)) ?: [];
+        $lines = preg_split('/\R/u', trim((string) $text)) ?: [];
         foreach ($lines as $i => $line) {
             $line = trim($line);
             if ($line === '') {

@@ -18,6 +18,6 @@ class DatabaseSeeder extends Seeder
             app(QuranImporter::class)->import();
         }
 
-        $this->call(WorshipContentSeeder::class);
+        $this->call([WorshipContentSeeder::class, GuideContentSeeder::class]);
     }
 }

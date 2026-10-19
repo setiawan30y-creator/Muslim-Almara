@@ -69,7 +69,7 @@ class PwaController extends Controller
 
     public function sitemap(\App\Services\Quran\QuranService $quran)
     {
-        $urls = collect(['/', '/al-quran', '/jadwal-sholat', '/kiblat', '/doa-dzikir', '/ibadah', '/belajar', '/asmaul-husna', '/tasbih', '/kalender', '/zakat', '/tentang', '/kebijakan-privasi', '/syarat-ketentuan'])
+        $urls = collect(['/', '/al-quran', '/jadwal-sholat', '/kiblat', '/doa-dzikir', '/ibadah', '/belajar', '/asmaul-husna', '/tasbih', '/kalender', '/zakat', '/panduan', '/panduan/tajwid', '/panduan/umroh', '/panduan/haji', '/panduan/ziarah', '/hafalan', '/terjemah', '/masjid-terdekat', '/tentang', '/kebijakan-privasi', '/syarat-ketentuan'])
             ->merge($quran->surahs()->map(fn ($s) => '/al-quran/'.$s->number))
             ->map(fn ($u) => url($u));
 

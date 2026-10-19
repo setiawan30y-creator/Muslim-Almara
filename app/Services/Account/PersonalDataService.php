@@ -33,9 +33,14 @@ class PersonalDataService
                 ] : null,
             ],
             'last_read' => $verseRef($user->lastRead?->verse),
-            'bookmarks' => $user->bookmarks()->with('verse.surah')->get()->map(fn ($b) => $verseRef($b->verse) + ['label' => $b->label, 'created_at' => $b->created_at?->toIso8601String()])->all(),
-            'notes' => $user->notes()->with('verse.surah')->get()->map(fn ($n) => ['verse' => $verseRef($n->verse), 'body' => $n->body, 'updated_at' => $n->updated_at?->toIso8601String()])->all(),
+            'bookmarks' => $user->bookmarks()->with('verse.surah')->get()->map(fn ($b) => $verseRef($b->verse) + ['label' => $b->label, 'collection_id' => $b->collection_id, 'created_at' => $b->created_at?->toIso8601String()])->all(),
+            'notes' => $user->notes()->with('verse.surah')->get()->map(fn ($n) => ['verse' => $verseRef($n->verse), 'body' => $n->body, 'tags' => $n->tags, 'updated_at' => $n->updated_at?->toIso8601String()])->all(),
             'reading_goals' => $user->readingGoals()->get(['daily_target', 'start_date', 'khatam_target_date', 'status'])->toArray(),
+            'memorization' => $user->memorizations()->with('verse.surah')->get()->map(fn ($m) => $verseRef($m->verse) + [
+                'status' => $m->status, 'interval_days' => $m->interval_days, 'next_review_on' => $m->next_review_on?->toDateString(),
+                'reviews' => $m->reviews, 'lapses' => $m->lapses,
+            ])->all(),
+            'collections' => $user->collections()->get(['id', 'name', 'description'])->toArray(),
             'reading_progress' => $user->readingProgress()->with('verse.surah')->get()->map(fn ($p) => $verseRef($p->verse) + ['last_read_at' => $p->last_read_at?->toIso8601String()])->all(),
         ];
     }
