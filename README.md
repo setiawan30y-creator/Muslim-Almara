@@ -7,12 +7,12 @@ Dibangun dengan **Laravel 13** mengikuti *ALMARA MUSLIM — Blueprint Teknis & R
 
 ## Status rilis
 
-Versi **2.2.0** mencakup Rilis Pertama (MVP, blueprint §1.1) + *Pengaturan Tampilan & Tema*:
+Versi **2.3.0** mencakup Rilis Pertama (MVP, blueprint §1.1) + *Pengaturan Tampilan & Tema*:
 
 | Area | Isi |
 |---|---|
 | Navigasi | Beranda · Qur'an · Belajar · Ibadah · Profil |
-| Beranda | Salam & lokasi, sholat berikutnya + hitung mundur, aksi cepat, lanjutkan bacaan, target tilawah, ayat harian, hari besar, catatan — kartu dapat diurutkan/disembunyikan |
+| Beranda | Salam & lokasi, sholat berikutnya + hitung mundur, cuaca & prakiraan per jam, aksi cepat, lanjutkan bacaan, target tilawah, ayat harian, hari besar, catatan — kartu dapat diurutkan/disembunyikan |
 | Al-Qur'an | 114 surah & 30 juz, terjemahan & tafsir Kemenag, pencarian, bookmark, catatan pribadi, tandai dibaca, unduh offline, pilihan mode baca |
 | Audio qari | Pemutar murattal (putar dari ayat, sorot ayat, mode per ayat, ulang); **Qari ALMARA** (rekaman sendiri: unggah → karantina → review → terbit) & qari berlisensi **Quran.Foundation** |
 | Ibadah | Jadwal sholat (8 metode, mazhab Asar, koreksi menit), kiblat + kalibrasi, masjid terdekat (OpenStreetMap), dzikir & doa bersumber, tasbih, kalender Hijriah, zakat, panduan Umroh, Haji & Ziarah Kubur |
@@ -23,7 +23,7 @@ Versi **2.2.0** mencakup Rilis Pertama (MVP, blueprint §1.1) + *Pengaturan Tamp
 | API | `/api/v1` format `{data, meta}` — lihat `docs/api.md` |
 | PWA | Manifest, service worker berversi, offline, halaman pribadi tidak pernah dicache |
 
-Belum diaktifkan: Mushaf penuh & transliterasi per ayat (menunggu dataset berlisensi), Premium/Iklan, cuaca, notifikasi push, TWA.
+Belum diaktifkan: Mushaf penuh & transliterasi per ayat (menunggu dataset berlisensi), Premium/Iklan, notifikasi push, TWA.
 
 ## Instalasi lokal (Laragon, PowerShell)
 
@@ -59,7 +59,7 @@ Doa, dzikir, dan materi panduan (Tajwid, Umroh, Haji, Ziarah) masuk berstatus **
 php artisan test
 ```
 
-92 test mencakup perhitungan sholat/kiblat/Hijriah, integritas dataset, autentikasi, isolasi data pribadi (IDOR), alur review admin, audio qari, panduan, hafalan, terjemah, jurnal & koleksi, preferensi tema, API, dan PWA.
+95 test mencakup perhitungan sholat/kiblat/Hijriah, integritas dataset, autentikasi, isolasi data pribadi (IDOR), alur review admin, audio qari, panduan, hafalan, terjemah, jurnal & koleksi, preferensi tema, API, dan PWA.
 
 ## Konfigurasi `.env`
 
@@ -78,6 +78,8 @@ php artisan test
 | `QF_MOCK` | `false` | Mode simulasi pemutar (nada uji) tanpa kredensial |
 | `TRANSLATE_URL`, `TRANSLATE_API_KEY` | kosong | Terjemah teks bebas via layanan kompatibel LibreTranslate (frasa offline tetap tersedia) |
 | `OVERPASS_URL` | overpass-api.de | Sumber data masjid terdekat (OpenStreetMap) |
+| `ALMARA_WEATHER` | `true` | Kartu cuaca di beranda (Open-Meteo, di-cache 30 menit per lokasi) |
+| `OPEN_METEO_API_KEY` | kosong | **Wajib untuk penggunaan komersial** (aplikasi disewakan/berbayar/beriklan); API gratis Open-Meteo hanya untuk non-komersial |
 
 ## Audio qari
 

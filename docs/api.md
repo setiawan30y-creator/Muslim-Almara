@@ -12,6 +12,7 @@ Basis: `/api/v1` · format (blueprint §7.1): berhasil `{"data": …, "meta": {�
 | GET | `/quran/verses/{id}` | detail ayat |
 | GET | `/quran/search?q=` | cari di terjemahan atau rujukan `2:255` |
 | GET | `/quran/translations` | daftar terjemahan + atribusi |
+| GET | `/weather?lat=&lng=` | cuaca terkini, min/maks, peluang hujan, 6 jam ke depan (Open-Meteo, CC BY 4.0) |
 | POST | `/translate` `{q, source, target}` (id/ar/en) — 503 bila layanan terjemah belum dikonfigurasi |
 | GET | `/quran/audio/reciters?surah=` | daftar qari (`almara:{slug}` / `qf:{id}`), `meta.default` = qari pilihan pengguna |
 | GET | `/quran/audio/surah/{surah}?reciter=` | `url` audio, `segments` (`ayah`, `start_ms`, `end_ms`), `attribution`, `offline_allowed`; 404 bila belum tersedia; `Cache-Control: no-store` |

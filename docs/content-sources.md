@@ -10,6 +10,7 @@
 
 | `almara-panduan` | Tajwid (17), Umroh (9), Haji (8), Ziarah (4) | Disusun tim dari rujukan per materi (Tuhfatul Athfal, al-Jazariyah, hadis, Tuntunan Manasik Kemenag) | **Wajib review guru/ahli**; masuk berstatus review |
 | `frasa.json` | 51 frasa Arab–Indonesia–Inggris | Disusun tim | Sebagian ragam percakapan; tinjau sebelum produksi |
+| Open-Meteo | Cuaca & prakiraan | API Open-Meteo (dari server) | Data CC BY 4.0; **API gratis hanya non-komersial** — aplikasi disewakan wajib paket berlangganan (`OPEN_METEO_API_KEY`) |
 | OpenStreetMap | Lokasi masjid | Overpass API (dari peramban) | ODbL — atribusi "© OpenStreetMap contributors" |
 | Qari ALMARA (`quran_reciters`, `quran_audio_tracks`) | Rekaman murattal milik platform | Unggahan admin; dasar hak dicatat per qari | Wajib review; bukan suara tiruan AI; checksum SHA-256 & versi |
 | Quran.Foundation (tidak disimpan) | Audio qari berlisensi + penanda ayat | Content API v4 (OAuth2 client credentials) | Atribusi wajib; cache ≤ 1 minggu (aplikasi: 1 hari); tidak untuk offline; redistribusi/sublisensi butuh lisensi komersial — lihat [Developer Terms](https://api-docs.quran.foundation/legal/developer-terms/) |

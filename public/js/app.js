@@ -718,6 +718,42 @@
         if (document.readyState === 'complete') load(); else window.addEventListener('load', load);
     })();
 
+    // ---------- Kartu cuaca (Open-Meteo lewat server) ----------
+    var wx = $('[data-weather]');
+    if (wx) (function () {
+        var tpl = $('[data-wx-icons]', wx);
+        function icon(name) { var src = tpl && tpl.content.querySelector('[data-i="' + name + '"] svg'); return src ? src.cloneNode(true) : document.createElement('span'); }
+        function li(iconName, text) { var el = document.createElement('li'); el.appendChild(icon(iconName)); el.appendChild(document.createTextNode(text)); return el; }
+        function show(d) {
+            var c = d.current, t = d.today;
+            var ico = $('[data-wx-ico]', wx); ico.innerHTML = ''; ico.appendChild(icon(c.icon));
+            $('[data-wx-temp]', wx).textContent = c.temp + '°';
+            $('[data-wx-label]', wx).textContent = c.label + (c.feels_like !== null ? ' · terasa ' + c.feels_like + '°' : '');
+            var meta = $('[data-wx-meta]', wx); meta.innerHTML = '';
+            if (t.max !== null) meta.appendChild(li('sun', t.min + '° / ' + t.max + '°'));
+            if (c.humidity !== null) meta.appendChild(li('droplet', c.humidity + '%'));
+            if (c.wind !== null) meta.appendChild(li('wind', c.wind + ' km/j'));
+            var hours = $('[data-wx-hours]', wx); hours.innerHTML = '';
+            (d.hours || []).forEach(function (h) {
+                var el = document.createElement('li'), tm = document.createElement('span'), b = document.createElement('b'), r = document.createElement('span');
+                tm.textContent = h.time; b.textContent = (h.temp === null ? '-' : h.temp) + '°';
+                r.className = 'rain'; r.textContent = h.rain >= 30 ? h.rain + '%' : '';
+                el.title = h.label; el.appendChild(tm); el.appendChild(icon(h.icon)); el.appendChild(b); el.appendChild(r);
+                hours.appendChild(el);
+            });
+            var tip = t.rain >= 60 ? 'Peluang hujan ' + t.rain + '% hari ini — siapkan payung bila ke masjid. ' : (t.uv >= 8 ? 'Indeks UV tinggi (' + t.uv + ') — lindungi diri saat siang. ' : '');
+            $('[data-wx-note]', wx).textContent = tip + d.attribution + '.';
+            wx.setAttribute('aria-busy', 'false');
+        }
+        function fail(msg) { $('[data-wx-label]', wx).textContent = msg; $('[data-wx-temp]', wx).textContent = '--°'; wx.setAttribute('aria-busy', 'false'); }
+        var cached = store.get('almara-weather', null);
+        if (cached && cached.data && cached.loc === wx.dataset.loc && Date.now() - cached.at < 30 * 60000) show(cached.data); else cached = null;
+        fetch(wx.dataset.api, { headers: { Accept: 'application/json' }, credentials: 'same-origin' })
+            .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j.message || 'Cuaca tidak tersedia'); return j.data; }); })
+            .then(function (d) { store.set('almara-weather', { at: Date.now(), loc: wx.dataset.loc, data: d }); show(d); })
+            .catch(function (e) { if (!cached) fail(navigator.onLine === false ? 'Offline — cuaca tidak dapat dimuat' : (e.message || 'Cuaca tidak tersedia')); });
+    })();
+
     // ---------- Hapus bookmark/catatan dari halaman profil ----------
     document.addEventListener('click', function (e) {
         var b = e.target.closest('[data-bookmark-delete], [data-note-delete]');

@@ -21,6 +21,7 @@
         <p>Halaman memuat huruf dari Google Fonts; penyedia tersebut dapat menerima alamat IP Anda saat memuat huruf.</p>
         <p><b>Masjid terdekat:</b> koordinat pencarian dikirim langsung dari peramban Anda ke layanan OpenStreetMap (Overpass API dan server peta), dan pustaka peta dimuat dari cdnjs. Aplikasi tidak menyimpan koordinat tersebut.</p>
         <p><b>Terjemah teks</b> (bila diaktifkan): teks yang Anda kirim diteruskan ke layanan terjemah yang dikonfigurasi pengelola aplikasi dan tidak disimpan di database.</p>
+        <p><b>Cuaca</b> diambil server aplikasi dari Open-Meteo berdasarkan koordinat lokasi yang dibulatkan (±1 km); alamat IP Anda tidak dikirim ke penyedia.</p>
         <p><b>Audio qari</b> dari Quran.Foundation (bila diaktifkan) diputar langsung dari server penyedia.</p>
         <h2>Perubahan</h2>
         <p>Kebijakan ini dapat diperbarui. Perubahan berlaku sejak dipublikasikan di halaman ini.</p>

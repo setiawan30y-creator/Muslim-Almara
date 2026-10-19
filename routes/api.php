@@ -22,6 +22,7 @@ Route::prefix('v1')->name('api.v1.')->middleware('throttle:api')->group(function
     // Ibadah harian
     Route::get('/prayer/methods', [V1\PrayerController::class, 'methods'])->name('prayer.methods');
     Route::get('/prayer/times', [V1\PrayerController::class, 'times'])->name('prayer.times');
+    Route::get('/weather', V1\WeatherController::class)->name('weather');
     Route::get('/qibla', [V1\PrayerController::class, 'qibla'])->name('qibla');
     Route::get('/{type}/categories', [V1\WorshipContentController::class, 'categories'])->whereIn('type', ['dhikr', 'dua'])->name('worship.categories');
     Route::get('/{type}/items', [V1\WorshipContentController::class, 'items'])->whereIn('type', ['dhikr', 'dua'])->name('worship.items');

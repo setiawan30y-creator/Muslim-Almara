@@ -49,7 +49,9 @@ Klien API (token Sanctum) ──> /api/v1 ─────────┘        
 - **Masjid terdekat**: OpenStreetMap via Overpass API dari peramban + peta Leaflet.
 - **Jurnal & Koleksi**: tag pada `user_notes`, `user_collections` untuk bookmark.
 
-Belum diaktifkan: Mushaf penuh & transliterasi per ayat (menunggu dataset berlisensi), Premium & iklan, cuaca, notifikasi push, TWA.
+Belum diaktifkan: Mushaf penuh & transliterasi per ayat (menunggu dataset berlisensi), Premium & iklan, notifikasi push, TWA.
+
+- **Cuaca** (beranda): `WeatherService` memanggil Open-Meteo dari server (IP pengguna tidak dikirim ke penyedia), cache 30 menit per koordinat ±1 km; API `GET /api/v1/weather`.
 
 ## Keputusan arsitektur
 

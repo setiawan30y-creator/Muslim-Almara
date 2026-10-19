@@ -3,7 +3,7 @@
 // Konfigurasi ALMARA MUSLIM — @2026-Alifiandra
 
 return [
-    'version' => '2.2.0',
+    'version' => '2.3.0',
 
     // Kota bawaan (slug dari resources/data/kota.json) bila pengguna belum memilih lokasi
     'default_city' => env('ALMARA_DEFAULT_CITY', 'jakarta'),
@@ -51,6 +51,16 @@ return [
         'timeout' => 10,
         'max_chars' => 1000,
         'languages' => ['id' => 'Indonesia', 'ar' => 'Arab', 'en' => 'Inggris'],
+    ],
+
+    // Cuaca (Open-Meteo, data CC BY 4.0). API gratis hanya untuk penggunaan NON-komersial;
+    // untuk aplikasi berbayar/beriklan/disewakan isi OPEN_METEO_API_KEY (paket berlangganan).
+    'weather' => [
+        'enabled' => (bool) env('ALMARA_WEATHER', true),
+        'url' => env('OPEN_METEO_URL'),             // kosong = otomatis (gratis / customer-api bila ada kunci)
+        'api_key' => env('OPEN_METEO_API_KEY'),
+        'cache_seconds' => (int) env('ALMARA_WEATHER_CACHE', 1800),
+        'timeout' => 6,
     ],
 
     // Masjid terdekat: data OpenStreetMap via Overpass API (dipanggil dari peramban pengguna).

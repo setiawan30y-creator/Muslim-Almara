@@ -68,6 +68,25 @@
                     <p class="small muted" style="margin:12px 0 0">Waktu {{ $tzLabel }} · {{ $params->describe() }} · Lokasi: {{ $loc['basis'] === 'device' ? 'perangkat' : ($loc['basis'] === 'default' ? 'bawaan aplikasi' : 'dipilih manual') }}. Perkiraan; ikuti jadwal resmi setempat.</p>
                 </section>
 
+            @elseif ($card === 'weather' && config('almara.weather.enabled'))
+                <section class="card weather" data-weather data-api="{{ url('/api/v1/weather') }}" data-loc="{{ $loc['lat'] }},{{ $loc['lng'] }}" aria-labelledby="cuaca-h" aria-busy="true">
+                    <div class="section-head">
+                        <h2 id="cuaca-h">Cuaca hari ini</h2>
+                        <a href="{{ route('location', ['kembali' => '/']) }}" class="small"><x-icon name="pin" style="width:14px;height:14px;display:inline;vertical-align:-2px" /> {{ $loc['nama'] }}</a>
+                    </div>
+                    <div class="weather__now">
+                        <span class="weather__ico" data-wx-ico aria-hidden="true"><x-icon name="cloud" /></span>
+                        <div class="weather__main">
+                            <b class="weather__temp tabular" data-wx-temp>--°</b>
+                            <span data-wx-label>Memuat cuaca…</span>
+                        </div>
+                        <ul class="weather__meta small muted" data-wx-meta></ul>
+                    </div>
+                    <ol class="weather__hours" data-wx-hours aria-label="Prakiraan per jam"></ol>
+                    <p class="small muted weather__note" data-wx-note></p>
+                    <template data-wx-icons>@foreach (['sun', 'moon', 'cloud', 'cloud-sun', 'rain', 'storm', 'fog', 'droplet', 'wind'] as $wi)<span data-i="{{ $wi }}"><x-icon :name="$wi" /></span>@endforeach</template>
+                </section>
+
             @elseif ($card === 'quick_actions')
                 <nav aria-label="Aksi cepat" class="span-all">
                     <div class="shortcuts">

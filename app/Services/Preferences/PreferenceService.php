@@ -53,6 +53,7 @@ class PreferenceService
     /** Kartu beranda (blueprint §8.3) — urutan bawaan. */
     public const HOME_CARDS = [
         'next_prayer' => 'Sholat berikutnya & hitung mundur',
+        'weather' => 'Cuaca hari ini',
         'quick_actions' => 'Aksi cepat',
         'continue_reading' => 'Lanjutkan bacaan',
         'reading_goal' => 'Target tilawah',
