@@ -44,15 +44,16 @@ class PreferencesTest extends TestCase
         $this->withUnencryptedCookie('almara_tampilan', '{"accent_color":"x\"><script>"}')->get('/')->assertSee('data-accent="hijau"', false);
     }
 
-    public function test_quran_preferences_default_mushaf_with_verse_fallback(): void
+    public function test_quran_preferences_default_mushaf_and_verse_mode(): void
     {
         $u = User::factory()->create();
         $this->actingAs($u)->getJson('/api/v1/quran/reading-preferences')
             ->assertJsonPath('data.reading_mode', 'mushaf')->assertJsonPath('data.show_translation', true)->assertJsonPath('data.audio_mode', 'surah')
-            ->assertJsonPath('meta.mushaf_available', false);
-        $this->actingAs($u)->get('/al-quran/1')->assertSee('Mode <b>Mushaf penuh</b>', false);
+            ->assertJsonPath('meta.mushaf_available', true);
+        $this->actingAs($u)->get('/al-quran/1')->assertSee('data-mushaf', false)->assertSee('mushaf__num', false)->assertSee('١', false);
+        $this->actingAs($u)->get('/al-quran/1?tampilan=ayat')->assertDontSee('data-mushaf>', false)->assertSee('ayah__bar', false);
         $this->actingAs($u)->putJson('/api/v1/quran/reading-preferences', ['reading_mode' => 'verse', 'show_translation' => false])->assertOk();
-        $this->actingAs($u)->get('/al-quran/1')->assertDontSee('Mode <b>Mushaf penuh</b>', false);
+        $this->actingAs($u)->get('/al-quran/1')->assertDontSee('data-mushaf>', false)->assertSee('ayah__bar', false);
     }
 
     public function test_prayer_preferences_change_method(): void

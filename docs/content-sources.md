@@ -13,6 +13,8 @@
 | Open-Meteo | Cuaca & prakiraan | API Open-Meteo (dari server) | Data CC BY 4.0; **API gratis hanya non-komersial** — aplikasi disewakan wajib paket berlangganan (`OPEN_METEO_API_KEY`) |
 | OpenStreetMap | Lokasi masjid | Overpass API (dari peramban) | ODbL — atribusi "© OpenStreetMap contributors" |
 | Qari ALMARA (`quran_reciters`, `quran_audio_tracks`) | Rekaman murattal milik platform | Unggahan admin; dasar hak dicatat per qari | Wajib review; bukan suara tiruan AI; checksum SHA-256 & versi |
+| Islamic Network / AlQuran Cloud (tidak disimpan) | Audio per ayat belasan qari | API `api.alquran.cloud` + CDN `cdn.islamic.network` (diputar langsung peramban) | Bebas non-komersial; boleh dalam produk komersial, hak cipta tetap milik qari & dapat diminta dihapus — [Terms](https://alquran.cloud/terms-and-conditions) |
+| `quran-transliteration` | Transliterasi Latin per ayat | Diimpor admin (`almara:quran:import-latin`) | Wajib disertai dasar hak (`--license`) |
 | Quran.Foundation (tidak disimpan) | Audio qari berlisensi + penanda ayat | Content API v4 (OAuth2 client credentials) | Atribusi wajib; cache ≤ 1 minggu (aplikasi: 1 hari); tidak untuk offline; redistribusi/sublisensi butuh lisensi komersial — lihat [Developer Terms](https://api-docs.quran.foundation/legal/developer-terms/) |
 
 Metode jadwal sholat: parameter publik masing-masing otoritas (Kemenag RI, MWL, Umm al-Qura, Egypt, ISNA, Karachi, JAKIM, MUIS). Validasi terhadap jadwal resmi setempat sebelum produksi.

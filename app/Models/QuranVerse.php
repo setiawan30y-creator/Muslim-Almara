@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 // @2026-Alifiandra
 class QuranVerse extends Model
 {
-    protected $fillable = ['surah_id', 'ayah_number', 'juz_number', 'page_number', 'text_uthmani', 'source_id', 'version'];
+    protected $fillable = ['surah_id', 'ayah_number', 'juz_number', 'page_number', 'text_uthmani', 'text_latin', 'source_id', 'version'];
 
     protected function casts(): array
     {

@@ -11,7 +11,7 @@ enum QuranReadingMode: string
     public function label(): string
     {
         return match ($this) {
-            self::Mushaf => 'Mushaf penuh',
+            self::Mushaf => 'Mushaf',
             self::Verse => 'Potongan ayat',
         };
     }

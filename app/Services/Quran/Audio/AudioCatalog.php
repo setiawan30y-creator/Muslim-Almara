@@ -14,12 +14,12 @@ use App\Services\Quran\QuranService;
  */
 class AudioCatalog
 {
-    public const KEY_PATTERN = '/^(almara:[a-z0-9-]{1,60}|qf:\d{1,6})$/';
+    public const KEY_PATTERN = '/^(almara:[a-z0-9-]{1,60}|qf:\d{1,6}|in:ar\.[a-z0-9]{2,40})$/';
 
     /** @var array<int, array<int, int>>|null reciter_id => daftar surah terbit (memo per request) */
     private ?array $published = null;
 
-    public function __construct(private QuranFoundationClient $qf, private QuranService $quran)
+    public function __construct(private QuranFoundationClient $qf, private QuranService $quran, private IslamicNetworkClient $in)
     {
     }
 
@@ -56,6 +56,12 @@ class AudioCatalog
                 ];
             }
         }
+        foreach ($this->in->reciters() as $r) {
+            $out[] = [
+                'key' => 'in:'.$r['id'], 'name' => $r['name'], 'style' => $r['style'], 'provider' => 'islamic_network',
+                'available' => true, 'attribution' => $this->in->attribution(),
+            ];
+        }
         foreach ($this->qf->reciters() as $r) {
             $out[] = [
                 'key' => 'qf:'.$r['id'], 'name' => $r['name'], 'style' => $r['style'], 'provider' => 'quran_foundation',
@@ -70,9 +76,11 @@ class AudioCatalog
     public function resolve(?string $key, ?int $surah = null): ?string
     {
         $list = $this->reciters($surah);
-        foreach ($list as $r) {
-            if ($r['key'] === $key && $r['available']) {
-                return $key;
+        foreach (array_filter([$key, config('almara.audio.default_reciter')]) as $want) {
+            foreach ($list as $r) {
+                if ($r['key'] === $want && $r['available']) {
+                    return $want;
+                }
             }
         }
         foreach ($list as $r) {
@@ -107,6 +115,18 @@ class AudioCatalog
             return $this->payload($reciter, $surah, route('quran.audio.stream', $track), $track->duration_seconds ? $track->duration_seconds * 1000 : null,
                 $track->segments->map(fn ($s) => ['ayah' => $s->ayah_number, 'start_ms' => $s->start_ms, 'end_ms' => $s->end_ms])->all(),
                 ['version' => $track->version, 'offline_allowed' => (bool) config('almara.audio.allow_offline')]);
+        }
+
+        if ($provider === 'in') {
+            $tracks = $this->in->surahTracks($ref, $surah);
+            if (! $tracks) {
+                return null;
+            }
+
+            return $this->payload($reciter, $surah, $tracks[0]['url'], null, [], [
+                'tracks' => $tracks,
+                'offline_allowed' => false,
+            ]);
         }
 
         $audio = $this->qf->chapterAudio((int) $ref, $surah, (int) ($this->quran->surah($surah)?->ayah_count ?? 0));

@@ -795,3 +795,15 @@ body.hide-tafsir .tafsir { display: none; }
 .weather__hours .rain { color: var(--color-primary); font-weight: 700; font-size: .72rem; min-height: 1em; }
 .weather__note { margin: 10px 0 0; }
 .weather[aria-busy="true"] .weather__temp { opacity: .4; }
+
+/* ---------- Mode Mushaf & transliterasi — @2026-Alifiandra ---------- */
+.mushaf { padding: var(--space-5) var(--space-4); background: color-mix(in srgb, var(--color-accent-soft, var(--color-primary-soft)) 35%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-primary) 22%, var(--color-border)); }
+.mushaf__text { margin: 0; font-family: var(--font-arabic); font-size: var(--arabic-size); line-height: 2.35; text-align: justify; text-align-last: center; direction: rtl; word-spacing: .04em; }
+.mushaf__ayah { cursor: pointer; border-radius: 8px; padding: 0 2px; transition: background .2s var(--ease); -webkit-tap-highlight-color: transparent; }
+.mushaf__ayah:hover, .mushaf__ayah:focus-visible { background: var(--color-primary-soft); outline: none; }
+.mushaf__ayah.is-picked { background: var(--color-primary-soft); }
+.mushaf__ayah.is-playing { background: color-mix(in srgb, var(--color-primary) 22%, transparent); }
+.mushaf__num { display: inline-grid; place-items: center; min-width: 1.6em; height: 1.6em; padding: 0 .15em; margin: 0 .1em; border: 1.5px solid var(--color-primary); border-radius: 50%; color: var(--color-primary); font-size: .62em; line-height: 1; vertical-align: .25em; font-family: var(--font-arabic); }
+.mushaf-detail { position: sticky; bottom: calc(var(--bottomnav-h) + 150px); z-index: 30; box-shadow: var(--shadow-2); }
+@media (min-width: 1024px) { .mushaf-detail { bottom: 150px; } }
+.ayah__latin { margin: -4px 0 8px; color: var(--color-primary); font-style: italic; font-size: var(--translation-size); line-height: 1.6; }

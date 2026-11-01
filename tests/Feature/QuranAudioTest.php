@@ -94,7 +94,7 @@ class QuranAudioTest extends TestCase
         $this->assertStringContainsString('/al-quran/audio/rekaman/'.$track->id, $res->json('data.url'));
         $this->assertStringContainsString('no-store', (string) $res->headers->get('Cache-Control'));
 
-        $this->get('/al-quran/1')->assertOk()->assertSee('data-audio-play', false)->assertSee('Qari Uji')->assertSee('data-play-ayah="1"', false);
+        $this->get('/al-quran/1?tampilan=ayat')->assertOk()->assertSee('data-audio-play', false)->assertSee('Qari Uji')->assertSee('data-play-ayah="1"', false);
         // Surah lain belum ada rekamannya
         $this->getJson('/api/v1/quran/audio/surah/2')->assertNotFound();
 

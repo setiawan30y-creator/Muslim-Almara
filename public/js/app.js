@@ -367,7 +367,39 @@
         if (jump) jump.addEventListener('change', function () { var el = document.getElementById('ayat-' + jump.value); if (el) el.scrollIntoView({ behavior: 'smooth' }); });
     }
 
-    // ---------- Pemutar murattal (Qari ALMARA / Quran.Foundation) ----------
+    // ---------- Ganti tampilan Mushaf / per ayat ----------
+    $$('[data-reading-mode]').forEach(function (b) {
+        b.addEventListener('click', function () {
+            var mode = b.dataset.readingMode, go = function () { var u = new URL(location.href); u.searchParams.delete('tampilan'); location.href = u.pathname + u.search; };
+            if (window.ALMARA) http('POST', ALMARA.routes.quranPrefs, { reading_mode: mode }).then(go).catch(go); else go();
+        });
+    });
+
+    // ---------- Mode Mushaf: ketuk ayat untuk arti & aksi ----------
+    var mushaf = $('[data-mushaf]'), md = $('[data-mushaf-detail]');
+    if (mushaf && md) {
+        var mdOpen = function (span) {
+            $$('.mushaf__ayah.is-picked', mushaf).forEach(function (x) { x.classList.remove('is-picked'); });
+            span.classList.add('is-picked');
+            var n = span.dataset.ayah, rd = $('[data-reader]');
+            $('[data-md-ref]', md).textContent = 'QS. ' + rd.dataset.surahName + ': ' + n;
+            $('[data-md-tr]', md).textContent = span.dataset.tr || '';
+            var play = $('[data-md-play]', md); if (play) play.dataset.playAyah = n;
+            $('[data-md-verse]', md).href = location.pathname + '?tampilan=ayat#ayat-' + n;
+            md.dataset.ayah = n;
+            md.hidden = false;
+        };
+        mushaf.addEventListener('click', function (e) { var sp = e.target.closest('.mushaf__ayah'); if (sp) mdOpen(sp); });
+        mushaf.addEventListener('keydown', function (e) { var sp = e.target.closest('.mushaf__ayah'); if (sp && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); mdOpen(sp); } });
+        $('[data-md-close]', md).addEventListener('click', function () { md.hidden = true; $$('.mushaf__ayah.is-picked', mushaf).forEach(function (x) { x.classList.remove('is-picked'); }); });
+        $('[data-md-copy]', md).addEventListener('click', function () {
+            var sp = document.getElementById('ayat-' + md.dataset.ayah);
+            var txt = sp.textContent.trim() + '\n' + (sp.dataset.tr || '') + ' (' + $('[data-md-ref]', md).textContent + ')';
+            if (navigator.clipboard) navigator.clipboard.writeText(txt).then(function () { toast('Disalin'); });
+        });
+    }
+
+    // ---------- Pemutar murattal (Qari ALMARA / Islamic Network / Quran.Foundation) ----------
     var player = $('[data-audio]');
     if (player) (function () {
         var audio = new Audio();
@@ -384,6 +416,17 @@
         function busy(on) { player.classList.toggle('is-loading', on); btn.setAttribute('aria-busy', on ? 'true' : 'false'); }
         function segs() { return (st.data && st.data.segments) || []; }
         function segOf(ayah) { var s = segs(); for (var i = 0; i < s.length; i++) if (s[i].ayah === ayah) return s[i]; return null; }
+        // Mode audio per ayat (berkas terpisah tiap ayat): diputar berurutan.
+        function tracks() { return (st.data && st.data.tracks) || null; }
+        var preloader = new Audio(); preloader.preload = 'auto';
+        function setTrack(i) {
+            var t = tracks(); if (!t || !t[i]) return false;
+            st.ti = i; st.triedAlt = false;
+            audio.src = t[i].url;
+            highlight(t[i].ayah);
+            if (t[i + 1]) preloader.src = t[i + 1].url;
+            return true;
+        }
 
         function load() {
             var key = sel ? sel.value : null;
@@ -393,11 +436,12 @@
             st.loading = fetch(player.dataset.api + (key ? '?reciter=' + encodeURIComponent(key) : ''), { headers: { Accept: 'application/json' }, credentials: 'same-origin' })
                 .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j.message || 'Audio belum tersedia.'); return j.data; }); })
                 .then(function (d) {
-                    st.data = d; st.key = key; audio.src = d.url;
+                    st.data = d; st.key = key;
+                    if (d.tracks && d.tracks.length) { st.ti = 0; audio.src = d.tracks[0].url; } else audio.src = d.url;
                     var info = [];
                     if (d.simulated) info.push('Mode simulasi: nada uji, bukan bacaan.');
                     if (d.attribution) info.push(d.attribution + '.');
-                    if (st.verseMode && !(d.segments || []).length) info.push('Penanda ayat belum tersedia untuk qari ini — diputar satu surah.');
+                    if (st.verseMode && !(d.segments || []).length && !d.tracks) info.push('Penanda ayat belum tersedia untuk qari ini — diputar satu surah.');
                     setNote(info.join(' '));
                     if (d.duration_ms) { dur.textContent = fmt(d.duration_ms / 1000); seek.max = d.duration_ms / 1000; }
                     if ('mediaSession' in navigator) {
@@ -433,6 +477,13 @@
 
         function playFrom(ayah) {
             return load().then(function () {
+                var t = tracks();
+                if (t) {
+                    var idx = 0;
+                    if (ayah) for (var k = 0; k < t.length; k++) if (t[k].ayah === ayah) { idx = k; break; }
+                    setTrack(idx);
+                    return audio.play();
+                }
                 var s = ayah ? segOf(ayah) : null;
                 st.range = null;
                 if (ayah && !s) toast('Penanda ayat belum tersedia — diputar dari awal surah');
@@ -443,21 +494,27 @@
 
         btn.addEventListener('click', function () {
             if (!audio.paused) { audio.pause(); return; }
-            if (st.data && audio.currentTime > 0) { audio.play().catch(function () {}); return; }
+            if (st.data && (audio.currentTime > 0 || tracks())) { if (tracks() && st.active === null) setTrack(st.ti || 0); audio.play().catch(function () {}); return; }
             playFrom(null);
         });
-        $$('[data-play-ayah]').forEach(function (b) { b.addEventListener('click', function () { playFrom(+b.dataset.playAyah); }); });
+        document.addEventListener('click', function (e) { var b = e.target.closest('[data-play-ayah]'); if (b && b.dataset.playAyah) playFrom(+b.dataset.playAyah); });
 
         audio.addEventListener('play', function () { player.classList.add('is-playing'); btn.setAttribute('aria-label', 'Jeda murattal'); });
         audio.addEventListener('pause', function () { player.classList.remove('is-playing'); btn.setAttribute('aria-label', 'Putar murattal'); });
         audio.addEventListener('loadedmetadata', function () { if (isFinite(audio.duration)) { seek.max = audio.duration; dur.textContent = fmt(audio.duration); } });
         audio.addEventListener('waiting', function () { busy(true); });
         audio.addEventListener('playing', function () { busy(false); });
-        audio.addEventListener('error', function () { busy(false); if (st.data) setNote('Audio tidak dapat dimuat. Periksa koneksi lalu coba lagi.'); });
+        audio.addEventListener('error', function () {
+            busy(false);
+            var t = tracks();
+            if (t && t[st.ti] && t[st.ti].alt && !st.triedAlt) { st.triedAlt = true; audio.src = t[st.ti].alt; audio.play().catch(function () {}); return; }
+            if (st.data) setNote('Audio tidak dapat dimuat. Periksa koneksi lalu coba lagi.');
+        });
         audio.addEventListener('timeupdate', function () {
             var t = audio.currentTime;
             if (!st.seeking) seek.value = t;
             cur.textContent = fmt(t);
+            if (tracks()) return;
             var ms = t * 1000, s = segs(), found = null;
             for (var i = 0; i < s.length; i++) { if (ms >= s[i].start_ms && ms < s[i].end_ms) { found = s[i].ayah; break; } }
             if (s.length) highlight(found);
@@ -467,6 +524,16 @@
             }
         });
         audio.addEventListener('ended', function () {
+            var tl = tracks();
+            if (tl) {
+                if (st.verseMode) { if (st.repeat) { audio.currentTime = 0; audio.play().catch(function () {}); } return; }
+                if (setTrack(st.ti + 1)) { audio.play().catch(function () {}); return; }
+                if (st.repeat) { setTrack(0); audio.play().catch(function () {}); return; }
+                highlight(null); st.ti = 0;
+                var nx = $('.pager .btn--tonal');
+                if (nx) setNote('Selesai. Lanjut ke surah berikutnya: ' + nx.textContent.trim() + '.');
+                return;
+            }
             if (st.repeat) { audio.currentTime = st.range ? st.range.start : 0; audio.play().catch(function () {}); return; }
             highlight(null);
             var next = $('.pager .btn--tonal');
@@ -505,6 +572,8 @@
                 navigator.mediaSession.setActionHandler('pause', function () { audio.pause(); });
                 navigator.mediaSession.setActionHandler('seekbackward', function () { audio.currentTime = Math.max(0, audio.currentTime - 10); });
                 navigator.mediaSession.setActionHandler('seekforward', function () { audio.currentTime = audio.currentTime + 10; });
+                navigator.mediaSession.setActionHandler('nexttrack', function () { if (tracks() && setTrack(st.ti + 1)) audio.play(); });
+                navigator.mediaSession.setActionHandler('previoustrack', function () { if (tracks() && setTrack(Math.max(0, st.ti - 1))) audio.play(); });
             } catch (e) {}
         }
         // Spasi = putar/jeda (kecuali saat mengetik)

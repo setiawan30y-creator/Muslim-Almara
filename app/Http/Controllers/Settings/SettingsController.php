@@ -56,6 +56,7 @@ class SettingsController extends Controller
         return view('pages.settings.quran', [
             'current' => $this->prefs->quran(),
             'mushafAvailable' => PreferenceService::mushafAvailable(),
+            'latinAvailable' => PreferenceService::latinAvailable(),
             'reciters' => app(\App\Services\Quran\Audio\AudioCatalog::class)->reciters(),
         ]);
     }

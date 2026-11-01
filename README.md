@@ -7,7 +7,7 @@ Dibangun dengan **Laravel 13** mengikuti *ALMARA MUSLIM — Blueprint Teknis & R
 
 ## Status rilis
 
-Versi **2.4.0** mencakup Rilis Pertama (MVP, blueprint §1.1) + *Pengaturan Tampilan & Tema*:
+Versi **2.5.0** mencakup Rilis Pertama (MVP, blueprint §1.1) + *Pengaturan Tampilan & Tema*:
 
 | Area | Isi |
 |---|---|
@@ -23,7 +23,7 @@ Versi **2.4.0** mencakup Rilis Pertama (MVP, blueprint §1.1) + *Pengaturan Tamp
 | API | `/api/v1` format `{data, meta}` — lihat `docs/api.md` |
 | PWA | Manifest, service worker berversi, offline, halaman pribadi tidak pernah dicache |
 
-Pengingat adzan (Web Push) aktif setelah kunci VAPID dibuat (`php artisan almara:push:keys`) dan penjadwal berjalan. Belum diaktifkan: Mushaf penuh & transliterasi per ayat (menunggu dataset berlisensi), Premium/Iklan.
+Pengingat adzan (Web Push) aktif setelah kunci VAPID dibuat (`php artisan almara:push:keys`) dan penjadwal berjalan. Mode **Mushaf** (teks bersambung, nomor ayat berornamen, ketuk ayat untuk arti) aktif sebagai tampilan bawaan. **Transliterasi Latin** aktif setelah dataset berizin diimpor: `php artisan almara:quran:import-latin berkas.json --license="..."`. Belum diaktifkan: Mushaf halaman bergambar (butuh edisi berlisensi), Premium/Iklan.
 
 Deploy ke Ubuntu: lihat **`docs/deployment.md`** (Nginx, PHP 8.4, MySQL, HTTPS, cron, Play Store/TWA).
 
@@ -61,7 +61,7 @@ Doa, dzikir, dan materi panduan (Tajwid, Umroh, Haji, Ziarah) masuk berstatus **
 php artisan test
 ```
 
-104 test mencakup perhitungan sholat/kiblat/Hijriah, integritas dataset, autentikasi, isolasi data pribadi (IDOR), alur review admin, audio qari, panduan, hafalan, terjemah, jurnal & koleksi, preferensi tema, API, dan PWA.
+107 test mencakup perhitungan sholat/kiblat/Hijriah, integritas dataset, autentikasi, isolasi data pribadi (IDOR), alur review admin, audio qari, panduan, hafalan, terjemah, jurnal & koleksi, preferensi tema, API, dan PWA.
 
 ## Konfigurasi `.env`
 
@@ -87,6 +87,7 @@ php artisan test
 
 ## Audio qari
 
+0. **Qari pilihan (aktif bawaan)** — belasan qari ternama (Alafasy, Sudais, Shuraim, Al-Husary, Al-Minshawi, Abdul Basit, Maher Al-Muaiqly, dll.) dari Islamic Network / AlQuran Cloud, tanpa kunci API, diputar ayat demi ayat (sorot ayat akurat). Batasi daftar dengan `ISLAMIC_NETWORK_RECITERS`; matikan dengan `ISLAMIC_NETWORK_AUDIO=false`. Ketentuan penyedia: rekaman bebas untuk non-komersial dan boleh disertakan dalam produk komersial, namun hak cipta tetap milik qari yang dapat meminta penghapusan.
 1. **Qari ALMARA** — Admin → *Audio qari* → *Tambah qari* (isi dasar hak penggunaan) → *Unggah rekaman* per surah (MP3/M4A/OGG/WAV). Berkas masuk karantina berstatus draf, dicek tanda tangan berkas, ukuran, durasi, dan checksum SHA-256. Opsional: penanda waktu per ayat (`ayat mulai selesai`) untuk sorot ayat & mode per ayat. Ajukan review → reviewer lain menyetujui → terbit; versi lama otomatis diarsipkan. Rekaman terbit dapat diputar tanpa login dengan dukungan HTTP Range.
    Naikkan batas unggah PHP agar rekaman besar dapat diunggah (Laragon: Menu → PHP → php.ini): `upload_max_filesize = 200M`, `post_max_size = 210M`, `max_execution_time = 300`, lalu *Reload*.
 2. **Quran.Foundation** — daftar di Developer Console (https://api-docs.quran.foundation), isi `QF_ENABLED=true`, `QF_CLIENT_ID`, `QF_CLIENT_SECRET`, lalu `php artisan config:clear`. Atribusi *"Quran data provided by Quran.Foundation"* tampil otomatis; data di-cache ≤ 1 hari (batas penyedia 1 minggu) dan tidak disediakan untuk offline. Penggunaan komersial/penyewaan aplikasi: pastikan sesuai Developer Terms penyedia.

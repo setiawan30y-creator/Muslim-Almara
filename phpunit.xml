@@ -22,6 +22,8 @@
         <env name="APP_MAINTENANCE_DRIVER" value="file"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="BROADCAST_CONNECTION" value="null"/>
+        <env name="ISLAMIC_NETWORK_AUDIO" value="false"/>
+        <env name="ALMARA_WEATHER_CACHE" value="1800"/>
         <env name="CACHE_STORE" value="file"/>
         <env name="DB_CONNECTION" value="sqlite"/>
         <env name="DB_DATABASE" value=":memory:"/>

@@ -156,17 +156,31 @@ class PreferenceService
         return $out;
     }
 
-    /** Mode efektif: Mushaf penuh hanya bila edisi Mushaf berlisensi telah dikonfigurasi. */
+    /**
+     * Mode Mushaf (teks bersambung berbasis teks Kemenag) selalu tersedia.
+     * Edisi halaman Mushaf bergambar berlisensi (opsional) dikonfigurasi lewat ALMARA_MUSHAF_EDITION.
+     */
     public static function mushafAvailable(): bool
     {
-        return (bool) config('almara.mushaf_edition');
+        return true;
+    }
+
+    public static function mushafPageEdition(): ?string
+    {
+        return config('almara.mushaf_edition') ?: null;
+    }
+
+    /** Transliterasi Latin tersedia bila dataset berlisensi sudah diimpor. */
+    public static function latinAvailable(): bool
+    {
+        return \Illuminate\Support\Facades\Cache::remember('quran:latin_available', 600, fn () => \App\Models\QuranVerse::query()->whereNotNull('text_latin')->exists());
     }
 
     public function effectiveReadingMode(): QuranReadingMode
     {
-        $mode = QuranReadingMode::from($this->quran()['reading_mode']);
+        $override = QuranReadingMode::tryFrom(match ((string) $this->request()->query('tampilan')) { 'ayat' => 'verse', 'mushaf' => 'mushaf', default => '' });
 
-        return $mode === QuranReadingMode::Mushaf && ! self::mushafAvailable() ? QuranReadingMode::Verse : $mode;
+        return $override ?? QuranReadingMode::from($this->quran()['reading_mode']);
     }
 
     /** @param array<string, mixed> $values */

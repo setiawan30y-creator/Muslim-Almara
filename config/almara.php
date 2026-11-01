@@ -3,7 +3,7 @@
 // Konfigurasi ALMARA MUSLIM — @2026-Alifiandra
 
 return [
-    'version' => '2.4.0',
+    'version' => '2.5.0',
 
     // Kota bawaan (slug dari resources/data/kota.json) bila pengguna belum memilih lokasi
     'default_city' => env('ALMARA_DEFAULT_CITY', 'jakarta'),
@@ -26,6 +26,15 @@ return [
         'max_duration_minutes' => (int) env('ALMARA_AUDIO_MAX_MINUTES', 240),
         // Unduh offline hanya bila hak rekaman mengizinkan.
         'allow_offline' => (bool) env('ALMARA_AUDIO_OFFLINE', false),
+        // Qari bawaan bagi pengguna yang belum memilih (bila tersedia)
+        'default_reciter' => env('ALMARA_DEFAULT_RECITER', 'in:ar.alafasy'),
+
+        // Pilihan qari dari Islamic Network / AlQuran Cloud (tanpa kunci). Batasi daftar dengan
+        // ISLAMIC_NETWORK_RECITERS=ar.alafasy,ar.husary,... (kosong = semua qari berbahasa Arab).
+        'islamic_network' => [
+            'enabled' => (bool) env('ISLAMIC_NETWORK_AUDIO', true),
+            'reciters' => env('ISLAMIC_NETWORK_RECITERS', ''),
+        ],
 
         // Qari berlisensi via Quran.Foundation Content API v4.
         // Kredensial dari Developer Console — hanya di server, jangan pernah dikirim ke browser.

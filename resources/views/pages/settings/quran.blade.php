@@ -11,23 +11,26 @@
                     <label><input type="radio" name="reading_mode" value="{{ $m->value }}" @checked($current['reading_mode'] === $m->value)><span>{{ $m->label() }}</span></label>
                 @endforeach
             </div>
-            @unless ($mushafAvailable)
-                <p class="small muted" style="margin:8px 0 0">Mode <b>Mushaf penuh</b> membutuhkan aset halaman Mushaf digital yang sumber, versi, dan hak penggunaannya telah diverifikasi. Selama belum tersedia, pembaca otomatis memakai mode potongan ayat dan pilihan Anda tetap tersimpan.</p>
-            @endunless
+            <p class="small muted" style="margin:8px 0 0"><b>Mushaf</b>: teks Arab bersambung seperti mushaf (rasm Kemenag), ketuk ayat untuk arti. <b>Potongan ayat</b>: setiap ayat dengan terjemahan, tafsir, bookmark, dan catatan. Dapat diganti langsung dari halaman surah.</p>
         </div>
         <div class="setting-row"><div><b>Tampilkan terjemahan Indonesia</b><span class="muted">Dapat disembunyikan kapan saja di halaman surah</span></div>
             <label class="switch"><input type="checkbox" name="show_translation" value="1" @checked($current['show_translation'])><span class="switch__track"></span><span class="sr-only">Tampilkan terjemahan</span></label></div>
         <div class="setting-row"><div><b>Tampilkan tafsir ringkas</b><span class="muted">Tafsir Kemenag di bawah setiap ayat</span></div>
             <label class="switch"><input type="checkbox" name="show_tafsir" value="1" @checked($current['show_tafsir'])><span class="switch__track"></span><span class="sr-only">Tampilkan tafsir</span></label></div>
-        <div class="setting-row"><div><b>Transliterasi Latin ayat</b><span class="muted">Belum tersedia — menunggu dataset transliterasi berlisensi</span></div>
-            <label class="switch"><input type="checkbox" name="show_transliteration" value="1" disabled @checked($current['show_transliteration'])><span class="switch__track"></span><span class="sr-only">Transliterasi</span></label></div>
+        <div class="setting-row"><div><b>Transliterasi Latin ayat</b><span class="muted">{{ $latinAvailable ? 'Ditampilkan di bawah teks Arab pada mode potongan ayat' : 'Belum tersedia — admin perlu mengimpor dataset transliterasi berlisensi' }}</span></div>
+            <label class="switch"><input type="checkbox" name="show_transliteration" value="1" @disabled(! $latinAvailable) @checked($current['show_transliteration'])><span class="switch__track"></span><span class="sr-only">Transliterasi</span></label></div>
         <div class="setting-group">
             <h2>Audio murattal</h2>
             @if ($reciters)
                 <div class="setting-row"><div><label for="reciter"><b>Qari</b></label><span class="muted">Dipakai otomatis di setiap surah; dapat diganti langsung dari pemutar</span></div>
                     <select id="reciter" name="reciter" class="select" style="max-width:260px">
-                        @foreach ($reciters as $r)
-                            <option value="{{ $r['key'] }}" @selected($current['reciter'] === $r['key'])>{{ $r['name'] }}{{ $r['style'] ? ' · '.$r['style'] : '' }}</option>
+                        @php $provLabels = ['almara' => 'Qari ALMARA', 'islamic_network' => 'Qari pilihan', 'quran_foundation' => 'Quran.Foundation']; @endphp
+                        @foreach (collect($reciters)->groupBy('provider') as $prov => $list)
+                            <optgroup label="{{ $provLabels[$prov] ?? $prov }}">
+                                @foreach ($list as $r)
+                                    <option value="{{ $r['key'] }}" @selected(($current['reciter'] ?? config('almara.audio.default_reciter')) === $r['key'])>{{ $r['name'] }}{{ $r['style'] ? ' · '.$r['style'] : '' }}</option>
+                                @endforeach
+                            </optgroup>
                         @endforeach
                     </select></div>
             @else

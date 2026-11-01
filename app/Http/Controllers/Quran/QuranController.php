@@ -41,6 +41,7 @@ class QuranController extends Controller
             'prefs' => $prefs->quran(),
             'mode' => $prefs->effectiveReadingMode(),
             'mushafAvailable' => PreferenceService::mushafAvailable(),
+            'latinAvailable' => PreferenceService::latinAvailable(),
             'bookmarked' => $user ? $user->bookmarks()->whereIn('verse_id', $this->quran->verses($surah)->pluck('id'))->pluck('verse_id')->flip() : collect(),
             'noteCounts' => $user ? $user->notes()->whereNotNull('verse_id')->selectRaw('verse_id, count(*) c')->groupBy('verse_id')->pluck('c', 'verse_id') : collect(),
             'source' => $surah->source,
