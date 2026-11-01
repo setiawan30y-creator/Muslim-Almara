@@ -58,7 +58,8 @@
    "source_kind": "hadith",
    "quran_ref": null,
    "count_target": null,
-   "context_note": "Jika lupa di awal makan, ucapkan: “Bismillāhi awwalahū wa ākhirahū” (Dengan nama Allah di awal dan akhirnya)."
+   "context_note": "Jika lupa di awal makan, ucapkan: “Bismillāhi awwalahū wa ākhirahū” (Dengan nama Allah di awal dan akhirnya).",
+   "audio_ref": null
   },
   {
    "category": "harian",
@@ -71,7 +72,8 @@
    "source_kind": "hadith",
    "quran_ref": null,
    "count_target": null,
-   "context_note": null
+   "context_note": null,
+   "audio_ref": null
   },
   {
    "category": "harian",
@@ -84,7 +86,8 @@
    "source_kind": "hadith",
    "quran_ref": null,
    "count_target": null,
-   "context_note": null
+   "context_note": null,
+   "audio_ref": null
   },
   {
    "category": "harian",
@@ -97,7 +100,8 @@
    "source_kind": "hadith",
    "quran_ref": null,
    "count_target": null,
-   "context_note": null
+   "context_note": null,
+   "audio_ref": null
   },
   {
    "category": "harian",
@@ -110,7 +114,8 @@
    "source_kind": "hadith",
    "quran_ref": null,
    "count_target": null,
-   "context_note": "Dibaca sebelum masuk."
+   "context_note": "Dibaca sebelum masuk.",
+   "audio_ref": null
   },
   {
    "category": "harian",
@@ -123,7 +128,8 @@
    "source_kind": "hadith",
    "quran_ref": null,
    "count_target": null,
-   "context_note": null
+   "context_note": null,
+   "audio_ref": null
   },
   {
    "category": "harian",
@@ -136,7 +142,8 @@
    "source_kind": "hadith",
    "quran_ref": null,
    "count_target": null,
-   "context_note": null
+   "context_note": null,
+   "audio_ref": null
   },
   {
    "category": "harian",
@@ -149,7 +156,8 @@
    "source_kind": "hadith",
    "quran_ref": null,
    "count_target": null,
-   "context_note": "Yang mendengar menjawab “Yarḥamukallāh” (semoga Allah merahmatimu)."
+   "context_note": "Yang mendengar menjawab “Yarḥamukallāh” (semoga Allah merahmatimu).",
+   "audio_ref": null
   },
   {
    "category": "ibadah",
@@ -162,7 +170,8 @@
    "source_kind": "hadith",
    "quran_ref": null,
    "count_target": null,
-   "context_note": null
+   "context_note": null,
+   "audio_ref": null
   },
   {
    "category": "ibadah",
@@ -175,7 +184,8 @@
    "source_kind": "hadith",
    "quran_ref": null,
    "count_target": null,
-   "context_note": null
+   "context_note": null,
+   "audio_ref": null
   },
   {
    "category": "ibadah",
@@ -188,7 +198,8 @@
    "source_kind": "hadith",
    "quran_ref": null,
    "count_target": null,
-   "context_note": null
+   "context_note": null,
+   "audio_ref": null
   },
   {
    "category": "ibadah",
@@ -201,7 +212,8 @@
    "source_kind": "hadith",
    "quran_ref": null,
    "count_target": null,
-   "context_note": "Dibaca setelah berbuka."
+   "context_note": "Dibaca setelah berbuka.",
+   "audio_ref": null
   },
   {
    "category": "perjalanan",
@@ -217,7 +229,8 @@
     13
    ],
    "count_target": null,
-   "context_note": null
+   "context_note": null,
+   "audio_ref": "43:13-14"
   },
   {
    "category": "keluarga",
@@ -233,7 +246,8 @@
     24
    ],
    "count_target": null,
-   "context_note": null
+   "context_note": null,
+   "audio_ref": "17:24"
   },
   {
    "category": "keluarga",
@@ -249,7 +263,8 @@
     74
    ],
    "count_target": null,
-   "context_note": null
+   "context_note": null,
+   "audio_ref": "25:74"
   },
   {
    "category": "quran",
@@ -265,7 +280,8 @@
     201
    ],
    "count_target": null,
-   "context_note": null
+   "context_note": null,
+   "audio_ref": "2:201"
   },
   {
    "category": "quran",
@@ -281,7 +297,8 @@
     114
    ],
    "count_target": null,
-   "context_note": null
+   "context_note": null,
+   "audio_ref": "20:114"
   },
   {
    "category": "quran",
@@ -297,7 +314,8 @@
     8
    ],
    "count_target": null,
-   "context_note": null
+   "context_note": null,
+   "audio_ref": "3:8"
   }
  ],
  "dhikr_items": [
@@ -312,7 +330,8 @@
    "source_kind": "hadith",
    "quran_ref": null,
    "count_target": 3,
-   "context_note": "Dibaca tiga kali setelah salam."
+   "context_note": "Dibaca tiga kali setelah salam.",
+   "audio_ref": null
   },
   {
    "category": "setelah-shalat",
@@ -325,7 +344,8 @@
    "source_kind": "hadith",
    "quran_ref": null,
    "count_target": 1,
-   "context_note": null
+   "context_note": null,
+   "audio_ref": null
   },
   {
    "category": "setelah-shalat",
@@ -341,7 +361,8 @@
     255
    ],
    "count_target": 1,
-   "context_note": null
+   "context_note": null,
+   "audio_ref": "2:255"
   },
   {
    "category": "setelah-shalat",
@@ -354,7 +375,8 @@
    "source_kind": "hadith",
    "quran_ref": null,
    "count_target": 33,
-   "context_note": null
+   "context_note": null,
+   "audio_ref": null
   },
   {
    "category": "setelah-shalat",
@@ -367,7 +389,8 @@
    "source_kind": "hadith",
    "quran_ref": null,
    "count_target": 33,
-   "context_note": null
+   "context_note": null,
+   "audio_ref": null
   },
   {
    "category": "setelah-shalat",
@@ -380,7 +403,8 @@
    "source_kind": "hadith",
    "quran_ref": null,
    "count_target": 33,
-   "context_note": null
+   "context_note": null,
+   "audio_ref": null
   },
   {
    "category": "setelah-shalat",
@@ -393,7 +417,8 @@
    "source_kind": "hadith",
    "quran_ref": null,
    "count_target": 1,
-   "context_note": "Penyempurna hitungan menjadi seratus setelah tasbih, tahmid, dan takbir masing-masing 33 kali."
+   "context_note": "Penyempurna hitungan menjadi seratus setelah tasbih, tahmid, dan takbir masing-masing 33 kali.",
+   "audio_ref": null
   },
   {
    "category": "pagi-petang",
@@ -409,7 +434,8 @@
     1
    ],
    "count_target": 3,
-   "context_note": "Dibaca tiga kali pada pagi dan petang, bersama Al-Falaq dan An-Nas."
+   "context_note": "Dibaca tiga kali pada pagi dan petang, bersama Al-Falaq dan An-Nas.",
+   "audio_ref": "112:1-4"
   },
   {
    "category": "pagi-petang",
@@ -425,7 +451,8 @@
     1
    ],
    "count_target": 3,
-   "context_note": null
+   "context_note": null,
+   "audio_ref": "113:1-5"
   },
   {
    "category": "pagi-petang",
@@ -441,7 +468,8 @@
     1
    ],
    "count_target": 3,
-   "context_note": null
+   "context_note": null,
+   "audio_ref": "114:1-6"
   },
   {
    "category": "pagi-petang",
@@ -454,7 +482,8 @@
    "source_kind": "hadith",
    "quran_ref": null,
    "count_target": 3,
-   "context_note": "Dibaca tiga kali pada pagi dan petang."
+   "context_note": "Dibaca tiga kali pada pagi dan petang.",
+   "audio_ref": null
   },
   {
    "category": "pagi-petang",
@@ -467,7 +496,8 @@
    "source_kind": "hadith",
    "quran_ref": null,
    "count_target": 1,
-   "context_note": "Dibaca pada pagi dan petang."
+   "context_note": "Dibaca pada pagi dan petang.",
+   "audio_ref": null
   }
  ]
 }

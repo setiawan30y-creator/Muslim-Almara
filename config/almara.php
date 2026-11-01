@@ -3,7 +3,7 @@
 // Konfigurasi ALMARA MUSLIM — @2026-Alifiandra
 
 return [
-    'version' => '2.5.0',
+    'version' => '2.5.1',
 
     // Kota bawaan (slug dari resources/data/kota.json) bila pengguna belum memilih lokasi
     'default_city' => env('ALMARA_DEFAULT_CITY', 'jakarta'),

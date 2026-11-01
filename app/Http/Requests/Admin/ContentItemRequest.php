@@ -47,6 +47,7 @@ class ContentItemRequest extends FormRequest
             'source_kind' => ['required', Rule::in(['quran', 'hadith', 'general'])],
             'count_target' => ['nullable', 'integer', 'min:1', 'max:1000'],
             'context_note' => ['nullable', 'string', 'max:1000'],
+            'audio_ref' => ['nullable', 'string', 'max:20', 'regex:/^\d{1,3}:\d{1,3}(-\d{1,3})?$/'],
             'sort_order' => ['nullable', 'integer', 'min:0', 'max:10000'],
         ];
     }
@@ -56,7 +57,7 @@ class ContentItemRequest extends FormRequest
         return [
             'category_id' => 'kategori', 'title' => 'judul', 'arabic_text' => 'teks Arab', 'transliteration' => 'transliterasi Latin',
             'translation' => 'arti Bahasa Indonesia', 'source_reference' => 'rujukan sumber', 'source_kind' => 'jenis sumber',
-            'count_target' => 'jumlah anjuran', 'context_note' => 'keterangan konteks', 'body' => 'penjelasan', 'example_ref' => 'contoh ayat',
+            'count_target' => 'jumlah anjuran', 'context_note' => 'keterangan konteks', 'body' => 'penjelasan', 'audio_ref' => 'ayat audio', 'example_ref' => 'contoh ayat',
         ];
     }
 }

@@ -15,7 +15,7 @@ class DuaItem extends Model
 
     protected $fillable = [
         'category_id', 'slug', 'title', 'arabic_text', 'transliteration', 'translation', 'translation_status',
-        'count_target', 'context_note', 'source_reference', 'source_kind', 'source_id', 'review_status',
+        'count_target', 'context_note', 'source_reference', 'audio_ref', 'source_kind', 'source_id', 'review_status',
         'content_version', 'created_by', 'submitted_by', 'reviewed_by', 'reviewed_at', 'published_at', 'sort_order',
     ];
 

@@ -140,6 +140,41 @@ class AudioCatalog
         ]);
     }
 
+    /**
+     * Audio per ayat untuk rentang "surah:dari[-sampai]" (doa/dzikir dari Al-Qur'an).
+     * Memakai qari per ayat (Islamic Network): pilihan pengguna bila sesuai, selain itu qari bawaan.
+     * @return array<string, mixed>|null
+     */
+    public function range(string $ref, ?string $key = null): ?array
+    {
+        if (! preg_match('/^(\d{1,3}):(\d{1,3})(?:-(\d{1,3}))?$/', $ref, $m)) {
+            return null;
+        }
+        [$s, $from] = [(int) $m[1], (int) $m[2]];
+        $to = isset($m[3]) ? (int) $m[3] : $from;
+        if ($s < 1 || $s > 114 || $from < 1 || $to < $from || $to > \App\Services\Quran\QuranDataset::AYAH_COUNTS[$s - 1]) {
+            return null;
+        }
+        $perAyah = collect($this->reciters())->where('provider', 'islamic_network')->values();
+        if ($perAyah->isEmpty()) {
+            return null;
+        }
+        $reciter = $perAyah->firstWhere('key', $key) ?? $perAyah->firstWhere('key', config('almara.audio.default_reciter')) ?? $perAyah->first();
+        $tracks = $this->in->surahTracks(substr($reciter['key'], 3), $s);
+        $tracks = $tracks ? array_values(array_filter($tracks, fn ($t) => $t['ayah'] >= $from && $t['ayah'] <= $to)) : [];
+        if (! $tracks) {
+            return null;
+        }
+
+        return [
+            'ref' => $ref,
+            'surah' => $s,
+            'reciter' => array_intersect_key($reciter, array_flip(['key', 'name', 'style', 'provider'])),
+            'tracks' => $tracks,
+            'attribution' => $reciter['attribution'],
+        ];
+    }
+
     private function payload(array $reciter, int $surah, string $url, ?int $durationMs, array $segments, array $extra): array
     {
         return [

@@ -807,3 +807,9 @@ body.hide-tafsir .tafsir { display: none; }
 .mushaf-detail { position: sticky; bottom: calc(var(--bottomnav-h) + 150px); z-index: 30; box-shadow: var(--shadow-2); }
 @media (min-width: 1024px) { .mushaf-detail { bottom: 150px; } }
 .ayah__latin { margin: -4px 0 8px; color: var(--color-primary); font-style: italic; font-size: var(--translation-size); line-height: 1.6; }
+
+/* ---------- Audio doa & dzikir — @2026-Alifiandra ---------- */
+[data-ayat-audio] .i-pause, [data-ayat-audio].is-playing .i-play { display: none; }
+[data-ayat-audio].is-playing .i-pause { display: block; }
+[data-ayat-audio].is-playing { background: var(--color-primary-soft); color: var(--color-primary); }
+[data-ayat-audio].is-loading { opacity: .5; cursor: progress; }

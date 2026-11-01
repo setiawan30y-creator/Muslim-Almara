@@ -55,6 +55,23 @@ trait HasReviewWorkflow
         return $this->belongsTo(User::class, 'reviewed_by');
     }
 
+    /** Rujukan audio ayat ("2:201", "112:1-4") → [surah, dari, sampai] atau null. */
+    public function audioRange(): ?array
+    {
+        $ref = $this->audio_ref ?? null;
+        if (! $ref || ! preg_match('/^(\d{1,3}):(\d{1,3})(?:-(\d{1,3}))?$/', $ref, $m)) {
+            return null;
+        }
+        $s = (int) $m[1];
+        $from = (int) $m[2];
+        $to = isset($m[3]) ? (int) $m[3] : $from;
+        if ($s < 1 || $s > 114 || $from < 1 || $to < $from || $to > \App\Services\Quran\QuranDataset::AYAH_COUNTS[$s - 1]) {
+            return null;
+        }
+
+        return [$s, $from, $to];
+    }
+
     /** Label jenis sumber untuk ditampilkan ke pengguna. */
     public function sourceKindLabel(): string
     {

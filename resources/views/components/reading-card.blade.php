@@ -7,6 +7,9 @@
         </h3>
         <span style="display:flex;gap:4px;align-items:center">
             @if ($item->count_target)<span class="count-pill" title="Jumlah anjuran">{{ $item->count_target }}×</span>@endif
+            @if (config('almara.audio.islamic_network.enabled') && $item->audioRange())
+                <button type="button" class="icon-btn" data-ayat-audio="{{ $item->audio_ref }}" aria-label="Dengarkan {{ $item->title }}" title="Dengarkan (QS {{ $item->audio_ref }})"><x-icon name="play" class="i-play" /><x-icon name="pause" class="i-pause" /></button>
+            @endif
             <button type="button" class="icon-btn" data-copy="baca-{{ $item->slug }}" aria-label="Salin {{ $item->title }}"><x-icon name="copy" /></button>
         </span>
     </div>
@@ -21,6 +24,9 @@
     <div class="reading-card__meta">
         <span class="badge badge--neutral">{{ $item->sourceKindLabel() }}</span>
         <span>Sumber: {{ $item->source_reference }}</span>
+        @if (config('almara.audio.islamic_network.enabled') && $item->audioRange())
+            <span class="small" data-ayat-audio-note="{{ $item->audio_ref }}"><x-icon name="headphones" style="width:14px;height:14px;display:inline;vertical-align:-2px" /> Audio: ayat lengkap QS {{ $item->audio_ref }}</span>
+        @endif
         @if ($item->count_target && $item->count_target > 1)
             <a href="{{ route('tasbih', ['dzikir' => $item->slug]) }}">Hitung dengan tasbih →</a>
         @endif

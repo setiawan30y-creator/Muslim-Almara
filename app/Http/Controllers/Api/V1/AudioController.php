@@ -37,4 +37,19 @@ class AudioController extends ApiController
 
         return $this->ok($audio)->header('Cache-Control', 'no-store');
     }
+
+    /** GET /api/v1/quran/audio/ayat?ref=112:1-4[&reciter=] — audio ayat untuk doa/dzikir. */
+    public function ayat(Request $request, PreferenceService $prefs, AudioCatalog $catalog)
+    {
+        $data = $request->validate([
+            'ref' => ['required', 'string', 'max:20', 'regex:/^\d{1,3}:\d{1,3}(-\d{1,3})?$/'],
+            'reciter' => ['nullable', 'string', 'regex:'.AudioCatalog::KEY_PATTERN],
+        ]);
+        $out = $catalog->range($data['ref'], $data['reciter'] ?? $prefs->quran()['reciter']);
+        if (! $out) {
+            return response()->json(['message' => 'Audio ayat ini belum tersedia.', 'errors' => (object) []], 404)->header('Cache-Control', 'no-store');
+        }
+
+        return $this->ok($out)->header('Cache-Control', 'no-store');
+    }
 }

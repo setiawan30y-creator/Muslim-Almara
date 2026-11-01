@@ -93,4 +93,38 @@ class QuranExtrasTest extends TestCase
         $cookie = json_encode(['reading_mode' => 'verse', 'show_transliteration' => true, 'show_translation' => true]);
         $this->withUnencryptedCookie('almara_quran', $cookie)->get('/al-quran/112')->assertOk()->assertSee('Qul huwallāhu aḥad')->assertSee('ayah__latin', false);
     }
+
+    public function test_doa_dzikir_audio_from_quran_verses(): void
+    {
+        $this->assertSame('2:201', \App\Models\DuaItem::query()->where('slug', 'kebaikan-dunia-akhirat')->value('audio_ref'));
+        $this->assertSame([112, 1, 4], \App\Models\DhikrItem::query()->where('slug', 'al-ikhlas')->first()->audioRange());
+
+        // Fitur nonaktif → tanpa tombol
+        $this->get('/doa-dzikir')->assertOk()->assertDontSee('data-ayat-audio=', false);
+
+        config(['almara.audio.islamic_network.enabled' => true]);
+        Http::fake([
+            'api.alquran.cloud/v1/edition/format/audio' => Http::response(['data' => [
+                ['identifier' => 'ar.alafasy', 'language' => 'ar', 'englishName' => 'Alafasy', 'format' => 'audio'],
+                ['identifier' => 'ar.husary', 'language' => 'ar', 'englishName' => 'Husary', 'format' => 'audio'],
+            ]]),
+            'api.alquran.cloud/v1/surah/112/ar.husary' => Http::response(['data' => ['ayahs' => array_map(fn ($n) => [
+                'numberInSurah' => $n, 'audio' => 'https://cdn.islamic.network/quran/audio/128/ar.husary/'.(6221 + $n).'.mp3',
+            ], [1, 2, 3, 4])]]),
+            'api.alquran.cloud/v1/surah/2/ar.alafasy' => Http::response(['data' => ['ayahs' => array_map(fn ($n) => [
+                'numberInSurah' => $n, 'audio' => 'https://cdn.islamic.network/quran/audio/128/ar.alafasy/'.(7 + $n).'.mp3',
+            ], range(1, 286))]]),
+        ]);
+
+        $this->get('/doa-dzikir')->assertOk()->assertSee('data-ayat-audio="112:1-4"', false)->assertSee('Audio: ayat lengkap QS 112:1-4');
+        $this->get('/doa-dzikir?tab=doa')->assertOk()->assertSee('data-ayat-audio="2:201"', false)->assertDontSee('data-ayat-audio="null"', false);
+
+        // Qari pilihan pengguna dipakai bila per ayat; selain itu qari bawaan (Alafasy)
+        $this->getJson('/api/v1/quran/audio/ayat?ref=2:201')->assertOk()->assertJsonCount(1, 'data.tracks')
+            ->assertJsonPath('data.tracks.0.ayah', 201)->assertJsonPath('data.reciter.key', 'in:ar.alafasy');
+        $this->getJson('/api/v1/quran/audio/ayat?ref=112:1-4&reciter=in:ar.husary')->assertOk()->assertJsonCount(4, 'data.tracks')
+            ->assertJsonPath('data.reciter.name', 'Husary');
+        $this->getJson('/api/v1/quran/audio/ayat?ref=112:1-9')->assertNotFound();
+        $this->getJson('/api/v1/quran/audio/ayat?ref=abc')->assertStatus(422);
+    }
 }

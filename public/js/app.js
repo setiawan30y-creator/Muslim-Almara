@@ -583,6 +583,35 @@
         });
     })();
 
+    // ---------- Audio doa & dzikir dari ayat Al-Qur'an (qari per ayat) ----------
+    if ($('[data-ayat-audio]')) (function () {
+        var au = new Audio(), cur = null, list = [], idx = 0;
+        function stop() { au.pause(); if (cur) cur.classList.remove('is-playing', 'is-loading'); cur = null; list = []; }
+        function next() { if (idx >= list.length) { stop(); return; } au.src = list[idx].url; au.play().catch(function () { stop(); }); }
+        au.addEventListener('ended', function () { idx++; next(); });
+        au.addEventListener('error', function () {
+            var t = list[idx];
+            if (t && t.alt && au.src !== t.alt) { au.src = t.alt; au.play().catch(stop); return; }
+            toast('Audio tidak dapat dimuat'); stop();
+        });
+        au.addEventListener('playing', function () { if (cur) cur.classList.remove('is-loading'); });
+        document.addEventListener('click', function (e) {
+            var b = e.target.closest('[data-ayat-audio]');
+            if (!b) return;
+            if (cur === b) { stop(); return; }
+            stop(); cur = b; b.classList.add('is-playing', 'is-loading');
+            fetch('/api/v1/quran/audio/ayat?ref=' + encodeURIComponent(b.dataset.ayatAudio), { headers: { Accept: 'application/json' }, credentials: 'same-origin' })
+                .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j.message || 'Audio belum tersedia'); return j.data; }); })
+                .then(function (d) {
+                    if (cur !== b) return;
+                    list = d.tracks; idx = 0; next();
+                    var note = $('[data-ayat-audio-note="' + b.dataset.ayatAudio + '"]', b.closest('article') || document);
+                    if (note) note.lastChild.textContent = ' Audio: ayat lengkap QS ' + d.ref + ' · ' + d.reciter.name;
+                })
+                .catch(function (err) { toast(err.message); stop(); });
+        });
+    })();
+
     // ---------- Admin: isi durasi rekaman otomatis dari metadata berkas ----------
     $$('[data-audio-file]').forEach(function (inp) {
         inp.addEventListener('change', function () {

@@ -54,6 +54,7 @@ class WorshipContentSeeder extends Seeder
                     'count_target' => $it['count_target'],
                     'context_note' => $it['context_note'],
                     'source_reference' => $it['source_reference'],
+                    'audio_ref' => $it['audio_ref'] ?? null,
                     'source_kind' => $it['source_kind'],
                     'source_id' => $sourceId,
                     'review_status' => $status,

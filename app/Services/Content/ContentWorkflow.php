@@ -26,7 +26,7 @@ class ContentWorkflow
     public const TYPES = ['doa' => DuaItem::class, 'dzikir' => DhikrItem::class, 'panduan' => \App\Models\GuideItem::class];
 
     /** Kolom teks yang perubahannya wajib ditinjau ulang. */
-    public const REVIEWED_FIELDS = ['title', 'arabic_text', 'transliteration', 'translation', 'source_reference', 'source_kind', 'count_target', 'context_note', 'category_id', 'body', 'example_ref', 'quiz_json'];
+    public const REVIEWED_FIELDS = ['title', 'arabic_text', 'transliteration', 'translation', 'source_reference', 'source_kind', 'count_target', 'context_note', 'category_id', 'body', 'example_ref', 'quiz_json', 'audio_ref'];
 
     public static function model(string $type): string
     {
