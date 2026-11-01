@@ -72,7 +72,7 @@ class AdzanReminder
         }
         $title = $s->minutes_before > 0 ? "{$s->minutes_before} menit lagi {$name}" : "Waktu {$name} telah tiba";
 
-        return ['title' => $title, 'body' => "{$name} {$time}{$where}. Mari bersiap menunaikan sholat.", 'url' => '/jadwal-sholat', 'tag' => 'adzan-'.$prayer];
+        return ['title' => $title, 'body' => "{$name} {$time}{$where}. Mari bersiap menunaikan sholat.", 'url' => $s->minutes_before > 0 ? '/jadwal-sholat' : '/jadwal-sholat?adzan='.$prayer, 'tag' => 'adzan-'.$prayer];
     }
 
     /** @return array{checked: int, sent: int, removed: int} */

@@ -42,7 +42,7 @@
                     <div class="hero__label">Sholat berikutnya</div>
                     <h1 class="hero__name" id="hero-next">{{ $next['nama'] }}</h1>
                     <div class="hero__time tabular">{{ $next['waktu'] }} {{ $tzLabel }}</div>
-                    <div class="countdown"><x-icon name="clock" /><span data-countdown="{{ $next['timestamp'] }}">—</span></div>
+                    <div class="countdown"><x-icon name="clock" /><span data-countdown="{{ $next['timestamp'] }}" data-prayer="{{ $next['key'] }}" data-prayer-name="{{ $next['nama'] }}">—</span></div>
                     <div class="hero__top" style="margin-top:var(--space-5)">
                         <span>{{ $now->translatedFormat('l, j F Y') }} · {{ $hijri['label'] }}</span>
                         <a href="{{ route('prayer') }}" class="hero__loc">Jadwal lengkap →</a>

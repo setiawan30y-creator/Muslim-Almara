@@ -7,7 +7,7 @@ Dibangun dengan **Laravel 13** mengikuti *ALMARA MUSLIM — Blueprint Teknis & R
 
 ## Status rilis
 
-Versi **2.7.0** mencakup Rilis Pertama (MVP, blueprint §1.1) + *Pengaturan Tampilan & Tema*:
+Versi **2.8.0** mencakup Rilis Pertama (MVP, blueprint §1.1) + *Pengaturan Tampilan & Tema*:
 
 | Area | Isi |
 |---|---|
@@ -15,7 +15,7 @@ Versi **2.7.0** mencakup Rilis Pertama (MVP, blueprint §1.1) + *Pengaturan Tamp
 | Beranda | Salam & lokasi, sholat berikutnya + hitung mundur, cuaca & prakiraan per jam, aksi cepat, lanjutkan bacaan, target tilawah, ayat harian, hari besar, catatan — kartu dapat diurutkan/disembunyikan |
 | Al-Qur'an | 114 surah & 30 juz, halaman per ayat (`/al-quran/2/255`), terjemahan & tafsir Kemenag, pencarian terjemahan & **huruf Arab** (harakat diabaikan), bagikan ayat sebagai gambar, bookmark, catatan pribadi, tandai dibaca, unduh offline, pilihan mode baca |
 | Audio qari | Pemutar murattal (putar dari ayat, sorot ayat, penanda ketukan huruf, mode per ayat, ulang, **kecepatan 0,75–1,5×, timer tidur, lanjut otomatis ke surah berikutnya, ulang rentang ayat X–Y N kali**); **Qari ALMARA** (rekaman sendiri: unggah → karantina → review → terbit) & qari berlisensi **Quran.Foundation** |
-| Ibadah | Jadwal sholat (8 metode, mazhab Asar, koreksi menit), kiblat + kalibrasi, masjid terdekat (OpenStreetMap), dzikir & doa bersumber, tasbih, **Tahlil lengkap** (pembuka s.d. doa, dengan penghitung), **tracker ibadah harian**, jadwal sholat per kota, **imsakiyah Ramadan**, **kalender puasa sunnah**, kalender Hijriah, zakat, panduan Umroh, Haji & Ziarah Kubur |
+| Ibadah | Jadwal sholat (8 metode, mazhab Asar, koreksi menit), **suara adzan** saat waktu sholat tiba (rekaman diunggah di Admin → Suara adzan; adzan Subuh terpisah; nada pengingat sebagai cadangan), kiblat + kalibrasi, masjid terdekat (OpenStreetMap), dzikir & doa bersumber, tasbih, **Tahlil lengkap** (pembuka s.d. doa, dengan penghitung), **tracker ibadah harian**, jadwal sholat per kota, **imsakiyah Ramadan**, **kalender puasa sunnah**, kalender Hijriah, zakat, panduan Umroh, Haji & Ziarah Kubur |
 | Belajar | Tajwid bertingkat + latihan, Hafalan & Murojaah (pengulangan berjarak), Terjemah & Frasa (offline + layanan opsional), Jurnal bertag & koleksi ayat |
 | Akun | Daftar/masuk, reset sandi, verifikasi email, progres & target, ekspor & hapus data |
 | Pengaturan | Tampilan & Tema (Terang/Gelap/Sistem, 5 aksen, ukuran teks UI/Arab/terjemahan, pratinjau, reset), Al-Qur'an, Jadwal Sholat, Beranda |
@@ -86,6 +86,7 @@ php artisan test
 | `TWA_PACKAGE_NAME`, `TWA_SHA256_FINGERPRINTS` | kosong | `/.well-known/assetlinks.json` untuk Play Store |
 | `ALMARA_WEATHER` | `true` | Kartu cuaca di beranda (Open-Meteo, di-cache 30 menit per lokasi) |
 | `ADS_ENABLED`, `ADSENSE_CLIENT`, `ADSENSE_SLOT_FOOTER`, `ADSENSE_SLOT_LIST` | nonaktif | Iklan (lihat `docs/iklan.md`); `ADS_TXT_EXTRA` untuk jaringan CPM lain |
+| `ADZAN_URL`, `ADZAN_SUBUH_URL` (+ `_NAME`, `ADZAN_LICENSE_NOTE`) | kosong | Alternatif berkas adzan berlisensi via URL HTTPS; utamakan unggah di Admin → Suara adzan |
 | `OPEN_METEO_API_KEY` | kosong | **Wajib untuk penggunaan komersial** (aplikasi disewakan/berbayar/beriklan); API gratis Open-Meteo hanya untuk non-komersial |
 
 ## Audio qari

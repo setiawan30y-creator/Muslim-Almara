@@ -45,6 +45,43 @@
         </aside>
     </form>
 
+    @php $adzan = app(\App\Services\Adzan\AdzanAudio::class); $adzanSounds = $adzan->sounds(); $adzanDefaults = $adzan->defaults(); @endphp
+    <section class="card form" id="suara-adzan" style="max-width:760px;margin-top:var(--space-5)" data-adzan-settings
+             data-defaults='@json($adzanDefaults)' aria-labelledby="adzan-h">
+        <div class="section-head"><h2 id="adzan-h">Suara adzan</h2><span class="badge badge--neutral">Perangkat ini</span></div>
+        <p class="small muted" style="margin:0">Adzan diputar otomatis saat waktu sholat tiba selama {{ config('app.name') }} terbuka (beranda atau jadwal sholat), dan saat Anda mengetuk notifikasi pengingat adzan. Notifikasi peramban sendiri hanya berbunyi nada sistem.</p>
+        @unless ($adzan->hasAdzan())
+            <div class="alert alert--info" style="margin:0"><x-icon name="info" /><div>Rekaman adzan belum tersedia di server — sementara memakai <b>nada pengingat</b>.@can('admin.access') Unggah rekaman di <a href="{{ route('admin.adzan.index') }}">Admin → Suara adzan</a>.@endcan</div></div>
+        @endunless
+        <label class="check"><input type="checkbox" data-adzan-on checked> <span>Putar suara adzan saat waktu sholat tiba</span></label>
+        <fieldset style="border:0;padding:0;margin:0">
+            <legend class="small" style="font-weight:700;margin-bottom:6px">Untuk sholat</legend>
+            <div role="group" style="display:flex;flex-wrap:wrap;gap:8px 16px">
+                @foreach (['subuh' => 'Subuh', 'dzuhur' => 'Dzuhur', 'ashar' => 'Ashar', 'maghrib' => 'Maghrib', 'isya' => 'Isya'] as $k => $label)
+                    <label class="check"><input type="checkbox" value="{{ $k }}" data-adzan-prayer checked> <span>{{ $label }}</span></label>
+                @endforeach
+            </div>
+        </fieldset>
+        <div class="form-grid form-grid--2">
+            @foreach (['regular' => 'Suara adzan', 'subuh' => 'Suara adzan Subuh'] as $kind => $label)
+                <div class="field"><label for="adzan-{{ $kind }}">{{ $label }}</label>
+                    <div style="display:flex;gap:8px">
+                        <select id="adzan-{{ $kind }}" class="select" data-adzan-sound="{{ $kind }}">
+                            @foreach ($adzanSounds as $s)
+                                @if ($s['kind'] === 'any' || $s['kind'] === $kind || $kind === 'subuh')
+                                    <option value="{{ $s['key'] }}" data-url="{{ $s['url'] }}">{{ $s['name'] }}{{ $kind === 'subuh' && $s['kind'] === 'regular' ? ' (umum)' : '' }}</option>
+                                @endif
+                            @endforeach
+                        </select>
+                        <button type="button" class="btn btn--outline btn--sm" data-adzan-preview="{{ $kind }}" aria-label="Dengarkan {{ $label }}"><x-icon name="play" />Dengar</button>
+                    </div></div>
+            @endforeach
+        </div>
+        <div class="field" style="max-width:320px"><label for="adzan-vol">Volume</label>
+            <input id="adzan-vol" type="range" min="0.1" max="1" step="0.05" value="0.9" data-adzan-volume style="accent-color:var(--color-primary)"></div>
+        <p class="small muted" data-adzan-msg aria-live="polite" style="margin:0"></p>
+    </section>
+
     @php $pushKey = config('almara.push.public_key'); $pushPrayers = \App\Models\PushSubscription::PRAYERS; @endphp
     <section class="card form" id="pengingat" style="max-width:760px;margin-top:var(--space-5)" data-push
              data-key="{{ $pushKey }}" aria-labelledby="pengingat-h">

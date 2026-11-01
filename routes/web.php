@@ -34,6 +34,8 @@ Route::prefix('al-quran')->name('quran.')->controller(QuranController::class)->g
 });
 // Audio qari (streaming publik dengan dukungan Range)
 Route::get('/al-quran/audio/rekaman/{track}', [\App\Http\Controllers\Quran\AudioController::class, 'stream'])->whereNumber('track')->name('quran.audio.stream');
+Route::get('/adzan/suara/{sound}', [\App\Http\Controllers\Worship\AdzanController::class, 'audio'])->whereNumber('sound')->name('adzan.audio');
+Route::get('/adzan/nada.wav', [\App\Http\Controllers\Worship\AdzanController::class, 'chime'])->name('adzan.chime');
 Route::get('/al-quran/audio/simulasi/{surah}.wav', [\App\Http\Controllers\Quran\AudioController::class, 'sample'])->whereNumber('surah')->name('quran.audio.sample');
 
 // Ibadah harian
@@ -135,6 +137,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'can:admin.access'])
         ->whereIn('action', ['submit', 'approve', 'publish', 'approve-publish', 'reject', 'suspend'])->name('content.transition');
     Route::post('/konten/{type}/massal', [Admin\ContentController::class, 'bulk'])->whereIn('type', ['doa', 'dzikir', 'panduan'])->name('content.bulk');
 
+    Route::get('/adzan', [Admin\AdzanController::class, 'index'])->name('adzan.index');
+    Route::post('/adzan', [Admin\AdzanController::class, 'store'])->name('adzan.store');
+    Route::post('/adzan/{sound}/{action}', [Admin\AdzanController::class, 'transition'])->whereNumber('sound')->whereIn('action', ['approve', 'deactivate', 'delete'])->name('adzan.transition');
     Route::get('/audio', [Admin\AudioController::class, 'index'])->name('audio.index');
     Route::post('/audio', [Admin\AudioController::class, 'store'])->name('audio.store');
     Route::get('/audio/{track}', [Admin\AudioController::class, 'show'])->whereNumber('track')->name('audio.show');

@@ -103,6 +103,17 @@ return [
         'overpass_url' => env('OVERPASS_URL', 'https://overpass-api.de/api/interpreter'),
     ],
 
+    // Suara adzan. Utamakan rekaman milik sendiri/berizin yang diunggah di Admin → Suara adzan.
+    // Alternatif: URL HTTPS berkas berlisensi. Tanpa keduanya, pengguna mendapat "nada pengingat".
+    'adzan' => [
+        'url' => env('ADZAN_URL'),
+        'url_name' => env('ADZAN_NAME'),
+        'subuh_url' => env('ADZAN_SUBUH_URL'),
+        'subuh_url_name' => env('ADZAN_SUBUH_NAME'),
+        'license_note' => env('ADZAN_LICENSE_NOTE'),
+        'max_upload_mb' => (int) env('ADZAN_MAX_MB', 20),
+    ],
+
     // Iklan (Google AdSense atau jaringan CPM lain yang memakai skrip adsbygoogle).
     // Mati secara default. Iklan TIDAK PERNAH dipasang di dalam teks Al-Qur'an, doa, dzikir,
     // pemutar audio, halaman akun/admin. Lihat docs/iklan.md.

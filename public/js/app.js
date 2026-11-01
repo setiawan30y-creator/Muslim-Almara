@@ -171,7 +171,13 @@
             countdowns.forEach(function (el) {
                 var target = parseInt(el.getAttribute('data-countdown'), 10);
                 var s = Math.max(0, Math.floor(target - now));
-                if (s === 0 && !el.dataset.reloaded) { el.dataset.reloaded = '1'; setTimeout(function () { location.reload(); }, 60000); }
+                if (s === 0 && !el.dataset.reloaded) {
+                    el.dataset.reloaded = '1';
+                    // Waktu sholat tiba: putar adzan (bila aktif), muat ulang jadwal setelah adzan selesai
+                    if (target > now - 90) document.dispatchEvent(new CustomEvent('almara:prayer-time', { detail: { key: el.getAttribute('data-prayer'), name: el.getAttribute('data-prayer-name'), at: target } }));
+                    var reload = function () { if (window.MA.adzanPlaying && window.MA.adzanPlaying()) { setTimeout(reload, 15000); return; } location.reload(); };
+                    setTimeout(reload, 60000);
+                }
                 var h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
                 el.textContent = (h > 0 ? h + ' jam ' : '') + pad(m) + ' mnt ' + pad(sec) + ' dtk';
             });
@@ -1544,6 +1550,118 @@
                 setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
                 window.MA && MA.toast('Gambar ayat diunduh');
             }, 'image/png');
+        });
+    });
+})();
+
+/* ===== Suara adzan: pengaturan perangkat + pemutar saat waktu sholat — @2026-Alifiandra ===== */
+(function () {
+    var KEY = 'almara-adzan', NAMES = { subuh: 'Subuh', dzuhur: 'Dzuhur', ashar: 'Ashar', maghrib: 'Maghrib', isya: 'Isya' };
+    function prefs() {
+        var p = null; try { p = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+        p = p || {};
+        if (typeof p.on !== 'boolean') p.on = true;
+        p.prayers = p.prayers || { subuh: true, dzuhur: true, ashar: true, maghrib: true, isya: true };
+        if (!(p.volume > 0)) p.volume = 0.9;
+        return p;
+    }
+    function save(p) { try { localStorage.setItem(KEY, JSON.stringify(p)); } catch (e) {} }
+
+    var audio = null, bar = null;
+    function stop() { if (audio) { audio.pause(); audio.currentTime = 0; } if (bar) bar.classList.remove('is-playing'); }
+    window.MA = window.MA || {};
+    window.MA.adzanPlaying = function () { return !!(audio && !audio.paused); };
+
+    var soundsP = null;
+    function sounds() {
+        if (soundsP) return soundsP;
+        soundsP = fetch('/api/v1/adzan/sounds', { headers: { Accept: 'application/json' } }).then(function (r) { return r.json(); })
+            .catch(function () { return { data: [{ key: 'nada', url: '/adzan/nada.wav' }], meta: { defaults: { regular: 'nada', subuh: 'nada' } } }; });
+        return soundsP;
+    }
+    function urlFor(kind) {
+        var p = prefs();
+        return sounds().then(function (j) {
+            var list = j.data || [], want = p[kind] || (j.meta && j.meta.defaults && j.meta.defaults[kind]);
+            var hit = list.filter(function (s) { return s.key === want; })[0] || list.filter(function (s) { return s.key === (j.meta.defaults || {})[kind]; })[0] || list[list.length - 1];
+            return hit ? hit.url : '/adzan/nada.wav';
+        });
+    }
+    function ensureBar() {
+        if (bar) return bar;
+        bar = document.createElement('div');
+        bar.className = 'adzan-bar'; bar.setAttribute('role', 'status'); bar.setAttribute('aria-live', 'polite');
+        bar.innerHTML = '<span class="adzan-bar__ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15L6 16Z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg></span><div class="adzan-bar__txt"><b data-adzan-title></b><span class="small">Mari tunaikan sholat. <a href="/doa-dzikir/doa/setelah-adzan">Doa setelah adzan</a></span></div>' +
+            '<button type="button" class="btn btn--sm" data-adzan-toggle>Hentikan</button><button type="button" class="icon-btn" data-adzan-close aria-label="Tutup"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>';
+        document.body.appendChild(bar);
+        bar.querySelector('[data-adzan-toggle]').addEventListener('click', function () {
+            if (audio && !audio.paused) { stop(); this.textContent = 'Putar adzan'; } else if (audio) { audio.play().then(function () { bar.classList.add('is-playing'); }).catch(function () {}); this.textContent = 'Hentikan'; }
+        });
+        bar.querySelector('[data-adzan-close]').addEventListener('click', function () { stop(); bar.hidden = true; });
+        return bar;
+    }
+    function playAdzan(key, name, opts) {
+        opts = opts || {};
+        var p = prefs();
+        if (!opts.force && (!p.on || !p.prayers[key])) return;
+        var kind = key === 'subuh' ? 'subuh' : 'regular';
+        urlFor(kind).then(function (url) {
+            stop();
+            audio = audio || new Audio();
+            audio.src = url; audio.volume = p.volume;
+            var b = ensureBar(); b.hidden = false;
+            b.querySelector('[data-adzan-title]').textContent = 'Waktu ' + (name || NAMES[key] || 'sholat') + ' telah tiba';
+            var tg = b.querySelector('[data-adzan-toggle]');
+            audio.onended = function () { b.classList.remove('is-playing'); tg.textContent = 'Putar ulang'; };
+            audio.play().then(function () { b.classList.add('is-playing'); tg.textContent = 'Hentikan'; })
+                .catch(function () { tg.textContent = 'Putar adzan'; }); // diblokir peramban → ketuk untuk memutar
+        });
+    }
+    document.addEventListener('almara:prayer-time', function (e) {
+        var d = e.detail || {}, mark = d.key + '@' + d.at;
+        try { if (sessionStorage.getItem('almara-adzan-last') === mark) return; sessionStorage.setItem('almara-adzan-last', mark); } catch (x) {}
+        playAdzan(d.key, d.name);
+    });
+    // Dibuka dari notifikasi pengingat adzan: /jadwal-sholat?adzan=subuh
+    var m = /[?&]adzan=(subuh|dzuhur|ashar|maghrib|isya)\b/.exec(location.search);
+    if (m) {
+        try { history.replaceState(null, '', location.pathname + location.search.replace(/[?&]adzan=\w+/, '').replace(/^&/, '?') + location.hash); } catch (e) {}
+        playAdzan(m[1], NAMES[m[1]]);
+    }
+
+    // ---- Halaman pengaturan ----
+    var box = document.querySelector('[data-adzan-settings]');
+    if (!box) return;
+    var p = prefs(), msg = box.querySelector('[data-adzan-msg]');
+    var on = box.querySelector('[data-adzan-on]'), vol = box.querySelector('[data-adzan-volume]');
+    var defs = {}; try { defs = JSON.parse(box.getAttribute('data-defaults') || '{}'); } catch (e) {}
+    on.checked = p.on; vol.value = p.volume;
+    box.querySelectorAll('[data-adzan-prayer]').forEach(function (c) { c.checked = p.prayers[c.value] !== false; });
+    box.querySelectorAll('[data-adzan-sound]').forEach(function (s) {
+        var k = s.getAttribute('data-adzan-sound'), want = p[k] || defs[k];
+        if (want && s.querySelector('option[value="' + want.replace(/"/g, '') + '"]')) s.value = want;
+    });
+    function collect() {
+        var q = prefs();
+        q.on = on.checked; q.volume = +vol.value;
+        box.querySelectorAll('[data-adzan-prayer]').forEach(function (c) { q.prayers[c.value] = c.checked; });
+        box.querySelectorAll('[data-adzan-sound]').forEach(function (s) { q[s.getAttribute('data-adzan-sound')] = s.value; });
+        save(q);
+        if (audio) audio.volume = q.volume;
+        msg.textContent = q.on ? 'Tersimpan di perangkat ini.' : 'Suara adzan dimatikan di perangkat ini.';
+    }
+    box.addEventListener('change', collect);
+    vol.addEventListener('input', function () { if (audio) audio.volume = +vol.value; });
+    box.querySelectorAll('[data-adzan-preview]').forEach(function (b) {
+        b.addEventListener('click', function () {
+            var k = b.getAttribute('data-adzan-preview'), sel = box.querySelector('[data-adzan-sound="' + k + '"]');
+            var opt = sel.options[sel.selectedIndex];
+            if (audio && !audio.paused && b.classList.contains('is-on')) { stop(); b.classList.remove('is-on'); return; }
+            box.querySelectorAll('[data-adzan-preview]').forEach(function (x) { x.classList.remove('is-on'); });
+            stop(); audio = audio || new Audio();
+            audio.src = opt.getAttribute('data-url'); audio.volume = +vol.value;
+            audio.onended = function () { b.classList.remove('is-on'); };
+            audio.play().then(function () { b.classList.add('is-on'); }).catch(function () { msg.textContent = 'Audio gagal diputar. Periksa koneksi.'; });
         });
     });
 })();

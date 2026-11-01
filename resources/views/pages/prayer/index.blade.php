@@ -68,7 +68,7 @@
                         <li class="{{ in_array($key, $minor) ? 'is-minor' : '' }} {{ $isNext ? 'is-next' : '' }}">
                             <span class="ico"><x-icon :name="$icons[$key]" /></span>
                             <span class="name">{{ \App\Services\Prayer\PrayerTimeCalculator::NAMES[$key] }}</span>
-                            @if ($isNext)<span class="tag" data-countdown="{{ $next['timestamp'] }}"></span>@endif
+                            @if ($isNext)<span class="tag" data-countdown="{{ $next['timestamp'] }}" data-prayer="{{ $next['key'] }}" data-prayer-name="{{ $next['nama'] }}"></span>@endif
                             <span class="time">{{ $time }}</span>
                         </li>
                     @endforeach

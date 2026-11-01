@@ -175,6 +175,20 @@
   },
   {
    "category": "ibadah",
+   "slug": "setelah-adzan",
+   "title": "Doa Setelah Adzan",
+   "arabic_text": "اَللّٰهُمَّ رَبَّ هٰذِهِ الدَّعْوَةِ التَّامَّةِ، وَالصَّلَاةِ الْقَائِمَةِ، اٰتِ مُحَمَّدًا الْوَسِيْلَةَ وَالْفَضِيْلَةَ، وَابْعَثْهُ مَقَامًا مَحْمُوْدًا الَّذِيْ وَعَدْتَهُ",
+   "transliteration": "Allāhumma rabba hādzihid-da‘watit-tāmmah, wash-shalātil-qā'imah, āti Muḥammadanil-wasīlata wal-faḍīlah, wab‘atshu maqāmam maḥmūdanil-ladzī wa‘adtah.",
+   "translation": "Ya Allah, Tuhan pemilik seruan yang sempurna ini dan sholat yang akan didirikan, berikanlah kepada Muhammad al-wasīlah dan keutamaan, dan bangkitkanlah beliau pada kedudukan terpuji yang telah Engkau janjikan.",
+   "source_reference": "HR. Al-Bukhari no. 614",
+   "source_kind": "hadith",
+   "quran_ref": null,
+   "count_target": null,
+   "context_note": "Saat mendengar adzan, ucapkan seperti yang diucapkan muadzin, kecuali pada “Ḥayya ‘alash-shalāh” dan “Ḥayya ‘alal-falāḥ” ucapkan “Lā ḥaula wa lā quwwata illā billāh” (HR. Muslim no. 385). Setelah adzan selesai, bershalawat kepada Nabi ﷺ (HR. Muslim no. 384), lalu membaca doa ini.",
+   "audio_ref": null
+  },
+  {
+   "category": "ibadah",
    "slug": "masuk-masjid",
    "title": "Masuk Masjid",
    "arabic_text": "اَللّٰهُمَّ افْتَحْ لِيْ أَبْوَابَ رَحْمَتِكَ",
