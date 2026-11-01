@@ -158,6 +158,7 @@ Route::view('/syarat-ketentuan', 'pages.static.syarat')->name('terms');
 Route::get('/manifest.webmanifest', [PwaController::class, 'manifest'])->name('pwa.manifest');
 Route::get('/service-worker.js', [PwaController::class, 'serviceWorker'])->name('pwa.sw');
 Route::get('/offline', [PwaController::class, 'offline'])->name('offline');
+Route::get('/.well-known/assetlinks.json', \App\Http\Controllers\TwaController::class)->name('twa.assetlinks');
 Route::get('/sitemap.xml', [PwaController::class, 'sitemap'])->name('sitemap');
 
 // Alamat lama tetap berfungsi

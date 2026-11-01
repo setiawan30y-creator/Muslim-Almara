@@ -7,7 +7,7 @@ Dibangun dengan **Laravel 13** mengikuti *ALMARA MUSLIM — Blueprint Teknis & R
 
 ## Status rilis
 
-Versi **2.3.0** mencakup Rilis Pertama (MVP, blueprint §1.1) + *Pengaturan Tampilan & Tema*:
+Versi **2.4.0** mencakup Rilis Pertama (MVP, blueprint §1.1) + *Pengaturan Tampilan & Tema*:
 
 | Area | Isi |
 |---|---|
@@ -23,7 +23,9 @@ Versi **2.3.0** mencakup Rilis Pertama (MVP, blueprint §1.1) + *Pengaturan Tamp
 | API | `/api/v1` format `{data, meta}` — lihat `docs/api.md` |
 | PWA | Manifest, service worker berversi, offline, halaman pribadi tidak pernah dicache |
 
-Belum diaktifkan: Mushaf penuh & transliterasi per ayat (menunggu dataset berlisensi), Premium/Iklan, notifikasi push, TWA.
+Pengingat adzan (Web Push) aktif setelah kunci VAPID dibuat (`php artisan almara:push:keys`) dan penjadwal berjalan. Belum diaktifkan: Mushaf penuh & transliterasi per ayat (menunggu dataset berlisensi), Premium/Iklan.
+
+Deploy ke Ubuntu: lihat **`docs/deployment.md`** (Nginx, PHP 8.4, MySQL, HTTPS, cron, Play Store/TWA).
 
 ## Instalasi lokal (Laragon, PowerShell)
 
@@ -59,7 +61,7 @@ Doa, dzikir, dan materi panduan (Tajwid, Umroh, Haji, Ziarah) masuk berstatus **
 php artisan test
 ```
 
-97 test mencakup perhitungan sholat/kiblat/Hijriah, integritas dataset, autentikasi, isolasi data pribadi (IDOR), alur review admin, audio qari, panduan, hafalan, terjemah, jurnal & koleksi, preferensi tema, API, dan PWA.
+104 test mencakup perhitungan sholat/kiblat/Hijriah, integritas dataset, autentikasi, isolasi data pribadi (IDOR), alur review admin, audio qari, panduan, hafalan, terjemah, jurnal & koleksi, preferensi tema, API, dan PWA.
 
 ## Konfigurasi `.env`
 
@@ -78,6 +80,8 @@ php artisan test
 | `QF_MOCK` | `false` | Mode simulasi pemutar (nada uji) tanpa kredensial |
 | `TRANSLATE_URL`, `TRANSLATE_API_KEY` | kosong | Terjemah teks bebas via layanan kompatibel LibreTranslate (frasa offline tetap tersedia) |
 | `OVERPASS_URL` | overpass-api.de | Sumber data masjid terdekat (OpenStreetMap) |
+| `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` | kosong | Pengingat adzan (Web Push) — buat dengan `php artisan almara:push:keys` |
+| `TWA_PACKAGE_NAME`, `TWA_SHA256_FINGERPRINTS` | kosong | `/.well-known/assetlinks.json` untuk Play Store |
 | `ALMARA_WEATHER` | `true` | Kartu cuaca di beranda (Open-Meteo, di-cache 30 menit per lokasi) |
 | `OPEN_METEO_API_KEY` | kosong | **Wajib untuk penggunaan komersial** (aplikasi disewakan/berbayar/beriklan); API gratis Open-Meteo hanya untuk non-komersial |
 

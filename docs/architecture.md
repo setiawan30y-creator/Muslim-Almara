@@ -49,7 +49,10 @@ Klien API (token Sanctum) ──> /api/v1 ─────────┘        
 - **Masjid terdekat**: OpenStreetMap via Overpass API dari peramban + peta Leaflet.
 - **Jurnal & Koleksi**: tag pada `user_notes`, `user_collections` untuk bookmark.
 
-Belum diaktifkan: Mushaf penuh & transliterasi per ayat (menunggu dataset berlisensi), Premium & iklan, notifikasi push, TWA.
+- **Pengingat adzan**: Web Push tanpa pustaka pihak ketiga (`App\Services\Push\WebPush`, RFC 8291 aes128gcm + VAPID RFC 8292), tabel `push_subscriptions`, perintah `almara:push:adzan` tiap menit; hanya layanan push resmi peramban yang diizinkan (anti-SSRF).
+- **TWA**: `/.well-known/assetlinks.json` dari `.env`.
+
+Belum diaktifkan: Mushaf penuh & transliterasi per ayat (menunggu dataset berlisensi), Premium & iklan.
 
 - **Cuaca** (beranda): `WeatherService` memanggil Open-Meteo dari server (IP pengguna tidak dikirim ke penyedia), cache 30 menit per koordinat ±1 km; API `GET /api/v1/weather`.
 

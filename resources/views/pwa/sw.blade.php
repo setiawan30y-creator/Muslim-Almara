@@ -127,3 +127,32 @@ self.addEventListener('fetch', (event) => {
     if (url.pathname.startsWith('/api/')) { event.respondWith(networkFirstApi(req)); return; }
     if (isStatic(url)) { event.respondWith(staleWhileRevalidate(req)); }
 });
+
+// ---------- Pengingat adzan (Web Push) ----------
+self.addEventListener('push', (event) => {
+    let data = {};
+    try { data = event.data ? event.data.json() : {}; } catch (e) { data = { title: event.data ? event.data.text() : '' }; }
+    const title = data.title || '{{ config('app.name') }}';
+    event.waitUntil(self.registration.showNotification(title, {
+        body: data.body || '',
+        icon: '/icons/icon-192.png',
+        badge: '/icons/icon-192.png',
+        tag: data.tag || 'almara',
+        renotify: true,
+        lang: 'id',
+        data: { url: data.url || '/' },
+    }));
+});
+
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+    const target = new URL((event.notification.data && event.notification.data.url) || '/', self.location.origin).href;
+    event.waitUntil((async () => {
+        const all = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+        for (const c of all) {
+            if (c.url === target && 'focus' in c) return c.focus();
+        }
+        if (all[0] && 'navigate' in all[0]) { await all[0].navigate(target); return all[0].focus(); }
+        return self.clients.openWindow(target);
+    })());
+});

@@ -754,6 +754,78 @@
             .catch(function (e) { if (!cached) fail(navigator.onLine === false ? 'Offline — cuaca tidak dapat dimuat' : (e.message || 'Cuaca tidak tersedia')); });
     })();
 
+    // ---------- Pengingat adzan (Web Push) ----------
+    var pushSupported = 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window && window.isSecureContext;
+    function b64uToBytes(s) { s = s.replace(/-/g, '+').replace(/_/g, '/'); s += '==='.slice((s.length + 3) % 4); var raw = atob(s), out = new Uint8Array(raw.length); for (var i = 0; i < raw.length; i++) out[i] = raw.charCodeAt(i); return out; }
+    function pushSave(sub, prefs) {
+        var j = sub.toJSON();
+        return http('POST', '/api/v1/push/subscriptions', { endpoint: j.endpoint, keys: j.keys, prayers: prefs.prayers, minutes_before: prefs.before })
+            .then(function (r) { store.set('almara-push', { prayers: prefs.prayers, before: prefs.before, at: Date.now() }); return r; });
+    }
+    // Segarkan langganan berkala agar lokasi & metode terbaru ikut terpakai.
+    if (pushSupported) {
+        var pushPrefs = store.get('almara-push', null);
+        if (pushPrefs && Date.now() - (pushPrefs.at || 0) > 12 * 3600000 && Notification.permission === 'granted') {
+            navigator.serviceWorker.ready.then(function (reg) { return reg.pushManager.getSubscription(); })
+                .then(function (sub) { if (sub) return pushSave(sub, pushPrefs); store.del('almara-push'); }).catch(function () {});
+        }
+    }
+    var pushBox = $('[data-push]');
+    if (pushBox && pushBox.dataset.key) (function () {
+        var state = $('[data-push-state]', pushBox), msg = $('[data-push-msg]', pushBox);
+        var onBtn = $('[data-push-on]', pushBox), testBtn = $('[data-push-test]', pushBox), offBtn = $('[data-push-off]', pushBox), beforeEl = $('[data-push-before]', pushBox);
+        function setState(active, text) {
+            state.textContent = active ? 'Aktif' : 'Nonaktif';
+            state.className = 'badge ' + (active ? 'badge--success' : 'badge--neutral');
+            testBtn.hidden = offBtn.hidden = !active;
+            if (text !== undefined) msg.textContent = text;
+        }
+        function prefs() {
+            return { prayers: $$('[data-push-prayer]', pushBox).filter(function (c) { return c.checked; }).map(function (c) { return c.value; }), before: +beforeEl.value };
+        }
+        if (!pushSupported) {
+            onBtn.disabled = true;
+            setState(false, !window.isSecureContext ? 'Pengingat membutuhkan HTTPS.' : (/iphone|ipad|ipod/i.test(navigator.userAgent) && !(window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches) ? 'Di iPhone: pasang aplikasi ke Layar Utama dulu (Bagikan → Tambahkan ke Layar Utama), lalu buka dari ikonnya.' : 'Peramban ini belum mendukung notifikasi push.'));
+            return;
+        }
+        var saved = store.get('almara-push', null);
+        if (saved) {
+            $$('[data-push-prayer]', pushBox).forEach(function (c) { c.checked = saved.prayers.indexOf(c.value) !== -1; });
+            beforeEl.value = String(saved.before || 0);
+        }
+        navigator.serviceWorker.ready.then(function (reg) { return reg.pushManager.getSubscription(); }).then(function (sub) {
+            setState(!!sub && Notification.permission === 'granted', Notification.permission === 'denied' ? 'Izin notifikasi diblokir. Buka pengaturan situs di peramban untuk mengizinkan.' : '');
+        });
+        onBtn.addEventListener('click', function () {
+            var p = prefs();
+            if (!p.prayers.length) { toast('Pilih minimal satu waktu sholat'); return; }
+            onBtn.disabled = true; msg.textContent = 'Meminta izin notifikasi…';
+            Notification.requestPermission().then(function (perm) {
+                if (perm !== 'granted') throw new Error('Izin notifikasi tidak diberikan.');
+                return navigator.serviceWorker.ready;
+            }).then(function (reg) {
+                return reg.pushManager.getSubscription().then(function (sub) {
+                    return sub || reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64uToBytes(pushBox.dataset.key) });
+                });
+            }).then(function (sub) { return pushSave(sub, p); })
+              .then(function (r) { setState(true, 'Aktif untuk ' + (r.data.location || 'lokasi Anda') + '. Jadwal mengikuti pengaturan di atas.'); toast('Pengingat adzan aktif'); })
+              .catch(function (e) { setState(false, e.message || 'Gagal mengaktifkan pengingat.'); })
+              .finally(function () { onBtn.disabled = false; });
+        });
+        testBtn.addEventListener('click', function () {
+            navigator.serviceWorker.ready.then(function (reg) { return reg.pushManager.getSubscription(); }).then(function (sub) {
+                if (!sub) throw new Error('Belum berlangganan.');
+                return http('POST', '/api/v1/push/subscriptions/test', { endpoint: sub.endpoint });
+            }).then(function () { toast('Notifikasi uji dikirim'); }).catch(function (e) { toast(e.message || 'Gagal mengirim uji'); });
+        });
+        offBtn.addEventListener('click', function () {
+            navigator.serviceWorker.ready.then(function (reg) { return reg.pushManager.getSubscription(); }).then(function (sub) {
+                if (!sub) return;
+                return http('DELETE', '/api/v1/push/subscriptions', { endpoint: sub.endpoint }).catch(function () {}).then(function () { return sub.unsubscribe(); });
+            }).then(function () { store.del('almara-push'); setState(false, 'Pengingat dimatikan di perangkat ini.'); });
+        });
+    })();
+
     // ---------- Hapus bookmark/catatan dari halaman profil ----------
     document.addEventListener('click', function (e) {
         var b = e.target.closest('[data-bookmark-delete], [data-note-delete]');

@@ -3,7 +3,7 @@
 // Konfigurasi ALMARA MUSLIM — @2026-Alifiandra
 
 return [
-    'version' => '2.3.0',
+    'version' => '2.4.0',
 
     // Kota bawaan (slug dari resources/data/kota.json) bila pengguna belum memilih lokasi
     'default_city' => env('ALMARA_DEFAULT_CITY', 'jakarta'),
@@ -51,6 +51,20 @@ return [
         'timeout' => 10,
         'max_chars' => 1000,
         'languages' => ['id' => 'Indonesia', 'ar' => 'Arab', 'en' => 'Inggris'],
+    ],
+
+    // Pengingat adzan (Web Push, VAPID). Buat kunci: php artisan almara:push:keys
+    // Jalankan penjadwal tiap menit di server: * * * * * php artisan schedule:run
+    'push' => [
+        'public_key' => env('VAPID_PUBLIC_KEY'),
+        'private_key' => env('VAPID_PRIVATE_KEY'),
+        'subject' => env('VAPID_SUBJECT', 'mailto:admin@example.com'),
+    ],
+
+    // Play Store (TWA): isi setelah membuat paket Android, untuk /.well-known/assetlinks.json
+    'twa' => [
+        'package' => env('TWA_PACKAGE_NAME'),
+        'fingerprints' => env('TWA_SHA256_FINGERPRINTS'), // dipisah koma
     ],
 
     // Cuaca (Open-Meteo, data CC BY 4.0). API gratis hanya untuk penggunaan NON-komersial;

@@ -85,6 +85,7 @@
                 </ul>
                 <p class="small muted" style="margin:10px 0 0">Hasil perhitungan bisa berbeda 1–2 menit dengan jadwal resmi daerah. Untuk ibadah, ikuti jadwal masjid atau otoritas setempat. Pengingat/notifikasi bergantung pada dukungan peramban.</p>
                 <a href="{{ route('settings.prayer') }}" class="btn btn--outline btn--sm" style="margin-top:12px"><x-icon name="sliders" />Ubah metode & koreksi</a>
+                <a href="{{ route('settings.prayer') }}#pengingat" class="btn btn--tonal btn--sm" style="margin-top:12px"><x-icon name="clock" />Pengingat adzan</a>
             </section>
         </aside>
     </div>

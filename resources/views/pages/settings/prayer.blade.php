@@ -44,4 +44,34 @@
             <p class="muted" style="margin:10px 0 0">Jadwal adalah hasil perhitungan astronomis dan dapat berbeda dengan jadwal resmi. Pengingat bergantung pada izin & dukungan peramban.</p>
         </aside>
     </form>
+
+    @php $pushKey = config('almara.push.public_key'); $pushPrayers = \App\Models\PushSubscription::PRAYERS; @endphp
+    <section class="card form" id="pengingat" style="max-width:760px;margin-top:var(--space-5)" data-push
+             data-key="{{ $pushKey }}" aria-labelledby="pengingat-h">
+        <div class="section-head"><h2 id="pengingat-h">Pengingat adzan</h2><span class="badge badge--neutral" data-push-state>Nonaktif</span></div>
+        @if (! $pushKey)
+            <p class="small muted" style="margin:0">Pengingat adzan belum diaktifkan di server. Admin: jalankan <code>php artisan almara:push:keys</code>, isi kuncinya di <code>.env</code>, dan pastikan penjadwal berjalan.</p>
+        @else
+            <p class="small muted" style="margin-top:-6px">Notifikasi muncul di perangkat ini walau aplikasi ditutup. Memakai lokasi & metode yang sedang dipilih ({{ $params->methodName }}). Di iPhone, pasang aplikasi ke Layar Utama terlebih dahulu (iOS 16.4+).</p>
+            <fieldset style="border:0;padding:0;margin:0">
+                <legend class="small" style="font-weight:700;margin-bottom:6px">Ingatkan saya untuk</legend>
+                <div role="group" style="display:flex;flex-wrap:wrap;gap:8px 16px">
+                    @foreach ($pushPrayers as $k => $label)
+                        <label class="check"><input type="checkbox" value="{{ $k }}" data-push-prayer @checked($k !== 'imsak')> <span>{{ $label }}</span></label>
+                    @endforeach
+                </div>
+            </fieldset>
+            <div class="field" style="max-width:260px"><label for="push-before">Waktu pengingat</label>
+                <select id="push-before" class="select" data-push-before>
+                    <option value="0">Tepat waktu adzan</option><option value="5">5 menit sebelumnya</option><option value="10">10 menit sebelumnya</option>
+                    <option value="15">15 menit sebelumnya</option><option value="30">30 menit sebelumnya</option>
+                </select></div>
+            <div class="form-actions">
+                <button type="button" class="btn" data-push-on><x-icon name="check" />Aktifkan / simpan</button>
+                <button type="button" class="btn btn--outline" data-push-test hidden>Kirim uji</button>
+                <button type="button" class="btn btn--ghost" data-push-off hidden>Matikan</button>
+            </div>
+            <p class="small muted" data-push-msg aria-live="polite" style="margin:0"></p>
+        @endif
+    </section>
 </x-layouts.app>
