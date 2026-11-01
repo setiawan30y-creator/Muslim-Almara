@@ -5,6 +5,7 @@
         [route('qibla'), 'Arah Kiblat', 'Kompas perangkat & derajat', 'compass', false],
         [route('mosques'), 'Masjid Terdekat', 'Peta & daftar masjid/musala sekitar', 'pin', false],
         [route('doa'), 'Dzikir & Doa', 'Arab, Latin, arti, dan sumber', 'hands', false],
+        [route('guide.module', 'tahlil'), 'Tahlil', 'Bacaan lengkap sampai doa, dengan penghitung', 'beads', false],
         [route('tasbih'), 'Tasbih Digital', 'Penghitung dzikir', 'beads', false],
         [route('calendar'), 'Kalender Hijriah', 'Hari besar Islam', 'calendar', false],
         [route('zakat'), 'Kalkulator Zakat', 'Maal, penghasilan, fitrah', 'coins', true],

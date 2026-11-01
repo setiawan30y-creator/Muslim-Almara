@@ -48,8 +48,8 @@ Route::get('/asmaul-husna', [ToolsController::class, 'asmaulHusna'])->name('asma
 
 // Panduan bersumber (Tajwid, Umroh, Haji, Ziarah)
 Route::get('/panduan', [\App\Http\Controllers\Learning\GuideController::class, 'index'])->name('guide.index');
-Route::get('/panduan/{modul}', [\App\Http\Controllers\Learning\GuideController::class, 'module'])->whereIn('modul', ['tajwid', 'umroh', 'haji', 'ziarah'])->name('guide.module');
-Route::get('/panduan/{modul}/{slug}', [\App\Http\Controllers\Learning\GuideController::class, 'show'])->whereIn('modul', ['tajwid', 'umroh', 'haji', 'ziarah'])->name('guide.show');
+Route::get('/panduan/{modul}', [\App\Http\Controllers\Learning\GuideController::class, 'module'])->whereIn('modul', ['tajwid', 'umroh', 'haji', 'ziarah', 'tahlil'])->name('guide.module');
+Route::get('/panduan/{modul}/{slug}', [\App\Http\Controllers\Learning\GuideController::class, 'show'])->whereIn('modul', ['tajwid', 'umroh', 'haji', 'ziarah', 'tahlil'])->name('guide.show');
 
 // Hafalan & Murojaah
 Route::get('/hafalan', [\App\Http\Controllers\Learning\HafalanController::class, 'index'])->name('hafalan');

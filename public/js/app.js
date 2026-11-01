@@ -685,6 +685,24 @@
         });
     })();
 
+    // ---------- Tahlil: penghitung, lompat, Latin ----------
+    var tahlil = $('[data-tahlil]');
+    if (tahlil) {
+        $$('.count-btn', tahlil).forEach(function (b) {
+            b.addEventListener('click', function () {
+                var max = +b.dataset.countTarget, el = $('[data-count]', b), n = (+el.textContent + 1);
+                if (n > max) n = max;
+                el.textContent = n; b.classList.toggle('is-done', n >= max);
+                if (navigator.vibrate) navigator.vibrate(n >= max ? [30, 40, 30] : 15);
+                if (n >= max) { var next = b.closest('.tahlil-step').nextElementSibling; if (next && next.classList.contains('tahlil-step')) setTimeout(function () { next.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 350); }
+            });
+        });
+        var rs = $('[data-tahlil-reset]', tahlil);
+        if (rs) rs.addEventListener('click', function () { $$('.count-btn', tahlil).forEach(function (b) { $('[data-count]', b).textContent = '0'; b.classList.remove('is-done'); }); toast('Hitungan diulang'); });
+        var tj = $('[data-tahlil-jump]', tahlil);
+        if (tj) tj.addEventListener('change', function () { var el = document.getElementById(tj.value); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+    }
+
     // ---------- Admin: isi durasi rekaman otomatis dari metadata berkas ----------
     $$('[data-audio-file]').forEach(function (inp) {
         inp.addEventListener('change', function () {

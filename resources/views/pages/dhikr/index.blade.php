@@ -4,6 +4,11 @@
     <x-page-head title="Dzikir & Doa" subtitle="Arab · Latin · arti Indonesia · sumber rujukan" />
 
     <div class="stack">
+        <a href="{{ route('guide.module', 'tahlil') }}" class="card" style="display:flex;align-items:center;gap:12px;padding:12px 16px">
+            <span class="shortcut__ico" style="flex:none;width:40px;height:40px"><x-icon name="beads" /></span>
+            <span style="flex:1"><b>Tahlil lengkap</b><span class="small muted" style="display:block">Dari hadiah Al-Fatihah sampai doa, dengan penghitung & audio</span></span>
+            <x-icon name="chevron-right" style="width:20px;height:20px" />
+        </a>
         <div class="tabs" role="tablist" aria-label="Jenis bacaan" style="max-width:360px">
             <a role="tab" class="tab-link" href="{{ route('doa') }}" aria-selected="{{ $tab === 'dzikir' ? 'true' : 'false' }}">Dzikir</a>
             <a role="tab" class="tab-link" href="{{ route('doa', ['tab' => 'doa']) }}" aria-selected="{{ $tab === 'doa' ? 'true' : 'false' }}">Doa</a>

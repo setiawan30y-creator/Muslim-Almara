@@ -21,11 +21,39 @@ class GuideController extends Controller
         return view('pages.guide.index', ['modules' => GuideCategory::MODULES, 'counts' => $counts]);
     }
 
+    /** Rangkaian ayat (Arab + arti Kemenag) untuk materi bertanda show_verses. @return array<int, \Illuminate\Support\Collection> id materi => ayat */
+    public static function verseBlocks(iterable $items): array
+    {
+        $out = [];
+        foreach ($items as $it) {
+            if (! $it->show_verses || ! ($r = $it->audioRange())) {
+                continue;
+            }
+            [$s, $from, $to] = $r;
+            $out[$it->id] = QuranVerse::query()->with(['surah', 'translationId'])
+                ->whereHas('surah', fn ($q) => $q->where('number', $s))
+                ->whereBetween('ayah_number', [$from, $to])->orderBy('ayah_number')->get();
+        }
+
+        return $out;
+    }
+
     public function module(string $modul)
     {
         abort_unless(isset(GuideCategory::MODULES[$modul]), 404);
         $categories = GuideCategory::query()->where('module', $modul)->orderBy('sort_order')
             ->with(['items' => fn ($q) => $q->published()])->get()->filter(fn ($c) => $c->items->isNotEmpty())->values();
+
+        if ($modul === 'tahlil') {
+            $items = $categories->flatMap->items;
+
+            return view('pages.guide.tahlil', [
+                'meta' => GuideCategory::MODULES[$modul],
+                'items' => $items,
+                'verses' => self::verseBlocks($items),
+                'source' => $items->first()?->source,
+            ]);
+        }
 
         return view('pages.guide.module', ['modul' => $modul, 'meta' => GuideCategory::MODULES[$modul], 'categories' => $categories]);
     }
@@ -49,6 +77,7 @@ class GuideController extends Controller
         }
 
         return view('pages.guide.show', [
+            'blocks' => self::verseBlocks([$item]),
             'modul' => $modul,
             'meta' => GuideCategory::MODULES[$modul],
             'item' => $item,

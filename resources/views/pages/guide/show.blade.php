@@ -16,6 +16,12 @@
             @endif
         </article>
 
+        @if (isset($blocks[$item->id]) && $blocks[$item->id]->isNotEmpty())
+            <section class="card reading-card" aria-label="Ayat">
+                <x-verse-block :verses="$blocks[$item->id]" :latin="$item->quran_latin" :audio-ref="$item->audio_ref" />
+            </section>
+        @endif
+
         @if ($item->arabic_text)
             <section class="card reading-card" aria-label="Bacaan">
                 <div class="section-head" style="margin-bottom:0"><h2 style="margin:0">Bacaan</h2>

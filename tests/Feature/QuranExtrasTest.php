@@ -141,4 +141,19 @@ class QuranExtrasTest extends TestCase
         $this->get('/panduan/umroh/umroh-talbiyah')->assertOk()->assertDontSee('data-ayat-audio=', false);
         $this->get('/panduan/umroh')->assertOk()->assertSee('Ada audio qari');
     }
+
+    public function test_tahlil_full_reading(): void
+    {
+        $this->get('/panduan/tahlil')->assertOk()
+            ->assertSee('1. Hadiah Al-Fatihah (tawasul)')->assertSee('24. Penutup (QS. Ash-Shaffat 180–182)')
+            ->assertSee('data-count-target="33"', false)->assertSee('Irḥamnā yā arḥamar-rāḥimīn.')
+            ->assertSee('QS. Al-Baqarah: 1–5')->assertSee('Alif lām mīm.')   // rangkaian ayat dari database + Latin
+            ->assertSee('Raḥmatullāhi wa barakātuhū');
+        $this->get('/panduan/tahlil/tahlil-ayat-kursi')->assertOk()->assertSee('QS. Al-Baqarah: 255');
+        $this->get('/ibadah')->assertOk()->assertSee(route('guide.module', 'tahlil'));
+        $this->get('/doa-dzikir')->assertOk()->assertSee('Tahlil lengkap');
+
+        \App\Models\GuideItem::query()->whereHas('category', fn ($q) => $q->where('module', 'tahlil'))->update(['review_status' => 'review']);
+        $this->get('/panduan/tahlil')->assertOk()->assertSee('Bacaan tahlil sedang ditinjau');
+    }
 }

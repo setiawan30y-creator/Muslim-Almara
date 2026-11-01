@@ -13,6 +13,7 @@ class GuideCategory extends Model
         'umroh' => ['Panduan Umroh', 'Rukun, wajib, dan langkah umroh beserta bacaannya', 'kaaba'],
         'haji' => ['Panduan Haji', 'Jenis haji, rukun & wajib, serta urutan hari-hari haji', 'kaaba'],
         'ziarah' => ['Panduan Ziarah Kubur', 'Tujuan, adab, salam, dan doa bersumber', 'map'],
+        'tahlil' => ['Tahlil', 'Susunan bacaan tahlil lengkap, dari hadiah Al-Fatihah sampai doa penutup', 'beads'],
     ];
 
     protected $fillable = ['module', 'slug', 'title', 'description', 'sort_order'];

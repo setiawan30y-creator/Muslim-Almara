@@ -15,13 +15,13 @@ class GuideItem extends Model
 
     protected $fillable = [
         'category_id', 'slug', 'title', 'body', 'arabic_text', 'transliteration', 'translation', 'translation_status',
-        'count_target', 'context_note', 'example_ref', 'audio_ref', 'quiz_json', 'source_reference', 'source_kind', 'source_id',
+        'count_target', 'context_note', 'example_ref', 'audio_ref', 'show_verses', 'quran_latin', 'quiz_json', 'source_reference', 'source_kind', 'source_id',
         'review_status', 'content_version', 'created_by', 'submitted_by', 'reviewed_by', 'reviewed_at', 'published_at', 'sort_order',
     ];
 
     protected function casts(): array
     {
-        return ['quiz_json' => 'array'];
+        return ['quiz_json' => 'array', 'show_verses' => 'boolean', 'count_target' => 'integer'];
     }
 
     public function sourceKindLabel(): string
