@@ -67,12 +67,32 @@ class PwaController extends Controller
         return view('pages.offline');
     }
 
-    public function sitemap(\App\Services\Quran\QuranService $quran)
+    public function sitemap(\App\Services\Quran\QuranService $quran, \App\Services\Content\StaticContent $content)
     {
-        $urls = collect(['/', '/al-quran', '/jadwal-sholat', '/kiblat', '/doa-dzikir', '/ibadah', '/belajar', '/asmaul-husna', '/tasbih', '/kalender', '/zakat', '/panduan', '/panduan/tajwid', '/panduan/umroh', '/panduan/haji', '/panduan/ziarah', '/hafalan', '/terjemah', '/masjid-terdekat', '/tentang', '/kebijakan-privasi', '/syarat-ketentuan'])
-            ->merge($quran->surahs()->map(fn ($s) => '/al-quran/'.$s->number))
-            ->map(fn ($u) => url($u));
+        $static = ['/', '/al-quran', '/jadwal-sholat', '/kiblat', '/doa-dzikir', '/ibadah', '/belajar', '/asmaul-husna', '/tasbih', '/kalender', '/zakat',
+            '/panduan', '/panduan/tajwid', '/panduan/umroh', '/panduan/haji', '/panduan/ziarah', '/panduan/tahlil', '/hafalan', '/terjemah',
+            '/masjid-terdekat', '/imsakiyah', '/puasa-sunnah', '/tentang', '/kebijakan-privasi', '/syarat-ketentuan'];
+        $urls = collect($static)->map(fn ($u) => url($u));
+        foreach ($content->cities() as $c) {
+            $urls->push(route('prayer.city', $c['slug']), route('imsakiyah.city', $c['slug']));
+        }
+        foreach (\App\Models\GuideItem::query()->published()->with('category:id,module')->get(['slug', 'category_id']) as $g) {
+            $urls->push(route('guide.show', [$g->category->module, $g->slug]));
+        }
+        foreach (\App\Services\Quran\QuranDataset::AYAH_COUNTS as $i => $count) {
+            $urls->push(route('quran.show', $i + 1));
+            for ($a = 1; $a <= $count; $a++) {
+                $urls->push(route('quran.verse', [$i + 1, $a]));
+            }
+        }
 
-        return response()->view('sitemap', ['urls' => $urls])->header('Content-Type', 'application/xml');
+        return response()->view('sitemap', ['urls' => $urls])->header('Content-Type', 'application/xml')->header('Cache-Control', 'public, max-age=86400');
+    }
+
+    public function robots()
+    {
+        $lines = ['User-agent: *', 'Disallow: /api/', 'Disallow: /lokasi', 'Disallow: /admin', 'Disallow: /profil', 'Disallow: /pengaturan', '', 'Sitemap: '.url('/sitemap.xml')];
+
+        return response(implode("\n", $lines)."\n", 200, ['Content-Type' => 'text/plain; charset=UTF-8']);
     }
 }

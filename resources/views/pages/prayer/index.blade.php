@@ -5,9 +5,11 @@
     $prev = $month->subMonth()->format('Y-m');
     $nextM = $month->addMonth()->format('Y-m');
     $q = $loc['custom'] ? ['lat' => $loc['lat'], 'lng' => $loc['lng'], 'tz' => $loc['tz']] : ['kota' => $loc['slug']];
+    $cityPage = $cityPage ?? false;
+    $link = fn (array $extra = []) => $cityPage ? route('prayer.city', array_merge(['kota' => $loc['slug']], $extra)) : route('prayer', array_merge($q, $extra));
 @endphp
-<x-layouts.app :loc="$loc" title="Jadwal Sholat {{ $loc['nama'] }}" description="Jadwal sholat {{ $loc['nama'] }} hari ini dan sebulan penuh: imsak, subuh, terbit, duha, zuhur, asar, magrib, isya.">
-    <x-page-head title="Jadwal Sholat" subtitle="{{ $loc['nama'] }} · {{ $tzLabel }} · {{ $params->methodName }}">
+<x-layouts.app :loc="$loc" title="Jadwal Sholat {{ $loc['nama'] }} Hari Ini, {{ $now->translatedFormat('j F Y') }}" :canonical="$cityPage ? route('prayer.city', $loc['slug']) : null" description="Jadwal sholat {{ $loc['nama'] }} hari ini dan sebulan penuh: imsak, subuh, terbit, duha, zuhur, asar, magrib, isya.">
+    <x-page-head :title="$cityPage ? 'Jadwal Sholat '.$loc['nama'] : 'Jadwal Sholat'" subtitle="{{ $loc['nama'] }} · {{ $tzLabel }} · {{ $params->methodName }}">
         <a href="{{ route('settings.prayer') }}" class="icon-btn" aria-label="Pengaturan metode"><x-icon name="sliders" /></a>
         <a href="{{ route('location', ['kembali' => '/jadwal-sholat']) }}" class="btn btn--tonal btn--sm"><x-icon name="pin" />Lokasi</a>
     </x-page-head>
@@ -18,9 +20,9 @@
                 <div class="section-head" style="flex-wrap:wrap">
                     <h2 id="bulanan">{{ $month->translatedFormat('F Y') }}</h2>
                     <div style="display:flex;gap:6px">
-                        <a class="icon-btn" href="{{ route('prayer', [...$q, 'bulan' => $prev]) }}" aria-label="Bulan sebelumnya"><x-icon name="chevron-left" /></a>
-                        <a class="chip" href="{{ route('prayer', $q) }}">Bulan ini</a>
-                        <a class="icon-btn" href="{{ route('prayer', [...$q, 'bulan' => $nextM]) }}" aria-label="Bulan berikutnya"><x-icon name="chevron-right" /></a>
+                        <a class="icon-btn" href="{{ $link(['bulan' => $prev]) }}" aria-label="Bulan sebelumnya"><x-icon name="chevron-left" /></a>
+                        <a class="chip" href="{{ $link() }}">Bulan ini</a>
+                        <a class="icon-btn" href="{{ $link(['bulan' => $nextM]) }}" aria-label="Bulan berikutnya"><x-icon name="chevron-right" /></a>
                     </div>
                 </div>
                 <div class="table-wrap">
@@ -87,6 +89,14 @@
                 <a href="{{ route('settings.prayer') }}" class="btn btn--outline btn--sm" style="margin-top:12px"><x-icon name="sliders" />Ubah metode & koreksi</a>
                 <a href="{{ route('settings.prayer') }}#pengingat" class="btn btn--tonal btn--sm" style="margin-top:12px"><x-icon name="clock" />Pengingat adzan</a>
             </section>
+            <section class="card">
+                <h2>Ramadan & puasa</h2>
+                <div class="form-actions" style="margin:0"><a class="btn btn--sm btn--outline" href="{{ route('imsakiyah') }}">Imsakiyah</a><a class="btn btn--sm btn--outline" href="{{ route('fasting') }}">Kalender puasa</a></div>
+            </section>
         </aside>
     </div>
+    <section class="card card--flat" style="margin-top:var(--space-5)">
+        <h2>Jadwal sholat kota lain</h2>
+        <div class="city-links">@foreach ($cities as $c)<a href="{{ route('prayer.city', $c['slug']) }}" @if ($cityPage && $c['slug'] === $loc['slug']) aria-current="page" @endif>{{ $c['nama'] }}</a>@endforeach</div>
+    </section>
 </x-layouts.app>

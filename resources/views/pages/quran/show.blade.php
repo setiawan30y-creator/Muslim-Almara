@@ -51,6 +51,7 @@
                     @if ($hasAudio)<button type="button" class="btn btn--sm" data-md-play data-play-ayah=""><x-icon name="play" />Putar dari ayat ini</button>@endif
                     <button type="button" class="btn btn--sm btn--outline" data-md-copy><x-icon name="copy" />Salin</button>
                     <a class="btn btn--sm btn--ghost" data-md-verse href="#">Bookmark & catatan →</a>
+                    <a class="btn btn--sm btn--ghost" data-md-page href="#">Halaman ayat & tafsir →</a>
                 </div>
             </aside>
         @else
@@ -59,7 +60,7 @@
                 @php $bm = isset($bookmarked[$v->id]); @endphp
                 <article class="ayah" id="ayat-{{ $v->ayah_number }}" data-verse-id="{{ $v->id }}" data-ayah="{{ $v->ayah_number }}">
                     <div class="ayah__bar">
-                        <span class="ayah__num">{{ $n }}:{{ $v->ayah_number }}</span>
+                        <a class="ayah__num" href="{{ route('quran.verse', [$n, $v->ayah_number]) }}" title="Halaman ayat {{ $n }}:{{ $v->ayah_number }}">{{ $n }}:{{ $v->ayah_number }}</a>
                         @if ($hasAudio)<button type="button" class="icon-btn" data-play-ayah="{{ $v->ayah_number }}" aria-label="Putar murattal mulai ayat {{ $v->ayah_number }}" title="Putar dari ayat ini"><x-icon name="play" /></button>@endif
                         <button type="button" class="icon-btn {{ $bm ? 'is-on' : '' }}" data-bookmark aria-pressed="{{ $bm ? 'true' : 'false' }}" aria-label="Bookmark ayat {{ $v->ayah_number }}" title="Bookmark"><x-icon name="bookmark" /></button>
                         <button type="button" class="icon-btn" data-mark-read aria-label="Tandai dibaca sampai ayat {{ $v->ayah_number }}" title="Tandai dibaca sampai sini"><x-icon name="check-circle" /></button>

@@ -866,3 +866,15 @@ body.hide-tafsir .tafsir { display: none; }
 .count-btn { display: inline-flex; align-items: baseline; gap: 2px; min-width: 72px; justify-content: center; padding: 8px 14px; border-radius: 99px; border: 2px solid var(--color-primary); background: var(--color-surface); color: var(--color-primary); font: inherit; font-weight: 800; cursor: pointer; font-variant-numeric: tabular-nums; }
 .count-btn b { font-size: 1.15rem; }
 .count-btn.is-done { background: var(--color-primary); color: var(--color-on-primary); }
+
+/* ---------- Puasa, imsakiyah, tautan kota — @2026-Alifiandra ---------- */
+.city-links { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: .9rem; }
+.city-links a[aria-current="page"] { font-weight: 800; }
+.fast-list { list-style: none; margin: 0; padding: 0; }
+.fast-list li { display: flex; gap: 12px; align-items: center; padding: 12px 16px; flex-wrap: wrap; }
+.fast-list li + li { border-top: 1px solid var(--color-border); }
+.fast-list li.is-today { background: var(--color-primary-soft); }
+.fast-list .date { flex: none; width: 46px; text-align: center; line-height: 1.1; }
+.fast-list .date b { display: block; font-size: 1.3rem; }
+.fast-list .info { flex: 1; min-width: 140px; display: flex; flex-direction: column; }
+.fast-list .tags { display: flex; gap: 6px; flex-wrap: wrap; }

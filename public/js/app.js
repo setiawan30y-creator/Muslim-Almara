@@ -386,6 +386,7 @@
             $('[data-md-tr]', md).textContent = span.dataset.tr || '';
             var play = $('[data-md-play]', md); if (play) play.dataset.playAyah = n;
             $('[data-md-verse]', md).href = location.pathname + '?tampilan=ayat#ayat-' + n;
+            var pg = $('[data-md-page]', md); if (pg) pg.href = location.pathname.replace(/\/$/, '') + '/' + n;
             md.dataset.ayah = n;
             md.hidden = false;
         };

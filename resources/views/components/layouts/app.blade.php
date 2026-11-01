@@ -1,4 +1,4 @@
-@props(['title' => null, 'description' => null, 'loc' => null, 'canonical' => null, 'noindex' => false])
+@props(['title' => null, 'description' => null, 'loc' => null, 'canonical' => null, 'noindex' => false, 'image' => null])
 @php
     /** @var array $appearance diisi view composer dari PreferenceService */
     $ap = $appearance ?? \App\Services\Preferences\PreferenceService::APPEARANCE_DEFAULTS;
@@ -33,8 +33,20 @@
     <link rel="canonical" href="{{ $canonical ?? url()->current() }}">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="{{ config('app.name') }}">
+    @php $metaDesc = $description ?? "Pendamping Muslim pribadi: Al-Qur'an, jadwal sholat, kiblat, dzikir & doa, kalender Hijriah."; @endphp
     <meta property="og:title" content="{{ $title ?? config('app.name') }}">
-    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:description" content="{{ $metaDesc }}">
+    <meta property="og:url" content="{{ $canonical ?? url()->current() }}">
+    <meta property="og:locale" content="id_ID">
+    <meta property="og:image" content="{{ $image ?? asset('icons/og-image.png') }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $title ?? config('app.name') }}">
+    <meta name="twitter:description" content="{{ $metaDesc }}">
+    @if (request()->routeIs('home'))
+        <script type="application/ld+json">{!! json_encode(['@context' => 'https://schema.org', '@type' => 'WebSite', 'name' => config('app.name'), 'url' => url('/'), 'inLanguage' => 'id', 'potentialAction' => ['@type' => 'SearchAction', 'target' => route('quran.search').'?q={search_term_string}', 'query-input' => 'required name=search_term_string']], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
+    @endif
     <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
     <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
     <link rel="manifest" href="{{ url('/manifest.webmanifest') }}">

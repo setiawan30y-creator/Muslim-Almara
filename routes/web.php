@@ -30,6 +30,7 @@ Route::prefix('al-quran')->name('quran.')->controller(QuranController::class)->g
     Route::get('/', 'index')->name('index');
     Route::get('/cari', 'search')->middleware('throttle:search')->name('search');
     Route::get('/{nomor}', 'show')->whereNumber('nomor')->name('show');
+    Route::get('/{nomor}/{ayat}', 'verse')->whereNumber('nomor')->whereNumber('ayat')->name('verse');
 });
 // Audio qari (streaming publik dengan dukungan Range)
 Route::get('/al-quran/audio/rekaman/{track}', [\App\Http\Controllers\Quran\AudioController::class, 'stream'])->whereNumber('track')->name('quran.audio.stream');
@@ -38,6 +39,10 @@ Route::get('/al-quran/audio/simulasi/{surah}.wav', [\App\Http\Controllers\Quran\
 // Ibadah harian
 Route::get('/jadwal-sholat', [PrayerController::class, 'index'])->name('prayer');
 Route::get('/lokasi', [PrayerController::class, 'location'])->name('location');
+Route::get('/jadwal-sholat/{kota}', [PrayerController::class, 'city'])->where('kota', '[a-z0-9-]+')->name('prayer.city');
+Route::get('/imsakiyah', [PrayerController::class, 'imsakiyah'])->name('imsakiyah');
+Route::get('/imsakiyah/{kota}', [PrayerController::class, 'imsakiyah'])->where('kota', '[a-z0-9-]+')->name('imsakiyah.city');
+Route::get('/puasa-sunnah', [PrayerController::class, 'fasting'])->name('fasting');
 Route::get('/kiblat', QiblaController::class)->name('qibla');
 Route::get('/doa-dzikir', [DoaDzikirController::class, 'index'])->name('doa');
 Route::get('/doa-dzikir/{type}/{slug}', [DoaDzikirController::class, 'show'])->whereIn('type', ['doa', 'dzikir'])->name('doa.show');
@@ -159,6 +164,7 @@ Route::get('/manifest.webmanifest', [PwaController::class, 'manifest'])->name('p
 Route::get('/service-worker.js', [PwaController::class, 'serviceWorker'])->name('pwa.sw');
 Route::get('/offline', [PwaController::class, 'offline'])->name('offline');
 Route::get('/.well-known/assetlinks.json', \App\Http\Controllers\TwaController::class)->name('twa.assetlinks');
+Route::get('/robots.txt', [PwaController::class, 'robots'])->name('robots');
 Route::get('/sitemap.xml', [PwaController::class, 'sitemap'])->name('sitemap');
 
 // Alamat lama tetap berfungsi
