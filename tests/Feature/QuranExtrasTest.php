@@ -56,7 +56,8 @@ class QuranExtrasTest extends TestCase
         $this->getJson('/api/v1/quran/audio/surah/113?reciter=in:ar.alafasy')->assertNotFound();
         $this->getJson('/api/v1/quran/audio/surah/1?reciter=in:../../x')->assertStatus(422);
 
-        $this->get('/al-quran/112')->assertOk()->assertSee('data-audio-play', false)->assertSee('Qari pilihan')->assertSee('Husary (Mujawwad)');
+        $this->get('/al-quran/112')->assertOk()->assertSee('data-audio-play', false)->assertSee('Qari pilihan')->assertSee('Husary (Mujawwad)')
+            ->assertSee('data-audio-beat', false);
 
         // Admin dapat membatasi daftar qari
         config(['almara.audio.islamic_network.reciters' => 'ar.husarymujawwad']);

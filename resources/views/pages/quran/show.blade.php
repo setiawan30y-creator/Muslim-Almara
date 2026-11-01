@@ -117,6 +117,7 @@
                     </select>
                 </div>
                 <button type="button" class="icon-btn" data-audio-mode aria-pressed="{{ $prefs['audio_mode'] === 'verse' ? 'true' : 'false' }}" title="Mode per ayat" aria-label="Mode per ayat"><x-icon name="list" /></button>
+                <button type="button" class="icon-btn" data-audio-beat aria-pressed="true" title="Penanda ketukan huruf" aria-label="Penanda ketukan huruf"><x-icon name="beat" /></button>
                 <button type="button" class="icon-btn" data-audio-repeat aria-pressed="false" title="Ulang" aria-label="Ulang"><x-icon name="repeat" /></button>
             </div>
             <div class="player__seek">

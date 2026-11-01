@@ -847,3 +847,11 @@ body.hide-tafsir .tafsir { display: none; }
 .convo__type { display: flex; gap: 4px; }
 .convo__type .input { min-height: 40px; }
 .convo__opts { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; gap: 8px; flex-wrap: wrap; }
+
+/* ---------- Penanda ketukan huruf saat murattal — @2026-Alifiandra ---------- */
+:root { --beat-bg: #ffcf4a; --beat-fg: #2b1d00; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --beat-bg: #f5b823; --beat-fg: #1a1100; } }
+:root[data-theme="dark"] { --beat-bg: #f5b823; --beat-fg: #1a1100; }
+.beat { border-radius: 6px; transition: background-color .08s linear, box-shadow .08s linear; }
+.beat.is-beat { background: var(--beat-bg); color: var(--beat-fg); box-shadow: 0 0 0 3px var(--beat-bg); }
+@media (prefers-reduced-motion: reduce) { .beat { transition: none; } }

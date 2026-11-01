@@ -466,6 +466,79 @@
             if (!audio.paused && (r.top < 80 || r.top > window.innerHeight * 0.6)) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
+        // ---- Penanda ketukan: blok 2–5 huruf yang bergerak mengikuti bacaan (perkiraan) ----
+        var beatBtn = $('[data-audio-beat]', player);
+        st.beat = store.get('almara-beat', true);
+        var MARK = /[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED\u08D3-\u08FF\u200C\u200D]/;
+        var LETTER = /[\u0621-\u064A\u0671-\u06D3\u06FA-\u06FF]/;
+        var MADD = /[\u0653\u06E4]/g, LONG = /[\u0627\u0648\u064A\u0649\u0670]/g;
+        function arabicEl(n) {
+            var el = document.getElementById('ayat-' + n);
+            return el && (el.classList.contains('mushaf__ayah') ? el : $('.arabic', el));
+        }
+        // Pecah teks ayat menjadi blok 2–5 huruf (huruf + harakatnya), sekali saja per ayat.
+        function beatsOf(n) {
+            var el = arabicEl(n);
+            if (!el) return null;
+            if (el._beats) return el._beats;
+            var parts = el.textContent.split(/(\s+)/), beats = [], total = 0;
+            el.textContent = '';
+            parts.forEach(function (w) {
+                if (!w) return;
+                if (/^\s+$/.test(w)) { el.appendChild(document.createTextNode(w)); return; }
+                var clusters = [];
+                Array.from(w).forEach(function (ch) { if (MARK.test(ch) && clusters.length) clusters[clusters.length - 1] += ch; else clusters.push(ch); });
+                var n = clusters.filter(function (c) { return LETTER.test(c[0]); }).length;
+                if (!n) { el.appendChild(document.createTextNode(w)); return; } // tanda waqaf berdiri sendiri
+                var groups = n <= 5 ? 1 : Math.ceil(n / 4), size = Math.ceil(n / groups), buf = '', cnt = 0;
+                var flush = function () {
+                    if (!buf) return;
+                    var sp = document.createElement('span'); sp.className = 'beat'; sp.textContent = buf;
+                    var wgt = cnt + ((buf.match(MADD) || []).length * 2) + ((buf.match(LONG) || []).length * 0.6);
+                    beats.push({ el: sp, from: total, to: total + wgt }); total += wgt;
+                    el.appendChild(sp); buf = ''; cnt = 0;
+                };
+                clusters.forEach(function (c, i) {
+                    buf += c; if (LETTER.test(c[0])) cnt++;
+                    var rest = clusters.slice(i + 1).some(function (x) { return LETTER.test(x[0]); });
+                    if (cnt >= size && rest) flush();
+                });
+                flush();
+            });
+            beats.forEach(function (bt) { bt.from /= total || 1; bt.to /= total || 1; });
+            el._beats = beats;
+            return beats;
+        }
+        var beatOn = null;
+        function clearBeat() { if (beatOn) beatOn.classList.remove('is-beat'); beatOn = null; }
+        function beatTick() {
+            if (!st.beat || audio.paused || !st.active) { clearBeat(); return; }
+            var p = null, t = audio.currentTime, tl = tracks();
+            if (tl) {
+                var d = audio.duration;
+                if (isFinite(d) && d > 0.8) p = (t - 0.25) / (d - 0.55); // abaikan jeda hening awal/akhir
+            } else {
+                var sg = segOf(st.active);
+                if (sg) p = (t * 1000 - sg.start_ms) / (sg.end_ms - sg.start_ms);
+            }
+            var beats = p === null ? null : beatsOf(st.active);
+            if (!beats || !beats.length) { clearBeat(); return; }
+            p = Math.max(0, Math.min(0.9999, p));
+            var hit = null;
+            for (var i = 0; i < beats.length; i++) if (p >= beats[i].from && p < beats[i].to) { hit = beats[i].el; break; }
+            if (hit !== beatOn) { clearBeat(); if (hit) { hit.classList.add('is-beat'); beatOn = hit; } }
+        }
+        (function loop() { beatTick(); requestAnimationFrame(loop); })();
+        if (beatBtn) {
+            beatBtn.setAttribute('aria-pressed', st.beat ? 'true' : 'false');
+            beatBtn.addEventListener('click', function () {
+                st.beat = !st.beat; store.set('almara-beat', st.beat);
+                beatBtn.setAttribute('aria-pressed', st.beat ? 'true' : 'false');
+                if (!st.beat) clearBeat();
+                toast(st.beat ? 'Penanda ketukan huruf aktif' : 'Penanda ketukan huruf nonaktif');
+            });
+        }
+
         // Geser posisi setelah metadata siap (sebelum itu peramban mengabaikan currentTime).
         function seekTo(t) {
             if (audio.readyState >= 1) { audio.currentTime = t; return Promise.resolve(); }
