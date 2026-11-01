@@ -20,6 +20,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->prepend(AssignRequestId::class);
         $middleware->append(SecurityHeaders::class);
         $middleware->statefulApi();
+        // Di belakang tunnel HTTPS / reverse proxy (cloudflared, ngrok, Nginx, load balancer):
+        // percayai header X-Forwarded-* agar URL aset & service worker memakai https.
+        // Bawaan hanya proksi lokal; isi TRUSTED_PROXIES (mis. "*" atau daftar IP) di server produksi.
+        $middleware->trustProxies(at: array_values(array_filter(array_map('trim', explode(',', (string) env('TRUSTED_PROXIES', '127.0.0.1,::1'))))) ?: null);
         // Cookie preferensi tampilan dibaca & ditulis JS (tamu); nilainya divalidasi di server.
         $middleware->encryptCookies(except: PreferenceService::PLAIN_COOKIES);
         $middleware->redirectGuestsTo(fn () => route('login'));

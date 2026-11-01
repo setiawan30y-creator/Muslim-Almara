@@ -59,7 +59,7 @@ Doa, dzikir, dan materi panduan (Tajwid, Umroh, Haji, Ziarah) masuk berstatus **
 php artisan test
 ```
 
-95 test mencakup perhitungan sholat/kiblat/Hijriah, integritas dataset, autentikasi, isolasi data pribadi (IDOR), alur review admin, audio qari, panduan, hafalan, terjemah, jurnal & koleksi, preferensi tema, API, dan PWA.
+97 test mencakup perhitungan sholat/kiblat/Hijriah, integritas dataset, autentikasi, isolasi data pribadi (IDOR), alur review admin, audio qari, panduan, hafalan, terjemah, jurnal & koleksi, preferensi tema, API, dan PWA.
 
 ## Konfigurasi `.env`
 
@@ -91,7 +91,17 @@ Nilai bawaan metode/kota/Hijriah juga dapat diubah di **Admin → Konfigurasi**.
 
 ## PWA & HTTPS
 
-PWA aktif di HTTPS atau `localhost`/`127.0.0.1`. Untuk `muslim-almara.test`, aktifkan SSL Laragon (Menu → Apache → SSL → Enabled). Untuk HP, gunakan domain HTTPS atau tunnel aman.
+PWA aktif di HTTPS atau `localhost`/`127.0.0.1`. Untuk `muslim-almara.test`, aktifkan SSL Laragon (Menu → Apache → SSL → Enabled).
+
+Mencoba di HP (domain `.test` hanya dikenal komputer Anda), gunakan tunnel HTTPS:
+
+```powershell
+winget install --id Cloudflare.cloudflared
+php artisan serve                                   # jendela 1
+cloudflared tunnel --url http://127.0.0.1:8000      # jendela 2 → salin alamat https://….trycloudflare.com
+```
+
+Aplikasi otomatis memakai `https` di balik tunnel lokal (`TRUSTED_PROXIES=127.0.0.1,::1`). Tambahkan domain tunnel ke `SANCTUM_STATEFUL_DOMAINS` agar fitur yang butuh login (bookmark, hafalan) berjalan.
 
 ## Dokumentasi
 
