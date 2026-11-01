@@ -111,7 +111,7 @@ Perintah terakhir menerbitkan semua konten berstatus review sekaligus, tetap ter
 | Cuaca untuk aplikasi komersial | `OPEN_METEO_API_KEY` | API gratis Open-Meteo hanya non-komersial |
 | Qari berlisensi | `QF_ENABLED=true`, `QF_CLIENT_ID`, `QF_CLIENT_SECRET` | Developer Console Quran.Foundation; patuhi Developer Terms |
 | Qari ALMARA | — | Unggah rekaman di Admin → Audio qari |
-| Terjemah teks bebas | `TRANSLATE_URL`, `TRANSLATE_API_KEY` | Layanan kompatibel LibreTranslate, contoh di server sendiri (Docker): `docker run -d --restart unless-stopped -p 127.0.0.1:5000:5000 libretranslate/libretranslate --load-only id,ar,en` lalu `TRANSLATE_URL=http://127.0.0.1:5000` |
+| Terjemah berkualitas tinggi | `TRANSLATE_GOOGLE_KEY` (Google Cloud Translation) atau `TRANSLATE_DEEPL_KEY`, atau `TRANSLATE_URL` | Layanan kompatibel LibreTranslate, contoh di server sendiri (Docker): `docker run -d --restart unless-stopped -p 127.0.0.1:5000:5000 libretranslate/libretranslate --load-only id,ar,en` lalu `TRANSLATE_URL=http://127.0.0.1:5000` |
 | Play Store (TWA) | `TWA_PACKAGE_NAME`, `TWA_SHA256_FINGERPRINTS` | Lihat bagian 9 |
 
 Setiap mengubah `.env`: `php artisan config:cache`.

@@ -20,7 +20,7 @@ class SecurityHeaders
         $h->set('X-Content-Type-Options', 'nosniff');
         $h->set('Referrer-Policy', 'strict-origin-when-cross-origin');
         $h->set('X-Frame-Options', 'SAMEORIGIN');
-        $h->set('Permissions-Policy', 'geolocation=(self), camera=(), microphone=(), payment=()');
+        $h->set('Permissions-Policy', 'geolocation=(self), camera=(), microphone=(self), payment=()');
 
         $private = $request->user() !== null
             || $request->is('admin', 'admin/*', 'profil', 'profil/*', 'masuk', 'daftar', 'lupa-sandi', 'reset-sandi/*', 'verifikasi-email*', 'api/v1/me*', 'api/v1/user/*', 'api/v1/auth/*');

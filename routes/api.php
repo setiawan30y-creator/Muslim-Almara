@@ -15,7 +15,7 @@ Route::prefix('v1')->name('api.v1.')->middleware('throttle:api')->group(function
     Route::get('/quran/verses/{id}', [V1\QuranController::class, 'verse'])->whereNumber('id')->name('quran.verse');
     Route::get('/quran/search', [V1\QuranController::class, 'search'])->middleware('throttle:search')->name('quran.search');
     Route::get('/quran/translations', [V1\QuranController::class, 'translations'])->name('quran.translations');
-    Route::post('/translate', V1\TranslateController::class)->middleware('throttle:search')->name('translate');
+    Route::post('/translate', V1\TranslateController::class)->middleware('throttle:translate')->name('translate');
     Route::get('/quran/audio/reciters', [V1\AudioController::class, 'reciters'])->name('quran.audio.reciters');
     Route::get('/quran/audio/ayat', [V1\AudioController::class, 'ayat'])->name('quran.audio.ayat');
     Route::get('/quran/audio/surah/{surah}', [V1\AudioController::class, 'surah'])->whereNumber('surah')->name('quran.audio.surah');

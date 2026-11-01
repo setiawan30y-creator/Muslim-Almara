@@ -58,6 +58,7 @@ class AppServiceProvider extends ServiceProvider
             Limit::perMinute(5)->by(strtolower((string) $r->input('email')).'|'.$r->ip()),
             Limit::perMinute(20)->by($r->ip()),
         ]);
+        RateLimiter::for('translate', fn (Request $r) => Limit::perMinute(40)->by($r->user()?->id ?: $r->ip()));
         RateLimiter::for('search', fn (Request $r) => Limit::perMinute(30)->by($r->user()?->id ?: $r->ip()));
     }
 }

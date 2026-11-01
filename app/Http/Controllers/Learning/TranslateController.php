@@ -17,6 +17,8 @@ class TranslateController extends Controller
             'source' => $data['source'],
             'enabled' => $translator->enabled(),
             'languages' => $translator->languages(),
+            'speech' => $translator->speechCodes(),
+            'provider' => $translator->providerName(),
             'maxChars' => (int) config('almara.translate.max_chars', 1000),
         ]);
     }

@@ -3,7 +3,7 @@
 // Konfigurasi ALMARA MUSLIM — @2026-Alifiandra
 
 return [
-    'version' => '2.5.2',
+    'version' => '2.6.0',
 
     // Kota bawaan (slug dari resources/data/kota.json) bila pengguna belum memilih lokasi
     'default_city' => env('ALMARA_DEFAULT_CITY', 'jakarta'),
@@ -52,14 +52,26 @@ return [
         ],
     ],
 
-    // Terjemah teks bebas (opsional) via layanan kompatibel LibreTranslate.
-    // Tanpa konfigurasi, halaman Terjemah tetap menyediakan kumpulan frasa offline.
+    // Terjemah teks & percakapan. Penyedia dipilih otomatis (TRANSLATE_DRIVER=auto):
+    //   google (TRANSLATE_GOOGLE_KEY) → deepl (TRANSLATE_DEEPL_KEY) → libretranslate (TRANSLATE_URL) → mymemory (tanpa kunci).
+    // MyMemory gratis tanpa kunci namun berkuota harian kecil — untuk produksi gunakan Google/DeepL/LibreTranslate.
     'translate' => [
-        'url' => env('TRANSLATE_URL'),          // contoh: https://libretranslate.contoh.id
+        'driver' => env('TRANSLATE_DRIVER', 'auto'),
+        'google_key' => env('TRANSLATE_GOOGLE_KEY'),
+        'deepl_key' => env('TRANSLATE_DEEPL_KEY'),
+        'url' => env('TRANSLATE_URL'),          // LibreTranslate, mis. http://127.0.0.1:5000
         'api_key' => env('TRANSLATE_API_KEY'),
+        'mymemory_email' => env('TRANSLATE_MYMEMORY_EMAIL'), // menaikkan kuota MyMemory
         'timeout' => 10,
-        'max_chars' => 1000,
-        'languages' => ['id' => 'Indonesia', 'ar' => 'Arab', 'en' => 'Inggris'],
+        'max_chars' => 2000,
+        'languages' => [
+            'id' => ['Indonesia', 'id-ID'],
+            'ar' => ['Arab', 'ar-SA'],
+            'en' => ['Inggris', 'en-US'],
+            'ms' => ['Melayu', 'ms-MY'],
+            'tr' => ['Turki', 'tr-TR'],
+            'ur' => ['Urdu', 'ur-PK'],
+        ],
     ],
 
     // Pengingat adzan (Web Push, VAPID). Buat kunci: php artisan almara:push:keys

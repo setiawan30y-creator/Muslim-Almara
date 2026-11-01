@@ -20,7 +20,7 @@
         <h2>Layanan pihak ketiga</h2>
         <p>Halaman memuat huruf dari Google Fonts; penyedia tersebut dapat menerima alamat IP Anda saat memuat huruf.</p>
         <p><b>Masjid terdekat:</b> koordinat pencarian dikirim langsung dari peramban Anda ke layanan OpenStreetMap (Overpass API dan server peta), dan pustaka peta dimuat dari cdnjs. Aplikasi tidak menyimpan koordinat tersebut.</p>
-        <p><b>Terjemah teks</b> (bila diaktifkan): teks yang Anda kirim diteruskan ke layanan terjemah yang dikonfigurasi pengelola aplikasi dan tidak disimpan di database.</p>
+        <p><b>Terjemah teks & percakapan</b>: teks yang Anda kirim diteruskan server ke layanan terjemah yang dikonfigurasi pengelola aplikasi (mis. Google Translate, DeepL, LibreTranslate, atau MyMemory) dan tidak disimpan di database. Masukan suara (mikrofon) dan pembacaan suara memakai fitur peramban/perangkat Anda; pada sebagian peramban, suara diproses oleh penyedia peramban tersebut.</p>
         <p><b>Cuaca</b> diambil server aplikasi dari Open-Meteo berdasarkan koordinat lokasi yang dibulatkan (±1 km); alamat IP Anda tidak dikirim ke penyedia.</p>
         <p><b>Pengingat adzan</b> (bila Anda aktifkan): server menyimpan alamat langganan notifikasi peramban, lokasi yang dibulatkan (±1 km), metode jadwal, dan waktu yang dipilih. Isi notifikasi dienkripsi dan dikirim melalui layanan push peramban (Google, Mozilla, Apple, Microsoft). Mematikan pengingat menghapus data tersebut.</p>
         <p><b>Audio qari</b> dari Quran.Foundation (bila diaktifkan) diputar langsung dari server penyedia.</p>

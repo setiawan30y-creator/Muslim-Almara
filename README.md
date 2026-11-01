@@ -7,7 +7,7 @@ Dibangun dengan **Laravel 13** mengikuti *ALMARA MUSLIM — Blueprint Teknis & R
 
 ## Status rilis
 
-Versi **2.5.0** mencakup Rilis Pertama (MVP, blueprint §1.1) + *Pengaturan Tampilan & Tema*:
+Versi **2.6.0** mencakup Rilis Pertama (MVP, blueprint §1.1) + *Pengaturan Tampilan & Tema*:
 
 | Area | Isi |
 |---|---|
@@ -61,7 +61,7 @@ Doa, dzikir, dan materi panduan (Tajwid, Umroh, Haji, Ziarah) masuk berstatus **
 php artisan test
 ```
 
-107 test mencakup perhitungan sholat/kiblat/Hijriah, integritas dataset, autentikasi, isolasi data pribadi (IDOR), alur review admin, audio qari, panduan, hafalan, terjemah, jurnal & koleksi, preferensi tema, API, dan PWA.
+109 test mencakup perhitungan sholat/kiblat/Hijriah, integritas dataset, autentikasi, isolasi data pribadi (IDOR), alur review admin, audio qari, panduan, hafalan, terjemah, jurnal & koleksi, preferensi tema, API, dan PWA.
 
 ## Konfigurasi `.env`
 
@@ -78,7 +78,7 @@ php artisan test
 | `QF_ENABLED`, `QF_CLIENT_ID`, `QF_CLIENT_SECRET` | nonaktif | Qari berlisensi Quran.Foundation (kredensial hanya di server) |
 | `QF_ENV` | `production` | `prelive` hanya berisi surah 1–2 |
 | `QF_MOCK` | `false` | Mode simulasi pemutar (nada uji) tanpa kredensial |
-| `TRANSLATE_URL`, `TRANSLATE_API_KEY` | kosong | Terjemah teks bebas via layanan kompatibel LibreTranslate (frasa offline tetap tersedia) |
+| `TRANSLATE_DRIVER` | `auto` | Terjemah teks & percakapan: Google (`TRANSLATE_GOOGLE_KEY`) → DeepL (`TRANSLATE_DEEPL_KEY`) → LibreTranslate (`TRANSLATE_URL`) → MyMemory (gratis tanpa kunci, kuota harian kecil) |
 | `OVERPASS_URL` | overpass-api.de | Sumber data masjid terdekat (OpenStreetMap) |
 | `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` | kosong | Pengingat adzan (Web Push) — buat dengan `php artisan almara:push:keys` |
 | `TWA_PACKAGE_NAME`, `TWA_SHA256_FINGERPRINTS` | kosong | `/.well-known/assetlinks.json` untuk Play Store |

@@ -115,18 +115,41 @@ class LearningFeaturesTest extends TestCase
         $this->get('/hafalan/999')->assertNotFound();
     }
 
-    public function test_translate_page_phrasebook_and_optional_provider(): void
+    public function test_translate_providers_text_and_conversation_ui(): void
     {
+        // Dinonaktifkan admin → hanya frasa
+        config(['almara.translate.driver' => 'off']);
         $this->get('/terjemah')->assertOk()->assertSee('Kumpulan frasa')->assertSee('أَيْنَ الْحَمَّامُ؟', false)->assertDontSee('data-translate', false);
         $this->postJson('/api/v1/translate', ['q' => 'Terima kasih', 'source' => 'id', 'target' => 'ar'])->assertStatus(503);
 
-        config(['almara.translate.url' => 'https://translate.contoh.test']);
-        Http::fake(['translate.contoh.test/translate' => Http::response(['translatedText' => 'شكرا'])]);
-        $this->get('/terjemah')->assertOk()->assertSee('data-translate', false);
-        $this->postJson('/api/v1/translate', ['q' => 'Terima kasih', 'source' => 'id', 'target' => 'ar'])->assertOk()->assertJsonPath('data.text', 'شكرا');
+        // Bawaan tanpa kunci: MyMemory (teks panjang dipecah ≤ 500 byte)
+        config(['almara.translate.driver' => 'auto']);
+        Http::fake([
+            'api.mymemory.translated.net/*' => Http::response(['responseStatus' => 200, 'responseData' => ['translatedText' => 'شكرا &amp; مرحبا']]),
+            'translation.googleapis.com/*' => Http::response(['data' => ['translations' => [['translatedText' => 'Thank you']]]]),
+            'api-free.deepl.com/*' => Http::response(['translations' => [['text' => 'Terima kasih (DeepL)']]]),
+        ]);
+        $this->get('/terjemah')->assertOk()->assertSee('data-translate', false)->assertSee('data-convo', false)
+            ->assertSee('data-cv-mic="b"', false)->assertSee('MyMemory')->assertSee('"ar":"ar-SA"', false);
+        $this->postJson('/api/v1/translate', ['q' => 'Terima kasih', 'source' => 'id', 'target' => 'ar'])->assertOk()
+            ->assertJsonPath('data.text', 'شكرا & مرحبا')->assertJsonPath('meta.provider', 'MyMemory');
+        Http::assertSent(fn ($r) => str_contains($r->url(), 'langpair=id%7Car'));
+        $this->assertCount(3, \App\Services\Translate\TranslateService::chunks(str_repeat('Kalimat yang cukup panjang untuk diuji. ', 30), 450));
+
+        // Kunci Google → Google; kunci tidak pernah tampil ke browser
+        config(['almara.translate.google_key' => 'kunci-google-uji']);
+        $res = $this->postJson('/api/v1/translate', ['q' => 'Terima kasih', 'source' => 'id', 'target' => 'en'])->assertOk()
+            ->assertJsonPath('data.text', 'Thank you')->assertJsonPath('meta.provider', 'Google Translate');
+        $this->assertStringNotContainsString('kunci-google-uji', $res->getContent());
+        $this->assertStringNotContainsString('kunci-google-uji', $this->get('/terjemah')->getContent());
+
+        config(['almara.translate.google_key' => null, 'almara.translate.deepl_key' => 'k:fx']);
+        $this->postJson('/api/v1/translate', ['q' => 'Thanks', 'source' => 'en', 'target' => 'id'])->assertOk()->assertJsonPath('meta.provider', 'DeepL');
+
         $this->postJson('/api/v1/translate', ['q' => 'x', 'source' => 'id', 'target' => 'id'])->assertStatus(422);
         $this->postJson('/api/v1/translate', ['q' => 'x', 'source' => 'id', 'target' => 'fr'])->assertStatus(422);
-        Http::assertSent(fn ($r) => $r['q'] === 'Terima kasih' && $r['target'] === 'ar');
+        // Mikrofon diizinkan untuk situs sendiri
+        $this->assertStringContainsString('microphone=(self)', (string) $this->get('/terjemah')->headers->get('Permissions-Policy'));
     }
 
     public function test_mosque_finder_page(): void

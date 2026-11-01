@@ -699,9 +699,10 @@
         if (!('speechSynthesis' in window)) { toast('Perangkat tidak mendukung pelafalan'); return; }
         var u = new SpeechSynthesisUtterance(text);
         u.lang = lang || 'ar-SA'; u.rate = 0.85;
-        var pre = (lang || 'ar').slice(0, 2);
-        var v = speechSynthesis.getVoices().filter(function (x) { return x.lang && x.lang.toLowerCase().indexOf(pre) === 0; })[0];
-        if (v) u.voice = v; else if (pre === 'ar') toast('Suara Arab belum terpasang di perangkat ini');
+        var pre = (lang || 'ar').slice(0, 2).toLowerCase(), voices = speechSynthesis.getVoices();
+        var v = voices.filter(function (x) { return x.lang && x.lang.replace('_', '-').toLowerCase() === (lang || '').toLowerCase(); })[0]
+            || voices.filter(function (x) { return x.lang && x.lang.toLowerCase().indexOf(pre) === 0; })[0];
+        if (v) u.voice = v; else if (voices.length) toast('Suara bahasa ini belum terpasang di perangkat — pasang di pengaturan Teks-ke-ucapan HP');
         speechSynthesis.cancel(); speechSynthesis.speak(u);
     }
     document.addEventListener('click', function (e) { var b = e.target.closest('[data-speak]'); if (b) speak(b.getAttribute('data-speak'), 'ar-SA'); });
@@ -720,23 +721,112 @@
         });
     }
 
-    // ---------- Terjemah teks ----------
-    var trf = $('[data-translate]');
-    if (trf) {
-        var trSrc = $('[data-tr-src]', trf), trTgt = $('[data-tr-tgt]', trf), trOut = $('[data-tr-out]', trf), trText = $('[data-tr-text]', trf);
-        $('[data-tr-swap]', trf).addEventListener('click', function () { var a = trSrc.value; trSrc.value = trTgt.value; trTgt.value = a; });
-        trf.addEventListener('submit', function (e) {
-            e.preventDefault();
-            if (trSrc.value === trTgt.value) { toast('Pilih bahasa yang berbeda'); return; }
-            var btn = $('[data-tr-go]', trf); btn.disabled = true;
-            http('POST', '/api/v1/translate', { q: $('[data-tr-q]', trf).value, source: trSrc.value, target: trTgt.value })
-                .then(function (r) { trText.textContent = r.data.text; trText.lang = trTgt.value; trOut.hidden = false; })
-                .catch(function (err) { toast(err.message || 'Terjemah gagal'); })
-                .finally(function () { btn.disabled = false; });
-        });
-        $('[data-tr-speak]', trf).addEventListener('click', function () { speak(trText.textContent, { ar: 'ar-SA', en: 'en-US', id: 'id-ID' }[trText.lang] || 'id-ID'); });
-        $('[data-tr-copy]', trf).addEventListener('click', function () { if (navigator.clipboard) navigator.clipboard.writeText(trText.textContent).then(function () { toast('Disalin'); }); });
+    // ---------- Terjemah: tab, teks (mirip Google Translate), percakapan suara ----------
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    function trRequest(q, src, tgt) { return http('POST', '/api/v1/translate', { q: q, source: src, target: tgt }).then(function (r) { return r.data.text; }); }
+    var trTabs = $('[data-tr-tabs]');
+    if (trTabs) {
+        var showTab = function (name) {
+            $$('[data-tab]', trTabs).forEach(function (b) { b.setAttribute('aria-selected', b.dataset.tab === name ? 'true' : 'false'); });
+            $$('[data-tab-panel]').forEach(function (p) { p.hidden = p.dataset.tabPanel !== name; });
+        };
+        $$('[data-tab]', trTabs).forEach(function (b) { b.addEventListener('click', function () { showTab(b.dataset.tab); history.replaceState(null, '', '#' + b.dataset.tab); }); });
+        var h = location.hash.slice(1);
+        if (h && $('[data-tab="' + h + '"]', trTabs)) showTab(h);
     }
+
+    var trf = $('[data-translate]');
+    if (trf) (function () {
+        var speech = JSON.parse(trf.dataset.speech || '{}');
+        var src = $('[data-tr-src]', trf), tgt = $('[data-tr-tgt]', trf), q = $('[data-tr-q]', trf), out = $('[data-tr-text]', trf);
+        var status = $('[data-tr-status]', trf), count = $('[data-tr-count]', trf), mic = $('[data-tr-mic]', trf);
+        var timer = null, seq = 0, lastKey = '';
+        function setLangAttrs() { q.lang = src.value; q.dir = /^(ar|ur)$/.test(src.value) ? 'rtl' : 'ltr'; }
+        function run() {
+            var text = q.value.trim(), key = src.value + '|' + tgt.value + '|' + text;
+            count.textContent = q.value.length + '/' + q.maxLength;
+            if (!text) { out.innerHTML = '<span class="muted">Terjemahan</span>'; out.removeAttribute('lang'); status.textContent = ''; lastKey = ''; return; }
+            if (key === lastKey) return;
+            if (src.value === tgt.value) { status.textContent = 'Pilih bahasa berbeda'; return; }
+            var my = ++seq; status.textContent = 'Menerjemahkan…';
+            trRequest(text, src.value, tgt.value).then(function (t) {
+                if (my !== seq) return;
+                lastKey = key; out.textContent = t; out.lang = tgt.value; status.textContent = '';
+            }).catch(function (e) { if (my === seq) status.textContent = e.message || 'Gagal menerjemahkan'; });
+        }
+        function later() { clearTimeout(timer); timer = setTimeout(run, 700); count.textContent = q.value.length + '/' + q.maxLength; }
+        q.addEventListener('input', later);
+        q.addEventListener('keydown', function (e) { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); clearTimeout(timer); run(); } });
+        src.addEventListener('change', function () { setLangAttrs(); lastKey = ''; run(); });
+        tgt.addEventListener('change', function () { lastKey = ''; run(); });
+        $('[data-tr-swap]', trf).addEventListener('click', function () {
+            var a = src.value; src.value = tgt.value; tgt.value = a;
+            if (out.lang && out.textContent) q.value = out.textContent;
+            setLangAttrs(); lastKey = ''; run();
+        });
+        $('[data-tr-clear]', trf).addEventListener('click', function () { q.value = ''; run(); q.focus(); });
+        $('[data-tr-speak]', trf).addEventListener('click', function () { if (out.lang) speak(out.textContent, speech[out.lang] || out.lang); });
+        $('[data-tr-speak-src]', trf).addEventListener('click', function () { if (q.value.trim()) speak(q.value, speech[src.value] || src.value); });
+        $('[data-tr-copy]', trf).addEventListener('click', function () { if (out.lang && navigator.clipboard) navigator.clipboard.writeText(out.textContent).then(function () { toast('Disalin'); }); });
+        setLangAttrs();
+        // Masukan suara
+        var rec = null;
+        if (!SR) { mic.hidden = true; return; }
+        mic.addEventListener('click', function () {
+            if (rec) { rec.stop(); return; }
+            rec = new SR(); rec.lang = speech[src.value] || src.value; rec.interimResults = true; rec.continuous = false;
+            var base = q.value ? q.value.replace(/\s*$/, ' ') : '';
+            rec.onresult = function (ev) {
+                var txt = ''; for (var i = 0; i < ev.results.length; i++) txt += ev.results[i][0].transcript;
+                q.value = base + txt; later();
+            };
+            rec.onerror = function (ev) { toast(ev.error === 'not-allowed' ? 'Izinkan akses mikrofon untuk memakai suara' : 'Suara tidak tertangkap, coba lagi'); };
+            rec.onend = function () { mic.classList.remove('is-listening'); rec = null; clearTimeout(timer); run(); };
+            mic.classList.add('is-listening'); rec.start();
+        });
+    })();
+
+    var cv = $('[data-convo]');
+    if (cv) (function () {
+        var speech = JSON.parse(cv.dataset.speech || '{}');
+        var log = $('[data-cv-log]', cv), auto = $('[data-cv-autospeak]', cv), rec = null;
+        function lang(side) { return $('[data-cv-lang="' + side + '"]', cv).value; }
+        function other(side) { return side === 'a' ? 'b' : 'a'; }
+        function syncLabels() { ['a', 'b'].forEach(function (s) { var sel = $('[data-cv-lang="' + s + '"]', cv); $('[data-cv-label="' + s + '"]', cv).textContent = sel.options[sel.selectedIndex].text; }); }
+        $$('[data-cv-lang]', cv).forEach(function (s) { s.addEventListener('change', syncLabels); });
+        syncLabels();
+        function bubble(side, text) {
+            var empty = $('.convo__empty', log); if (empty) empty.remove();
+            var li = document.createElement('li'); li.className = 'convo__msg convo__msg--' + side;
+            var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'icon-btn'; btn.setAttribute('aria-label', 'Dengarkan'); btn.innerHTML = $('[data-tr-speak]') ? $('[data-tr-speak]').innerHTML : '▶';
+            var o = document.createElement('p'); o.className = 'convo__orig'; o.lang = lang(side); o.textContent = text;
+            var t = document.createElement('p'); t.className = 'convo__tr'; t.lang = lang(other(side)); t.textContent = '…';
+            li.appendChild(btn); li.appendChild(o); li.appendChild(t); log.appendChild(li); log.scrollTop = log.scrollHeight;
+            btn.addEventListener('click', function () { speak(t.textContent, speech[t.lang] || t.lang); });
+            trRequest(text, lang(side), lang(other(side))).then(function (tr) {
+                t.textContent = tr; log.scrollTop = log.scrollHeight;
+                if (auto.checked) speak(tr, speech[t.lang] || t.lang);
+            }).catch(function (e) { t.removeAttribute('lang'); t.className = 'convo__tr small muted'; t.textContent = e.message || 'Gagal menerjemahkan'; });
+        }
+        $$('[data-cv-form]', cv).forEach(function (f) {
+            f.addEventListener('submit', function (e) { e.preventDefault(); var i = $('input', f), v = i.value.trim(); if (v) { bubble(f.dataset.cvForm, v); i.value = ''; } });
+        });
+        $('[data-cv-clear]', cv).addEventListener('click', function () { log.innerHTML = '<li class="convo__empty muted small">Percakapan dibersihkan.</li>'; });
+        $$('[data-cv-mic]', cv).forEach(function (b) {
+            if (!SR) { b.disabled = true; b.title = 'Peramban ini belum mendukung masukan suara — gunakan kolom ketik'; return; }
+            b.addEventListener('click', function () {
+                if (rec) { rec.stop(); return; }
+                if ('speechSynthesis' in window) speechSynthesis.cancel();
+                var side = b.dataset.cvMic;
+                rec = new SR(); rec.lang = speech[lang(side)] || lang(side); rec.interimResults = false; rec.continuous = false;
+                rec.onresult = function (ev) { var txt = ev.results[0][0].transcript.trim(); if (txt) bubble(side, txt); };
+                rec.onerror = function (ev) { toast(ev.error === 'not-allowed' ? 'Izinkan akses mikrofon untuk memakai suara' : 'Suara tidak tertangkap, coba lagi'); };
+                rec.onend = function () { b.classList.remove('is-listening'); rec = null; };
+                b.classList.add('is-listening'); rec.start();
+            });
+        });
+        if (!SR) $('[data-cv-note]', cv).textContent = 'Peramban ini belum mendukung masukan suara. Gunakan kolom ketik; terjemahan tetap dapat dibacakan. Untuk suara, pakai Chrome di Android/desktop.';
+    })();
 
     // ---------- Masjid terdekat (OpenStreetMap / Overpass) ----------
     var mq = $('[data-mosques]');

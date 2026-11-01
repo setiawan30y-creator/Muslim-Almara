@@ -22,13 +22,13 @@ class TranslateController extends ApiController
         ], [], ['q' => 'teks', 'source' => 'bahasa asal', 'target' => 'bahasa tujuan']);
 
         if (! $translator->enabled()) {
-            return response()->json(['message' => 'Layanan terjemah teks belum diaktifkan. Gunakan kumpulan frasa.', 'errors' => (object) []], 503);
+            return response()->json(['message' => 'Layanan terjemah dinonaktifkan admin. Gunakan kumpulan frasa.', 'errors' => (object) []], 503);
         }
         $out = $translator->translate(trim($data['q']), $data['source'], $data['target']);
         if ($out === null) {
             return response()->json(['message' => 'Layanan terjemah sedang tidak dapat dihubungi. Coba lagi nanti.', 'errors' => (object) []], 502);
         }
 
-        return $this->ok(['text' => $out], ['provider' => 'libretranslate', 'note' => 'Terjemahan mesin — periksa kembali untuk teks penting.'])->header('Cache-Control', 'no-store');
+        return $this->ok(['text' => $out], ['provider' => $translator->providerName(), 'note' => 'Terjemahan mesin — periksa kembali untuk teks penting.'])->header('Cache-Control', 'no-store');
     }
 }
