@@ -176,6 +176,8 @@
         @endforeach
         </div>
 
+        <x-ad place="list" />
+
         <p class="small muted" style="text-align:center"><a href="{{ route('settings.home') }}">Atur kartu beranda</a></p>
     </div>
 </x-layouts.app>

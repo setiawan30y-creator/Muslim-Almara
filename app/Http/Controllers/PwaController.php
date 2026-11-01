@@ -89,6 +89,15 @@ class PwaController extends Controller
         return response()->view('sitemap', ['urls' => $urls])->header('Content-Type', 'application/xml')->header('Cache-Control', 'public, max-age=86400');
     }
 
+    /** ads.txt untuk verifikasi penjual iklan (IAB). 404 bila iklan belum dikonfigurasi. */
+    public function adsTxt(\App\Services\Ads\AdManager $ads)
+    {
+        $txt = $ads->adsTxt();
+        abort_if($txt === null, 404);
+
+        return response($txt, 200, ['Content-Type' => 'text/plain; charset=UTF-8', 'Cache-Control' => 'public, max-age=3600']);
+    }
+
     public function robots()
     {
         $lines = ['User-agent: *', 'Disallow: /api/', 'Disallow: /lokasi', 'Disallow: /admin', 'Disallow: /profil', 'Disallow: /pengaturan', '', 'Sitemap: '.url('/sitemap.xml')];

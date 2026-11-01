@@ -878,3 +878,15 @@ body.hide-tafsir .tafsir { display: none; }
 .fast-list .date b { display: block; font-size: 1.3rem; }
 .fast-list .info { flex: 1; min-width: 140px; display: flex; flex-direction: column; }
 .fast-list .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* Iklan & persetujuan — @2026-Alifiandra */
+.ad-slot { margin: 20px auto 4px; max-width: 728px; min-height: 100px; text-align: center; border-top: 1px dashed var(--color-border); padding-top: 8px; }
+.ad-slot__label { display: block; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: 4px; }
+.ad-slot[data-ad-empty] { display: none; }
+.consent { position: fixed; left: 12px; right: 12px; bottom: calc(76px + env(safe-area-inset-bottom)); z-index: 60; max-width: 640px; margin: 0 auto; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
+  background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 16px; padding: 14px 16px; box-shadow: 0 10px 30px rgb(0 0 0 / .18); }
+.consent[hidden] { display: none; }
+.consent__body { flex: 1 1 260px; }
+.consent__body p { margin: 4px 0 0; }
+.consent__actions { display: flex; gap: 8px; flex-wrap: wrap; }
+@media (min-width: 900px) { .consent { bottom: 20px; } }

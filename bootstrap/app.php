@@ -25,7 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Bawaan hanya proksi lokal; isi TRUSTED_PROXIES (mis. "*" atau daftar IP) di server produksi.
         $middleware->trustProxies(at: array_values(array_filter(array_map('trim', explode(',', (string) env('TRUSTED_PROXIES', '127.0.0.1,::1'))))) ?: null);
         // Cookie preferensi tampilan dibaca & ditulis JS (tamu); nilainya divalidasi di server.
-        $middleware->encryptCookies(except: PreferenceService::PLAIN_COOKIES);
+        $middleware->encryptCookies(except: [...PreferenceService::PLAIN_COOKIES, \App\Services\Ads\AdManager::CONSENT_COOKIE]);
         $middleware->redirectGuestsTo(fn () => route('login'));
         $middleware->redirectUsersTo(fn () => route('profile'));
     })

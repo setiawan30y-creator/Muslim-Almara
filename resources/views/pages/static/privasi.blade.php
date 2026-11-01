@@ -1,6 +1,6 @@
 {{-- Kebijakan Privasi (blueprint §6.3, §10.3) — @2026-Alifiandra --}}
 <x-layouts.app title="Kebijakan Privasi">
-    <x-page-head title="Kebijakan Privasi" subtitle="Terakhir diperbarui {{ \Carbon\Carbon::create(2026, 10, 19)->translatedFormat('j F Y') }}" />
+    <x-page-head title="Kebijakan Privasi" subtitle="Terakhir diperbarui {{ \Carbon\Carbon::create(2026, 11, 1)->translatedFormat('j F Y') }}" />
     <article class="card card--pad-lg prose">
         <p>Kami menghormati privasi Anda. Fitur ibadah inti dapat digunakan tanpa akun.</p>
         <h2>Data akun</h2>
@@ -24,6 +24,14 @@
         <p><b>Cuaca</b> diambil server aplikasi dari Open-Meteo berdasarkan koordinat lokasi yang dibulatkan (±1 km); alamat IP Anda tidak dikirim ke penyedia.</p>
         <p><b>Pengingat adzan</b> (bila Anda aktifkan): server menyimpan alamat langganan notifikasi peramban, lokasi yang dibulatkan (±1 km), metode jadwal, dan waktu yang dipilih. Isi notifikasi dienkripsi dan dikirim melalui layanan push peramban (Google, Mozilla, Apple, Microsoft). Mematikan pengingat menghapus data tersebut.</p>
         <p><b>Audio qari</b> dari Quran.Foundation (bila diaktifkan) diputar langsung dari server penyedia.</p>
+        <h2 id="iklan">Iklan</h2>
+        @if (app(\App\Services\Ads\AdManager::class)->enabled())
+            <p>Aplikasi ini gratis dan dibiayai iklan dari mitra pihak ketiga (Google AdSense atau jaringan iklan sejenis). Iklan hanya tampil di area daftar dan bagian bawah halaman — <b>tidak pernah</b> di dalam bacaan Al-Qur'an, doa, dzikir, panduan ibadah, pemutar audio, maupun halaman akun.</p>
+            <p>Saat pertama berkunjung Anda dapat memilih: <b>Izinkan</b> (iklan yang dipersonalisasi — mitra iklan dapat memakai cookie atau pengenal perangkat untuk menampilkan iklan yang relevan dan mengukur kinerjanya) atau <b>Iklan umum saja</b> (iklan non-personalisasi; cookie tetap dapat dipakai untuk membatasi frekuensi dan mencegah penipuan). Skrip iklan baru dimuat setelah Anda memilih. Pilihan disimpan di cookie <code>{{ \App\Services\Ads\AdManager::CONSENT_COOKIE }}</code> selama 12 bulan dan dapat diubah kapan saja melalui tautan <b>Pengaturan iklan</b> di bagian bawah halaman.</p>
+            <p>Cara Google memakai data dari situs mitra dijelaskan di <a href="https://policies.google.com/technologies/partner-sites" rel="noopener" target="_blank">policies.google.com/technologies/partner-sites</a>. Anda juga dapat mengatur personalisasi iklan di <a href="https://adssettings.google.com" rel="noopener" target="_blank">adssettings.google.com</a>.</p>
+        @else
+            <p>Saat ini aplikasi tidak menampilkan iklan. Bila kelak iklan diaktifkan, bagian ini akan diperbarui dan Anda akan diminta memilih persetujuan sebelum skrip iklan dimuat.</p>
+        @endif
         <h2>Perubahan</h2>
         <p>Kebijakan ini dapat diperbarui. Perubahan berlaku sejak dipublikasikan di halaman ini.</p>
     </article>

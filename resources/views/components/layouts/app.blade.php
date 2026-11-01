@@ -102,6 +102,7 @@
         </div>
     @endif
     {{ $slot }}
+    <x-ad place="footer" />
 </main>
 
 <footer class="footer">
@@ -127,6 +128,7 @@
                 <li><a href="{{ route('about') }}">Tentang &amp; sumber data</a></li>
                 <li><a href="{{ route('privacy') }}">Kebijakan Privasi</a></li>
                 <li><a href="{{ route('terms') }}">Syarat &amp; Ketentuan</a></li>
+                @if (app(\App\Services\Ads\AdManager::class)->enabled())<li><button type="button" class="link-btn" data-ads-consent-open>Pengaturan iklan</button></li>@endif
             </ul>
         </div>
         <div class="footer__bottom" style="grid-column:1/-1">
@@ -163,6 +165,7 @@
         clearPrivateCache: {{ session('clear_private_cache') ? 'true' : 'false' }}
     };
 </script>
+<x-ad-consent />
 <script src="{{ asset('js/app.js') }}?v={{ @filemtime(public_path('js/app.js')) }}" defer></script>
 @stack('scripts')
 </body>

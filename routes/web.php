@@ -165,6 +165,7 @@ Route::get('/service-worker.js', [PwaController::class, 'serviceWorker'])->name(
 Route::get('/offline', [PwaController::class, 'offline'])->name('offline');
 Route::get('/.well-known/assetlinks.json', \App\Http\Controllers\TwaController::class)->name('twa.assetlinks');
 Route::get('/robots.txt', [PwaController::class, 'robots'])->name('robots');
+Route::get('/ads.txt', [PwaController::class, 'adsTxt'])->name('ads.txt');
 Route::get('/sitemap.xml', [PwaController::class, 'sitemap'])->name('sitemap');
 
 // Alamat lama tetap berfungsi

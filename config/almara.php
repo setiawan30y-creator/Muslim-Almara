@@ -103,5 +103,21 @@ return [
         'overpass_url' => env('OVERPASS_URL', 'https://overpass-api.de/api/interpreter'),
     ],
 
+    // Iklan (Google AdSense atau jaringan CPM lain yang memakai skrip adsbygoogle).
+    // Mati secara default. Iklan TIDAK PERNAH dipasang di dalam teks Al-Qur'an, doa, dzikir,
+    // pemutar audio, halaman akun/admin. Lihat docs/iklan.md.
+    'ads' => [
+        'enabled' => (bool) env('ADS_ENABLED', false),
+        'client' => env('ADSENSE_CLIENT'),              // ca-pub-XXXXXXXXXXXXXXXX
+        'slots' => [                                      // ID unit iklan (data-ad-slot); kosong = slot tidak tampil
+            'footer' => env('ADSENSE_SLOT_FOOTER'),
+            'list' => env('ADSENSE_SLOT_LIST'),
+        ],
+        // Baris tambahan ads.txt (pisahkan dengan |), mis. dari jaringan iklan lain
+        'ads_txt_extra' => env('ADS_TXT_EXTRA'),
+        // Jangan tampilkan iklan untuk pengguna yang login (opsional)
+        'hide_for_members' => (bool) env('ADS_HIDE_FOR_MEMBERS', false),
+    ],
+
     'developer' => '@2026-Alifiandra',
 ];

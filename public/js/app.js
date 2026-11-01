@@ -1273,3 +1273,53 @@
         });
     }
 })();
+
+/* ===== Iklan: persetujuan + pemuatan lambat — @2026-Alifiandra ===== */
+(function () {
+    var cfg = window.ALMARA_ADS;
+    if (!cfg || !cfg.client) return;
+    var banner = document.querySelector('[data-ads-consent]');
+    var loaded = false;
+
+    function setCookie(v) {
+        document.cookie = cfg.cookie + '=' + v + '; Max-Age=' + (365 * 86400) + '; Path=/; SameSite=Lax' + (location.protocol === 'https:' ? '; Secure' : '');
+    }
+    function load() {
+        if (loaded || !cfg.consent) return;
+        var slots = document.querySelectorAll('ins.adsbygoogle');
+        if (!slots.length) return;
+        loaded = true;
+        window.adsbygoogle = window.adsbygoogle || [];
+        if (cfg.consent === 'npa') window.adsbygoogle.requestNonPersonalizedAds = 1;
+        var s = document.createElement('script');
+        s.async = true;
+        s.crossOrigin = 'anonymous';
+        s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + encodeURIComponent(cfg.client);
+        s.onerror = function () { slots.forEach(function (i) { i.closest('[data-ad-slot-wrap]').setAttribute('data-ad-empty', ''); }); };
+        document.head.appendChild(s);
+        slots.forEach(function (i) { try { window.adsbygoogle.push({}); } catch (e) {} });
+    }
+    function lazy() {
+        var wraps = document.querySelectorAll('[data-ad-slot-wrap]');
+        if (!wraps.length || !cfg.consent) return;
+        if (!('IntersectionObserver' in window)) { load(); return; }
+        var io = new IntersectionObserver(function (es) {
+            if (es.some(function (e) { return e.isIntersecting; })) { io.disconnect(); load(); }
+        }, { rootMargin: '400px 0px' });
+        wraps.forEach(function (w) { io.observe(w); });
+    }
+    document.addEventListener('click', function (e) {
+        var c = e.target.closest('[data-consent-choice]');
+        if (c) {
+            var prev = cfg.consent;
+            cfg.consent = c.getAttribute('data-consent-choice');
+            setCookie(cfg.consent);
+            if (banner) banner.hidden = true;
+            // Mengganti pilihan setelah skrip termuat → muat ulang agar pengaturan baru berlaku
+            if (loaded && prev !== cfg.consent) location.reload(); else lazy();
+            return;
+        }
+        if (e.target.closest('[data-ads-consent-open]') && banner) { banner.hidden = false; banner.querySelector('button').focus(); }
+    });
+    lazy();
+})();
