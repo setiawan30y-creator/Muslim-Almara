@@ -43,6 +43,7 @@
                     <h1 class="hero__name" id="hero-next">{{ $next['nama'] }}</h1>
                     <div class="hero__time tabular">{{ $next['waktu'] }} {{ $tzLabel }}</div>
                     <div class="countdown"><x-icon name="clock" /><span data-countdown="{{ $next['timestamp'] }}" data-prayer="{{ $next['key'] }}" data-prayer-name="{{ $next['nama'] }}">—</span></div>
+                    <button type="button" class="hero__adzan" data-adzan-play="{{ $next['key'] }}"><x-icon name="volume" /><span data-adzan-play-label>Putar adzan</span></button>
                     <div class="hero__top" style="margin-top:var(--space-5)">
                         <span>{{ $now->translatedFormat('l, j F Y') }} · {{ $hijri['label'] }}</span>
                         <a href="{{ route('prayer') }}" class="hero__loc">Jadwal lengkap →</a>

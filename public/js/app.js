@@ -1610,7 +1610,7 @@
             audio = audio || new Audio();
             audio.src = url; audio.volume = p.volume;
             var b = ensureBar(); b.hidden = false;
-            b.querySelector('[data-adzan-title]').textContent = 'Waktu ' + (name || NAMES[key] || 'sholat') + ' telah tiba';
+            b.querySelector('[data-adzan-title]').textContent = opts.manual ? (key === 'subuh' ? 'Adzan Subuh' : 'Adzan') : 'Waktu ' + (name || NAMES[key] || 'sholat') + ' telah tiba';
             var tg = b.querySelector('[data-adzan-toggle]');
             audio.onended = function () { b.classList.remove('is-playing'); tg.textContent = 'Putar ulang'; };
             audio.play().then(function () { b.classList.add('is-playing'); tg.textContent = 'Hentikan'; })
@@ -1622,6 +1622,18 @@
         try { if (sessionStorage.getItem('almara-adzan-last') === mark) return; sessionStorage.setItem('almara-adzan-last', mark); } catch (x) {}
         playAdzan(d.key, d.name);
     });
+    // Tombol manual "Putar adzan" (beranda & jadwal sholat): ketuk lagi untuk menghentikan
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('[data-adzan-play]');
+        if (!btn) return;
+        if (window.MA.adzanPlaying() && btn.classList.contains('is-on')) { stop(); btn.classList.remove('is-on'); return; }
+        document.querySelectorAll('[data-adzan-play].is-on').forEach(function (x) { x.classList.remove('is-on'); });
+        btn.classList.add('is-on');
+        playAdzan(btn.getAttribute('data-adzan-play'), null, { force: true, manual: true });
+    });
+    function syncButtons() { if (!window.MA.adzanPlaying()) document.querySelectorAll('[data-adzan-play].is-on').forEach(function (x) { x.classList.remove('is-on'); }); }
+    setInterval(syncButtons, 1000);
+
     // Dibuka dari notifikasi pengingat adzan: /jadwal-sholat?adzan=subuh
     var m = /[?&]adzan=(subuh|dzuhur|ashar|maghrib|isya)\b/.exec(location.search);
     if (m) {

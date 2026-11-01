@@ -946,3 +946,9 @@ body.hide-tafsir .tafsir { display: none; }
 [data-adzan-preview].is-on { background: var(--color-primary-soft); }
 @keyframes adzan-pulse { 50% { transform: scale(1.15); } }
 @media (prefers-reduced-motion: reduce) { .adzan-bar.is-playing .adzan-bar__ico { animation: none; } }
+.hero__adzan { margin-top: 12px; display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; border: 1px solid rgb(255 255 255 / .45); background: rgb(255 255 255 / .14); color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
+.hero__adzan svg { width: 18px; height: 18px; }
+.hero__adzan.is-on, .adzan-actions .is-on { box-shadow: 0 0 0 3px rgb(255 255 255 / .35); }
+.adzan-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--color-border); }
+.adzan-actions .btn svg { width: 18px; height: 18px; }
+.adzan-actions .btn.is-on { box-shadow: 0 0 0 3px var(--color-primary-soft); }

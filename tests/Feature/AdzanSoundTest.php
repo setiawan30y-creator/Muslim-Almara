@@ -39,6 +39,8 @@ class AdzanSoundTest extends TestCase
         $this->get('/pengaturan/jadwal-sholat')->assertOk()->assertSee('Suara adzan')->assertSee('data-adzan-settings', false)
             ->assertSee('Nada pengingat (bukan adzan)')->assertSee('Rekaman adzan belum tersedia');
         $this->get('/')->assertOk()->assertSee('data-prayer="', false);
+        $this->get('/')->assertSee('data-adzan-play="', false)->assertSee('Putar adzan');
+        $this->get('/jadwal-sholat')->assertOk()->assertSee('data-adzan-play="subuh"', false)->assertSee('Atur suara adzan');
     }
 
     public function test_upload_approve_and_stream(): void

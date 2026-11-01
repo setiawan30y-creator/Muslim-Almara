@@ -73,6 +73,11 @@
                         </li>
                     @endforeach
                 </ul>
+                <div class="adzan-actions">
+                    <button type="button" class="btn btn--sm" data-adzan-play="dzuhur"><x-icon name="volume" /><span data-adzan-play-label>Putar adzan</span></button>
+                    <button type="button" class="btn btn--sm btn--outline" data-adzan-play="subuh"><x-icon name="volume" /><span data-adzan-play-label>Adzan Subuh</span></button>
+                    <a href="{{ route('settings.prayer') }}#suara-adzan" class="small">Atur suara adzan</a>
+                </div>
             </section>
             <section class="card card--flat">
                 <h2><x-icon name="info" style="width:20px;height:20px;display:inline;vertical-align:-4px;color:var(--color-primary)" /> Metode perhitungan</h2>
