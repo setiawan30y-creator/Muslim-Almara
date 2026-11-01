@@ -19,6 +19,9 @@
         @if ($item->arabic_text)
             <section class="card reading-card" aria-label="Bacaan">
                 <div class="section-head" style="margin-bottom:0"><h2 style="margin:0">Bacaan</h2>
+                    @if (config('almara.audio.islamic_network.enabled') && $item->audioRange())
+                        <button type="button" class="icon-btn" data-ayat-audio="{{ $item->audio_ref }}" aria-label="Dengarkan bacaan" title="Dengarkan (QS {{ $item->audio_ref }}, ayat lengkap)"><x-icon name="play" class="i-play" /><x-icon name="pause" class="i-pause" /></button>
+                    @endif
                     <button type="button" class="icon-btn" data-copy="baca-{{ $item->slug }}" aria-label="Salin bacaan"><x-icon name="copy" /></button></div>
                 <div id="baca-{{ $item->slug }}">
                     <p class="arabic" lang="ar">{{ $item->arabic_text }}</p>
@@ -30,10 +33,19 @@
 
         @if ($verse)
             <section class="card verse" aria-labelledby="contoh-ayat">
-                <div class="section-head"><h2 id="contoh-ayat">Contoh ayat</h2><span class="badge badge--neutral">QS. {{ $verse->surah->name_latin }}: {{ $verse->ayah_number }}</span></div>
+                <div class="section-head"><h2 id="contoh-ayat">{{ $modul === 'tajwid' ? 'Contoh ayat' : 'Ayat terkait' }}</h2>
+                    <span style="display:flex;gap:6px;align-items:center">
+                        <span class="badge badge--neutral">QS. {{ $verse->surah->name_latin }}: {{ $verse->ayah_number }}</span>
+                        @if (config('almara.audio.islamic_network.enabled'))
+                            <button type="button" class="icon-btn" data-ayat-audio="{{ $item->example_ref }}" aria-label="Dengarkan QS. {{ $verse->surah->name_latin }}: {{ $verse->ayah_number }}" title="Dengarkan"><x-icon name="play" class="i-play" /><x-icon name="pause" class="i-pause" /></button>
+                        @endif
+                    </span></div>
                 <p class="arabic" lang="ar">{{ $verse->text_uthmani }}</p>
                 <p class="verse__tr">“{{ $verse->translationId?->text }}”</p>
                 <a class="verse__ref" href="{{ route('quran.show', $verse->surah->number) }}#ayat-{{ $verse->ayah_number }}">Buka di Al-Qur'an →</a>
+                @if (config('almara.audio.islamic_network.enabled'))
+                    <p class="small muted" style="margin:6px 0 0" data-ayat-audio-note="{{ $item->example_ref }}"><x-icon name="headphones" style="width:14px;height:14px;display:inline;vertical-align:-2px" /> Dengarkan bacaan qari dengan tombol ▶</p>
+                @endif
             </section>
         @endif
 

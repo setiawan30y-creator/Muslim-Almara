@@ -29,6 +29,7 @@ class ContentItemRequest extends FormRequest
                 'transliteration' => ['nullable', 'required_with:arabic_text', 'string', 'max:5000'],
                 'translation' => ['nullable', 'required_with:arabic_text', 'string', 'max:5000'],
                 'example_ref' => ['nullable', 'string', 'regex:/^\d{1,3}:\d{1,3}$/'],
+                'audio_ref' => ['nullable', 'string', 'max:20', 'regex:/^\d{1,3}:\d{1,3}(-\d{1,3})?$/'],
                 'source_reference' => ['required', 'string', 'max:255'],
                 'source_kind' => ['required', Rule::in(['quran', 'hadith', 'general'])],
                 'context_note' => ['nullable', 'string', 'max:1000'],

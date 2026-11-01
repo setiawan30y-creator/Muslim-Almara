@@ -46,10 +46,8 @@
                 <div class="field"><label for="source_reference">Rujukan sumber</label><input id="source_reference" name="source_reference" class="input" value="{{ old('source_reference', $item?->source_reference) }}" required maxlength="255" placeholder="Contoh: HR. Muslim no. 591" @disabled(! $canEdit)>@error('source_reference')<span class="error">{{ $message }}</span>@enderror</div>
                 <div class="field"><label for="count_target">Jumlah anjuran (opsional)</label><input id="count_target" name="count_target" type="number" min="1" max="1000" class="input" value="{{ old('count_target', $item?->count_target) }}" @disabled(! $canEdit)><span class="hint">Isi hanya bila ada dasarnya.</span></div>
             </div>
-            @unless ($guide)
-                <div class="field"><label for="audio_ref">Audio dari ayat Al-Qur'an (opsional)</label><input id="audio_ref" name="audio_ref" class="input" style="max-width:200px" value="{{ old('audio_ref', $item?->audio_ref) }}" placeholder="surah:ayat atau 112:1-4" pattern="\d{1,3}:\d{1,3}(-\d{1,3})?" @disabled(! $canEdit)>
+                            <div class="field"><label for="audio_ref">Audio dari ayat Al-Qur'an (opsional)</label><input id="audio_ref" name="audio_ref" class="input" style="max-width:200px" value="{{ old('audio_ref', $item?->audio_ref) }}" placeholder="surah:ayat atau 112:1-4" pattern="\d{1,3}:\d{1,3}(-\d{1,3})?" @disabled(! $canEdit)>
                     <span class="hint">Isi hanya untuk bacaan yang berasal dari ayat Al-Qur'an; diputar dengan qari pilihan pengguna (ayat lengkap).</span>@error('audio_ref')<span class="error">{{ $message }}</span>@enderror</div>
-            @endunless
             <div class="field"><label for="context_note">Keterangan konteks (opsional)</label><textarea id="context_note" name="context_note" class="input" style="min-height:70px" @disabled(! $canEdit)>{{ old('context_note', $item?->context_note) }}</textarea><span class="hint">Jangan menyatakan waktu, jumlah, atau status wajib tanpa dasar.</span></div>
             <input type="hidden" name="sort_order" value="{{ old('sort_order', $item?->sort_order ?? 0) }}">
             @if ($canEdit)<div class="form-actions"><button class="btn" data-loading>{{ $item ? 'Simpan perubahan' : 'Simpan sebagai draf' }}</button></div>@endif

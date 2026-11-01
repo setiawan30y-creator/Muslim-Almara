@@ -24,6 +24,7 @@
                                     <span class="step-list__num">{{ $n }}</span>
                                     <span class="step-list__body"><b>{{ $it->title }}</b>
                                         <span class="small muted">{{ \Illuminate\Support\Str::limit(strtok($it->body, "\n"), 110) }}</span></span>
+                                    @if (($it->audio_ref || $it->example_ref) && config('almara.audio.islamic_network.enabled'))<span class="badge badge--neutral" title="Ada audio qari"><x-icon name="headphones" style="width:13px;height:13px;display:inline;vertical-align:-2px" /></span>@endif
                                     @if ($it->quiz_json)<span class="badge badge--neutral">Latihan</span>@endif
                                     <x-icon name="chevron-right" />
                                 </a>

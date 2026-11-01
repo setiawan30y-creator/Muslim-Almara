@@ -127,4 +127,17 @@ class QuranExtrasTest extends TestCase
         $this->getJson('/api/v1/quran/audio/ayat?ref=112:1-9')->assertNotFound();
         $this->getJson('/api/v1/quran/audio/ayat?ref=abc')->assertStatus(422);
     }
+
+    public function test_guide_pages_offer_qari_audio_for_quran_verses(): void
+    {
+        $this->assertSame('2:201', \App\Models\GuideItem::query()->where('slug', 'umroh-tawaf')->value('audio_ref'));
+        $this->get('/panduan/umroh/umroh-tawaf')->assertOk()->assertDontSee('data-ayat-audio=', false);
+
+        config(['almara.audio.islamic_network.enabled' => true]);
+        $this->get('/panduan/umroh/umroh-tawaf')->assertOk()->assertSee('data-ayat-audio="2:201"', false)->assertSee('Ayat terkait');
+        $this->get('/panduan/tajwid/tajwid-lafaz-allah-ra')->assertOk()->assertSee('data-ayat-audio="112:1"', false)->assertSee('Contoh ayat');
+        // Bacaan dari hadis (talbiyah) tidak diberi suara qari
+        $this->get('/panduan/umroh/umroh-talbiyah')->assertOk()->assertDontSee('data-ayat-audio=', false);
+        $this->get('/panduan/umroh')->assertOk()->assertSee('Ada audio qari');
+    }
 }

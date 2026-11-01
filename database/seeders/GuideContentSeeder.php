@@ -47,6 +47,7 @@ class GuideContentSeeder extends Seeder
                 'transliteration' => $it['transliteration'],
                 'translation' => $it['translation'],
                 'example_ref' => $it['example_ref'],
+                'audio_ref' => $it['audio_ref'] ?? null,
                 'quiz_json' => $it['quiz'],
                 'context_note' => $it['context_note'],
                 'source_reference' => $it['source_reference'],

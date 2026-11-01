@@ -605,7 +605,7 @@
                 .then(function (d) {
                     if (cur !== b) return;
                     list = d.tracks; idx = 0; next();
-                    var note = $('[data-ayat-audio-note="' + b.dataset.ayatAudio + '"]', b.closest('article') || document);
+                    var note = $('[data-ayat-audio-note="' + b.dataset.ayatAudio + '"]', b.closest('article, section') || document);
                     if (note) note.lastChild.textContent = ' Audio: ayat lengkap QS ' + d.ref + ' · ' + d.reciter.name;
                 })
                 .catch(function (err) { toast(err.message); stop(); });
