@@ -571,7 +571,7 @@
             if (st.data && (audio.currentTime > 0 || tracks())) { if (tracks() && st.active === null) setTrack(st.ti || 0); audio.play().catch(function () {}); return; }
             playFrom(null);
         });
-        document.addEventListener('click', function (e) { var b = e.target.closest('[data-play-ayah]'); if (b && b.dataset.playAyah) playFrom(+b.dataset.playAyah); });
+        document.addEventListener('click', function (e) { var b = e.target.closest('[data-play-ayah]'); if (b && b.dataset.playAyah) { if (st.loop && window.MA.loopEnd) window.MA.loopEnd(); playFrom(+b.dataset.playAyah); } });
 
         audio.addEventListener('play', function () { player.classList.add('is-playing'); btn.setAttribute('aria-label', 'Jeda murattal'); });
         audio.addEventListener('pause', function () { player.classList.remove('is-playing'); btn.setAttribute('aria-label', 'Putar murattal'); });
@@ -592,6 +592,7 @@
             var ms = t * 1000, s = segs(), found = null;
             for (var i = 0; i < s.length; i++) { if (ms >= s[i].start_ms && ms < s[i].end_ms) { found = s[i].ayah; break; } }
             if (s.length) highlight(found);
+            if (st.loop && st.loop.end !== undefined && t >= st.loop.end) { loopLap(); return; }
             if (st.range && t >= st.range.end) {
                 if (st.repeat) audio.currentTime = st.range.start;
                 else { audio.pause(); st.range = null; }
@@ -599,18 +600,25 @@
         });
         audio.addEventListener('ended', function () {
             var tl = tracks();
+            if (st.loop) {
+                if (tl && tl[st.ti] && tl[st.ti].ayah < st.loop.to && setTrack(st.ti + 1)) { audio.play().catch(function () {}); return; }
+                loopLap(); return;
+            }
+            if (st.sleepEnd && !(tl && tl[st.ti + 1])) { sleepStop(); return; }
             if (tl) {
                 if (st.verseMode) { if (st.repeat) { audio.currentTime = 0; audio.play().catch(function () {}); } return; }
                 if (setTrack(st.ti + 1)) { audio.play().catch(function () {}); return; }
                 if (st.repeat) { setTrack(0); audio.play().catch(function () {}); return; }
                 highlight(null); st.ti = 0;
                 var nx = $('.pager .btn--tonal');
+                if (nx && autoNext()) return;
                 if (nx) setNote('Selesai. Lanjut ke surah berikutnya: ' + nx.textContent.trim() + '.');
                 return;
             }
             if (st.repeat) { audio.currentTime = st.range ? st.range.start : 0; audio.play().catch(function () {}); return; }
             highlight(null);
             var next = $('.pager .btn--tonal');
+            if (next && autoNext()) return;
             if (next) setNote('Selesai. Lanjut ke surah berikutnya: ' + next.textContent.trim() + '.');
         });
 
@@ -639,6 +647,109 @@
             repBtn.setAttribute('aria-pressed', st.repeat ? 'true' : 'false');
             toast(st.repeat ? (st.verseMode ? 'Ulang ayat aktif' : 'Ulang surah aktif') : 'Ulang nonaktif');
         });
+
+        // ---- Murattal plus: kecepatan, timer tidur, lanjut otomatis, ulang rentang — @2026-Alifiandra ----
+        var rateSel = $('[data-audio-rate]', player), sleepSel = $('[data-audio-sleep]', player), sleepLeft = $('[data-audio-sleep-left]', player);
+        var autoChk = $('[data-audio-autonext]', player);
+        function applyRate() { var r = +(rateSel ? rateSel.value : 1) || 1; audio.defaultPlaybackRate = r; audio.playbackRate = r; }
+        if (rateSel) {
+            rateSel.value = String(store.get('almara-rate', '1'));
+            if (!rateSel.value) rateSel.value = '1';
+            applyRate();
+            rateSel.addEventListener('change', function () { store.set('almara-rate', rateSel.value); applyRate(); toast('Kecepatan ' + rateSel.value + '×'); });
+            audio.addEventListener('loadedmetadata', applyRate);
+        }
+        // Timer tidur: volume dipelankan 8 detik terakhir lalu berhenti. Berlaku lintas surah (sessionStorage).
+        var sleepTimer = null, baseVol = 1;
+        function sleepStop() {
+            clearInterval(sleepTimer); sleepTimer = null; st.sleepEnd = null;
+            try { sessionStorage.removeItem('almara-sleep'); } catch (e) {}
+            audio.pause(); audio.volume = baseVol;
+            if (sleepSel) sleepSel.value = '0';
+            if (sleepLeft) sleepLeft.textContent = '';
+            toast('Timer tidur: murattal dihentikan');
+        }
+        function sleepArm(at) {
+            clearInterval(sleepTimer); st.sleepEnd = null; audio.volume = baseVol;
+            if (!at) { if (sleepLeft) sleepLeft.textContent = ''; try { sessionStorage.removeItem('almara-sleep'); } catch (e) {} return; }
+            if (at === 'end') { st.sleepEnd = 'end'; if (sleepLeft) sleepLeft.textContent = 'Berhenti di akhir surah'; return; }
+            try { sessionStorage.setItem('almara-sleep', String(at)); } catch (e) {}
+            sleepTimer = setInterval(function () {
+                var left = (at - Date.now()) / 1000;
+                if (left <= 0) { sleepStop(); return; }
+                if (left < 8 && !audio.paused) audio.volume = Math.max(0.05, baseVol * left / 8);
+                if (sleepLeft) sleepLeft.textContent = 'Sisa ' + fmt(left);
+            }, 500);
+        }
+        if (sleepSel) {
+            sleepSel.addEventListener('change', function () {
+                var v = sleepSel.value;
+                sleepArm(v === '0' ? null : v === 'end' ? 'end' : Date.now() + v * 60000);
+                if (v !== '0') toast(v === 'end' ? 'Berhenti di akhir surah' : 'Timer tidur ' + v + ' menit');
+            });
+            try { var saved = +sessionStorage.getItem('almara-sleep'); if (saved > Date.now()) sleepArm(saved); } catch (e) {}
+        }
+        // Lanjut otomatis ke surah berikutnya (halaman berikutnya memutar dengan ?putar=1)
+        if (autoChk) {
+            autoChk.checked = !!store.get('almara-autonext', false) && !autoChk.disabled;
+            autoChk.addEventListener('change', function () { store.set('almara-autonext', autoChk.checked); });
+        }
+        function autoNext() {
+            if (!autoChk || !autoChk.checked || st.repeat) return false;
+            var nx = $('.pager .btn--tonal'); if (!nx) return false;
+            setNote('Lanjut ke ' + nx.textContent.trim() + '…');
+            var u = new URL(nx.href, location.href); u.searchParams.set('putar', '1'); u.hash = '';
+            location.href = u.toString();
+            return true;
+        }
+        if (/[?&]putar=1\b/.test(location.search)) {
+            try { history.replaceState(null, '', location.pathname + location.search.replace(/[?&]putar=1\b/, '').replace(/^&/, '?') + location.hash); } catch (e) {}
+            var more0 = $('[data-audio-more]', player); if (more0 && autoChk && autoChk.checked) more0.open = false;
+            playFrom(null).then(function () { if (audio.paused) setNote('Ketuk ▶ untuk melanjutkan murattal.'); });
+        }
+        // Ulang rentang ayat X–Y sebanyak N kali
+        var rFrom = $('[data-range-from]', player), rTo = $('[data-range-to]', player), rTimes = $('[data-range-times]', player);
+        var rStart = $('[data-range-start]', player), rStop = $('[data-range-stop]', player), rStat = $('[data-range-status]', player);
+        function loopStatus() { if (rStat) rStat.textContent = st.loop ? 'Ayat ' + st.loop.from + '–' + st.loop.to + ' · putaran ' + (st.loop.lap + 1) + '/' + st.loop.times : ''; }
+        function loopEnd(msg) {
+            st.loop = null; loopStatus();
+            if (rStart) rStart.hidden = false; if (rStop) rStop.hidden = true;
+            if (msg) toast(msg);
+        }
+        function loopGo() {
+            var L = st.loop, tl = tracks();
+            if (tl) {
+                var idx = -1; for (var k = 0; k < tl.length; k++) if (tl[k].ayah === L.from) { idx = k; break; }
+                if (idx < 0) { loopEnd('Ayat tidak ditemukan'); return Promise.resolve(); }
+                setTrack(idx); return audio.play();
+            }
+            return seekTo(L.start).then(function () { return audio.play(); });
+        }
+        function loopLap() {
+            var L = st.loop; if (!L) return;
+            L.lap++;
+            if (L.lap >= L.times) { audio.pause(); loopEnd('Ulang rentang selesai (' + L.times + '×)'); return; }
+            loopStatus(); loopGo().catch(function () {});
+        }
+        if (rStart) rStart.addEventListener('click', function () {
+            var max = +rTo.max || 286, a = Math.max(1, Math.min(max, +rFrom.value || 1)), b = Math.max(a, Math.min(max, +rTo.value || a));
+            var n = Math.max(1, Math.min(50, +rTimes.value || 1));
+            rFrom.value = a; rTo.value = b; rTimes.value = n;
+            load().then(function () {
+                st.range = null; st.repeat = false; repBtn.setAttribute('aria-pressed', 'false');
+                var L = { from: a, to: b, times: n, lap: 0 };
+                if (!tracks()) {
+                    var sa = segOf(a), sb = segOf(b);
+                    if (!sa || !sb) { toast('Penanda ayat belum tersedia untuk qari ini — pilih qari lain'); return; }
+                    L.start = sa.start_ms / 1000; L.end = sb.end_ms / 1000;
+                }
+                st.loop = L; loopStatus();
+                rStart.hidden = true; rStop.hidden = false;
+                return loopGo();
+            }).catch(function (e) { if (e && e.name !== 'AbortError') toast(e.message || 'Audio gagal diputar'); });
+        });
+        if (rStop) rStop.addEventListener('click', function () { audio.pause(); loopEnd('Ulang rentang dihentikan'); });
+        window.MA.loopEnd = function () { loopEnd(); };
 
         if ('mediaSession' in navigator) {
             try {
@@ -1339,5 +1450,100 @@
                 .then(function (j) { status.textContent = 'Tersimpan · skor ' + j.data.score + '%'; })
                 .catch(function () { status.textContent = 'Gagal menyimpan — tekan Simpan.'; });
         }, 500);
+    });
+})();
+
+/* ===== Bagikan ayat sebagai gambar (canvas 1080×1350) — @2026-Alifiandra ===== */
+(function () {
+    function wrap(ctx, text, maxW) {
+        var words = String(text || '').split(/\s+/).filter(Boolean), lines = [], line = '';
+        words.forEach(function (w) {
+            var t = line ? line + ' ' + w : w;
+            if (ctx.measureText(t).width > maxW && line) { lines.push(line); line = w; } else { line = t; }
+        });
+        if (line) lines.push(line);
+        return lines;
+    }
+    function fit(ctx, text, font, maxW, maxH, start, min, lh) {
+        for (var size = start; size >= min; size -= 2) {
+            ctx.font = font.replace('{s}', size);
+            var lines = wrap(ctx, text, maxW);
+            if (lines.length * size * lh <= maxH) return { size: size, lines: lines };
+        }
+        ctx.font = font.replace('{s}', min);
+        var l = wrap(ctx, text, maxW), max = Math.floor(maxH / (min * lh));
+        if (l.length > max) { l = l.slice(0, max); l[max - 1] += ' …'; }
+        return { size: min, lines: l };
+    }
+    function render(d) {
+        var W = 1080, H = 1350, P = 90;
+        var c = document.createElement('canvas'); c.width = W; c.height = H;
+        var ctx = c.getContext('2d');
+        var css = getComputedStyle(document.documentElement);
+        var primary = (css.getPropertyValue('--color-primary') || '#0f6b5c').trim() || '#0f6b5c';
+        var g = ctx.createLinearGradient(0, 0, W, H);
+        g.addColorStop(0, '#0b3d35'); g.addColorStop(1, '#062420');
+        ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+        // Bingkai ornamen sederhana
+        ctx.strokeStyle = 'rgba(214, 180, 106, .55)'; ctx.lineWidth = 3;
+        ctx.strokeRect(40, 40, W - 80, H - 80);
+        ctx.strokeStyle = 'rgba(214, 180, 106, .25)'; ctx.lineWidth = 1.5;
+        ctx.strokeRect(54, 54, W - 108, H - 108);
+        ctx.fillStyle = primary; ctx.fillRect(W / 2 - 40, 96, 80, 4);
+
+        ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+        ctx.fillStyle = '#d6b46a'; ctx.font = '600 30px "Plus Jakarta Sans", sans-serif';
+        ctx.fillText(d.ref, W / 2, 124);
+
+        // Teks Arab (RTL)
+        ctx.direction = 'rtl'; ctx.fillStyle = '#ffffff';
+        // Bila huruf Al-Qur'an belum termuat (offline), tanda waqaf kecil dihapus agar huruf fallback tidak rusak
+        var arText = d.ar;
+        var hasQuranFont = document.fonts && Array.prototype.some.call(document.fonts, function (f) { return f.family.replace(/["']/g, '') === 'Scheherazade New' && f.status === 'loaded'; });
+        if (!hasQuranFont) arText = arText.replace(/\s?\u06D5?[\u06D6-\u06ED]/g, '').replace(/\u0657/g, '\u064F').replace(/\u0656/g, '\u0650');
+        var ar = fit(ctx, arText, '{s}px "Scheherazade New", "Amiri", serif', W - P * 2, 560, 76, 34, 1.75);
+        var y = 210;
+        ar.lines.forEach(function (l) { ctx.fillText(l, W / 2, y); y += ar.size * 1.75; });
+        ctx.direction = 'ltr';
+
+        // Terjemahan
+        y += 30;
+        ctx.fillStyle = 'rgba(214, 180, 106, .6)'; ctx.fillRect(W / 2 - 60, y, 120, 2); y += 40;
+        ctx.fillStyle = 'rgba(255,255,255,.9)';
+        var tr = fit(ctx, d.tr ? '“' + d.tr + '”' : '', '400 {s}px "Plus Jakarta Sans", sans-serif', W - P * 2, H - y - 190, 38, 22, 1.5);
+        tr.lines.forEach(function (l) { ctx.fillText(l, W / 2, y); y += tr.size * 1.5; });
+
+        // Kaki
+        ctx.fillStyle = '#d6b46a'; ctx.font = '800 32px "Plus Jakarta Sans", sans-serif';
+        ctx.fillText('ALMARA MUSLIM', W / 2, H - 150);
+        ctx.fillStyle = 'rgba(255,255,255,.6)'; ctx.font = '400 24px "Plus Jakarta Sans", sans-serif';
+        ctx.fillText(location.host + ' · Terjemahan Kemenag RI', W / 2, H - 106);
+        return c;
+    }
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('[data-share-image]');
+        if (!btn) return;
+        var src = btn.hasAttribute('data-ar') ? btn : btn.closest('[data-share-card]');
+        if (!src) return;
+        var d = { ref: src.getAttribute('data-ref') || '', ar: src.getAttribute('data-ar') || '', tr: src.getAttribute('data-tr') || '', url: src.getAttribute('data-url') || location.href };
+        btn.setAttribute('aria-busy', 'true');
+        var fonts = document.fonts && document.fonts.load ? Promise.all([document.fonts.load('60px "Scheherazade New"', d.ar), document.fonts.load('600 30px "Plus Jakarta Sans"')]).catch(function () {}) : Promise.resolve();
+        fonts.then(function () {
+            render(d).toBlob(function (blob) {
+                btn.removeAttribute('aria-busy');
+                if (!blob) { window.MA && MA.toast('Gagal membuat gambar'); return; }
+                var name = 'almara-' + d.ref.replace(/[^\w]+/g, '-').replace(/^-|-$/g, '').toLowerCase() + '.png';
+                var file = window.File ? new File([blob], name, { type: 'image/png' }) : null;
+                if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+                    navigator.share({ files: [file], title: d.ref, text: d.ref + ' — ' + d.url }).catch(function () {});
+                    return;
+                }
+                var a = document.createElement('a');
+                a.href = URL.createObjectURL(blob); a.download = name;
+                document.body.appendChild(a); a.click(); a.remove();
+                setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+                window.MA && MA.toast('Gambar ayat diunduh');
+            }, 'image/png');
+        });
     });
 })();

@@ -66,7 +66,8 @@
                         <button type="button" class="icon-btn" data-mark-read aria-label="Tandai dibaca sampai ayat {{ $v->ayah_number }}" title="Tandai dibaca sampai sini"><x-icon name="check-circle" /></button>
                         <button type="button" class="icon-btn" data-note aria-label="Catatan untuk ayat {{ $v->ayah_number }}" title="Catatan pribadi"><x-icon name="note" /></button>
                         <button type="button" class="icon-btn" data-copy="salin-{{ $v->ayah_number }}" aria-label="Salin ayat {{ $v->ayah_number }}" title="Salin"><x-icon name="copy" /></button>
-                        <button type="button" class="icon-btn" data-share="{{ route('quran.show', $n) }}#ayat-{{ $v->ayah_number }}" data-share-title="QS. {{ $surah->name_latin }}: {{ $v->ayah_number }}" data-share-text="{{ $v->translationId?->text }} (QS. {{ $surah->name_latin }}: {{ $v->ayah_number }})" aria-label="Bagikan ayat {{ $v->ayah_number }}" title="Bagikan"><x-icon name="share" /></button>
+                        <button type="button" class="icon-btn" data-share-image data-ref="QS. {{ $surah->name_latin }} ({{ $n }}): {{ $v->ayah_number }}" data-ar="{{ $v->text_uthmani }}" data-tr="{{ $v->translationId?->text }}" data-url="{{ route('quran.verse', [$n, $v->ayah_number]) }}" aria-label="Bagikan ayat {{ $v->ayah_number }} sebagai gambar" title="Bagikan sebagai gambar"><x-icon name="image" /></button>
+                        <button type="button" class="icon-btn" data-share="{{ route('quran.verse', [$n, $v->ayah_number]) }}" data-share-title="QS. {{ $surah->name_latin }}: {{ $v->ayah_number }}" data-share-text="{{ $v->translationId?->text }} (QS. {{ $surah->name_latin }}: {{ $v->ayah_number }})" aria-label="Bagikan ayat {{ $v->ayah_number }}" title="Bagikan"><x-icon name="share" /></button>
                     </div>
                     <div id="salin-{{ $v->ayah_number }}">
                         <p class="arabic" lang="ar">{{ $v->text_uthmani }}</p>
@@ -126,6 +127,32 @@
                 <input type="range" min="0" max="0" step="0.1" value="0" data-audio-seek aria-label="Posisi murattal">
                 <span class="tabular small" data-audio-dur>--:--</span>
             </div>
+            <details class="player__more" data-audio-more>
+                <summary>Kecepatan, timer tidur, ulang rentang</summary>
+                <div class="player__opts">
+                    <label class="field field--inline"><span>Kecepatan</span>
+                        <select class="input input--sm" data-audio-rate>
+                            @foreach (['0.75', '1', '1.25', '1.5'] as $r)<option value="{{ $r }}" @selected($r === '1')>{{ $r }}×</option>@endforeach
+                        </select></label>
+                    <label class="field field--inline"><span>Timer tidur</span>
+                        <select class="input input--sm" data-audio-sleep>
+                            <option value="0">Mati</option>
+                            @foreach ([5, 15, 30, 45, 60] as $m)<option value="{{ $m }}">{{ $m }} menit</option>@endforeach
+                            <option value="end">Akhir surah</option>
+                        </select></label>
+                    <span class="small muted" data-audio-sleep-left></span>
+                    <label class="check"><input type="checkbox" data-audio-autonext @disabled(! $next)> <span>Lanjut otomatis ke surah berikutnya</span></label>
+                </div>
+                <fieldset class="player__range">
+                    <legend>Ulang rentang ayat (murojaah)</legend>
+                    <label>Dari <input type="number" class="input input--sm" min="1" max="{{ $surah->ayah_count }}" value="1" data-range-from inputmode="numeric"></label>
+                    <label>sampai <input type="number" class="input input--sm" min="1" max="{{ $surah->ayah_count }}" value="{{ min(5, $surah->ayah_count) }}" data-range-to inputmode="numeric"></label>
+                    <label><input type="number" class="input input--sm" min="1" max="50" value="3" data-range-times inputmode="numeric"> kali</label>
+                    <button type="button" class="btn btn--sm" data-range-start>Mulai</button>
+                    <button type="button" class="btn btn--sm btn--ghost" data-range-stop hidden>Hentikan</button>
+                    <span class="small muted" data-range-status aria-live="polite"></span>
+                </fieldset>
+            </details>
             <p class="player__note small muted" data-audio-note hidden></p>
         </section>
     @endif

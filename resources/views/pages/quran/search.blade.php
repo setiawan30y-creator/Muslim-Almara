@@ -5,7 +5,7 @@
         <form action="{{ route('quran.search') }}" method="get" role="search" class="input-wrap">
             <x-icon name="search" />
             <label for="q" class="sr-only">Kata kunci</label>
-            <input id="q" name="q" type="search" class="input" value="{{ $q }}" placeholder="Contoh: sabar, rezeki, 2:255" minlength="2" maxlength="100" autofocus>
+            <input id="q" name="q" type="search" class="input" value="{{ $q }}" placeholder="Contoh: sabar, 2:255, atau huruf Arab: الرحمن" minlength="2" maxlength="100" autofocus>
         </form>
 
         @if ($surahMatches->isNotEmpty())

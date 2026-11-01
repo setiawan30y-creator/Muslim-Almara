@@ -1,6 +1,6 @@
 {{-- Banner persetujuan iklan + konfigurasi pemuatan skrip — @2026-Alifiandra --}}
 @php $ads = app(\App\Services\Ads\AdManager::class); @endphp
-@if ($ads->enabled())
+@if ($ads->allowedHere())
     <div class="consent" data-ads-consent role="dialog" aria-labelledby="consent-title" @if ($ads->consent()) hidden @endif>
         <div class="consent__body">
             <b id="consent-title">Iklan &amp; privasi</b>

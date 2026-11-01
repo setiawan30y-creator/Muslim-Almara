@@ -42,7 +42,7 @@ class AdsTest extends TestCase
 
         // Tidak ada iklan di bacaan ibadah, akun, admin
         foreach (['/al-quran/1', '/al-quran/2/255', '/tasbih', '/masuk', '/kebijakan-privasi', '/hafalan'] as $u) {
-            $this->get($u)->assertOk()->assertDontSee('class="adsbygoogle"', false);
+            $this->get($u)->assertOk()->assertDontSee('class="adsbygoogle"', false)->assertDontSee('data-ads-consent', false);
         }
         $this->get('/jadwal-sholat')->assertOk()->assertSee('data-ad-slot="1111111111"', false);
 

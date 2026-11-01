@@ -25,7 +25,7 @@
         <form action="{{ route('quran.search') }}" method="get" role="search" class="input-wrap">
             <x-icon name="search" />
             <label for="cari-quran" class="sr-only">Cari di terjemahan atau rujukan ayat</label>
-            <input id="cari-quran" name="q" type="search" class="input" placeholder="Cari kata di terjemahan, atau rujukan seperti 2:255" minlength="2" maxlength="100">
+            <input id="cari-quran" name="q" type="search" class="input" placeholder="Cari terjemahan, rujukan 2:255, atau teks Arab" minlength="2" maxlength="100">
         </form>
 
         <div class="tabs" role="tablist" aria-label="Tampilan daftar" style="max-width:360px">

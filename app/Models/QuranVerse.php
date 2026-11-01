@@ -10,7 +10,16 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 // @2026-Alifiandra
 class QuranVerse extends Model
 {
-    protected $fillable = ['surah_id', 'ayah_number', 'juz_number', 'page_number', 'text_uthmani', 'text_latin', 'source_id', 'version'];
+    protected $fillable = ['surah_id', 'ayah_number', 'juz_number', 'page_number', 'text_uthmani', 'text_plain', 'text_latin', 'source_id', 'version'];
+
+    protected static function booted(): void
+    {
+        static::saving(function (QuranVerse $v) {
+            if ($v->isDirty('text_uthmani') || $v->text_plain === null) {
+                $v->text_plain = \App\Support\ArabicText::normalize((string) $v->text_uthmani);
+            }
+        });
+    }
 
     protected function casts(): array
     {

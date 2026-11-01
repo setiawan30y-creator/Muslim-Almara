@@ -88,6 +88,10 @@ class QuranService
 
         if (preg_match('/^(\d{1,3})\s*[:.]\s*(\d{1,3})$/', $q, $m)) {
             $query->where('quran_surahs.number', (int) $m[1])->where('quran_verses.ayah_number', (int) $m[2]);
+        } elseif (\App\Support\ArabicText::hasArabic($q)) {
+            // Pencarian huruf Arab: harakat & tanda waqaf diabaikan
+            $plain = \App\Support\ArabicText::normalize($q);
+            $query->where('quran_verses.text_plain', 'like', '%'.str_replace(['%', '_'], ['\\%', '\\_'], $plain).'%');
         } else {
             $like = '%'.str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $q).'%';
             $query->where('quran_translations.text', 'like', $like);

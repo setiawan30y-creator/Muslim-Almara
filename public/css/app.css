@@ -918,3 +918,17 @@ body.hide-tafsir .tafsir { display: none; }
 .heat__cell--2 { background: color-mix(in srgb, var(--color-primary) 50%, transparent); }
 .heat__cell--3 { background: color-mix(in srgb, var(--color-primary) 75%, transparent); }
 .heat__cell--4 { background: var(--color-primary); }
+
+/* Murattal plus — @2026-Alifiandra */
+.player__more { margin-top: 6px; font-size: .85rem; }
+.player__more summary { cursor: pointer; color: var(--color-primary); font-weight: 600; padding: 4px 0; list-style: none; }
+.player__more summary::-webkit-details-marker { display: none; }
+.player__more summary::before { content: '▸ '; }
+.player__more[open] summary::before { content: '▾ '; }
+.player__opts { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; padding: 6px 0; }
+.field--inline { display: inline-flex; align-items: center; gap: 6px; margin: 0; }
+.input--sm { padding: 4px 8px; min-height: 32px; font-size: .85rem; width: auto; }
+.player__range { border: 1px solid var(--color-border); border-radius: 12px; padding: 8px 12px; margin: 6px 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.player__range legend { font-weight: 700; padding: 0 4px; }
+.player__range input[type=number] { width: 64px; }
+.player__more[open] { max-height: 42vh; overflow: auto; }

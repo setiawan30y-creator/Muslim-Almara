@@ -120,6 +120,7 @@ class QuranImporter
                         'juz_number' => QuranDataset::juzFor($n, (int) $a['nomor']),
                         'page_number' => null,
                         'text_uthmani' => $a['arab'],
+                        'text_plain' => \App\Support\ArabicText::normalize($a['arab']),
                         'source_id' => $sources['quran-text-kemenag'],
                         'version' => $version,
                         'created_at' => $now,
@@ -127,7 +128,7 @@ class QuranImporter
                     ];
                 }
                 foreach (array_chunk($verseRows, 300) as $chunk) {
-                    QuranVerse::query()->upsert($chunk, ['surah_id', 'ayah_number'], ['juz_number', 'page_number', 'text_uthmani', 'source_id', 'version', 'updated_at']);
+                    QuranVerse::query()->upsert($chunk, ['surah_id', 'ayah_number'], ['juz_number', 'page_number', 'text_uthmani', 'text_plain', 'source_id', 'version', 'updated_at']);
                 }
                 $this->stats['verses'] += count($verseRows);
 

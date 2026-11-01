@@ -20,7 +20,7 @@
 <x-layouts.app :title="$title" :description="$desc" :canonical="route('quran.verse', [$n, $a])">
     <x-page-head :title="$famous ?? ('Surah '.$surah->name_latin.' Ayat '.$a)" :subtitle="$ref.' · '.$surah->name_translation.' · '.$surah->revelationLabel()" :back="route('quran.show', $n).'#ayat-'.$a" />
     <div class="stack" style="max-width:820px">
-        <article class="card verse-page" data-share-card data-ref="{{ $ref }}" data-ar="{{ $verse->text_uthmani }}" data-tr="{{ $verse->translationId?->text }}">
+        <article class="card verse-page" data-share-card data-url="{{ route('quran.verse', [$n, $a]) }}" data-ref="{{ $ref }}" data-ar="{{ $verse->text_uthmani }}" data-tr="{{ $verse->translationId?->text }}">
             <div class="section-head">
                 <span class="badge">{{ $n }}:{{ $a }}</span>
                 <span style="display:flex;gap:4px">
