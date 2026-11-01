@@ -115,6 +115,8 @@ Route::middleware('auth')->group(function () {
         Route::delete('/koleksi/{collection}', [LibraryController::class, 'destroyCollection'])->whereNumber('collection')->name('collections.destroy');
         Route::put('/bookmark/{bookmark}/koleksi', [LibraryController::class, 'moveBookmark'])->whereNumber('bookmark')->name('bookmarks.move');
         Route::get('/progres', [LibraryController::class, 'progress'])->name('progress');
+        Route::get('/ibadah', [\App\Http\Controllers\Account\WorshipLogController::class, 'index'])->name('worship');
+        Route::post('/ibadah', [\App\Http\Controllers\Account\WorshipLogController::class, 'update'])->name('worship.save');
         Route::post('/progres/target', [LibraryController::class, 'saveGoal'])->name('goal');
     });
 });

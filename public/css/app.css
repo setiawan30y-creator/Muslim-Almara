@@ -890,3 +890,31 @@ body.hide-tafsir .tafsir { display: none; }
 .consent__body p { margin: 4px 0 0; }
 .consent__actions { display: flex; gap: 8px; flex-wrap: wrap; }
 @media (min-width: 900px) { .consent { bottom: 20px; } }
+
+/* Tracker ibadah — @2026-Alifiandra */
+.week-pills { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.week-pills a { display: flex; flex-direction: column; align-items: center; padding: 8px 0; border-radius: 12px; border: 1px solid var(--color-border); background: var(--color-surface); color: inherit; text-decoration: none; font-size: .78rem; }
+.week-pills a b { font-size: 1.05rem; }
+.week-pills a[aria-current] { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+.prayer-track { display: grid; gap: 10px; }
+.prayer-track__row { border: 0; padding: 0; margin: 0; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.prayer-track__row legend { float: left; width: 72px; font-weight: 700; padding: 0; }
+.seg { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; }
+.seg label { position: relative; }
+.seg input { position: absolute; opacity: 0; inset: 0; }
+.seg span { display: inline-block; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--color-border); font-size: .85rem; cursor: pointer; }
+.seg input:checked + span { background: var(--color-primary-soft); border-color: var(--color-primary); color: var(--color-primary); font-weight: 700; }
+.seg input:focus-visible + span { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.habit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+.habit { position: relative; }
+.habit input[type=checkbox] { position: absolute; opacity: 0; inset: 0; }
+.habit span { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border: 1px solid var(--color-border); border-radius: 12px; cursor: pointer; font-size: .9rem; }
+.habit span svg { width: 18px; height: 18px; color: var(--color-primary); flex: none; }
+.habit input:checked + span { background: var(--color-primary-soft); border-color: var(--color-primary); font-weight: 700; }
+.habit input:focus-visible + span { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.heat { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; max-width: 420px; }
+.heat__cell { aspect-ratio: 1; border-radius: 5px; background: var(--color-border); }
+.heat__cell--1 { background: color-mix(in srgb, var(--color-primary) 25%, transparent); }
+.heat__cell--2 { background: color-mix(in srgb, var(--color-primary) 50%, transparent); }
+.heat__cell--3 { background: color-mix(in srgb, var(--color-primary) 75%, transparent); }
+.heat__cell--4 { background: var(--color-primary); }

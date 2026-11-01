@@ -17,6 +17,7 @@
             <div class="card card--list">
                 <ul class="list">
                     @foreach ([
+                        ['profile.worship', 'check-circle', 'Tracker ibadah harian', 'Sholat 5 waktu & amalan sunnah — privat'],
                         ['profile.progress', 'chart', 'Progres & target tilawah', 'Target harian, khatam, riwayat baca'],
                         ['profile.bookmarks', 'bookmark', 'Bookmark & koleksi', 'Ayat tersimpan per tema'],
                         ['hafalan', 'repeat', 'Hafalan & murojaah', 'Progres hafalan & jadwal ulang'],

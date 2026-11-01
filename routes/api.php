@@ -63,6 +63,9 @@ Route::prefix('v1')->name('api.v1.')->middleware('throttle:api')->group(function
         Route::post('/me/memorization', [V1\MemorizationController::class, 'store'])->name('me.memorization.store');
         Route::delete('/me/memorization', [V1\MemorizationController::class, 'destroy'])->name('me.memorization.destroy');
 
+        Route::get('/me/worship-logs', [\App\Http\Controllers\Account\WorshipLogController::class, 'apiIndex'])->name('me.worship');
+        Route::put('/me/worship-logs/{date}', [\App\Http\Controllers\Account\WorshipLogController::class, 'apiUpdate'])->name('me.worship.update');
+
         Route::get('/me/data-export', [V1\MeController::class, 'export'])->name('me.export');
         Route::post('/me/delete-account', [V1\MeController::class, 'deleteAccount'])->name('me.delete');
 

@@ -41,6 +41,7 @@ class PersonalDataService
                 'reviews' => $m->reviews, 'lapses' => $m->lapses,
             ])->all(),
             'collections' => $user->collections()->get(['id', 'name', 'description'])->toArray(),
+            'worship_logs' => $user->worshipLogs()->orderBy('date')->get()->map(fn ($l) => ['date' => $l->date->toDateString(), 'score' => $l->score] + $l->data)->all(),
             'reading_progress' => $user->readingProgress()->with('verse.surah')->get()->map(fn ($p) => $verseRef($p->verse) + ['last_read_at' => $p->last_read_at?->toIso8601String()])->all(),
         ];
     }

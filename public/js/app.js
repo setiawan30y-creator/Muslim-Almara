@@ -1323,3 +1323,21 @@
     });
     lazy();
 })();
+
+/* ===== Tracker ibadah: simpan otomatis saat berubah — @2026-Alifiandra ===== */
+(function () {
+    var form = document.querySelector('[data-worship-form]');
+    if (!form || !window.fetch) return;
+    var status = form.querySelector('[data-worship-status]');
+    var timer;
+    form.addEventListener('change', function () {
+        clearTimeout(timer);
+        status.textContent = 'Menyimpan…';
+        timer = setTimeout(function () {
+            fetch(form.action, { method: 'POST', body: new FormData(form), credentials: 'same-origin', headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' } })
+                .then(function (r) { if (!r.ok) throw r; return r.json(); })
+                .then(function (j) { status.textContent = 'Tersimpan · skor ' + j.data.score + '%'; })
+                .catch(function () { status.textContent = 'Gagal menyimpan — tekan Simpan.'; });
+        }, 500);
+    });
+})();

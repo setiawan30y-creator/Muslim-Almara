@@ -104,6 +104,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(UserNote::class);
     }
 
+    public function worshipLogs(): HasMany
+    {
+        return $this->hasMany(WorshipLog::class);
+    }
+
     public function memorizations(): HasMany
     {
         return $this->hasMany(UserMemorization::class);

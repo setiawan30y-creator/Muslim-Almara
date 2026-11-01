@@ -2,6 +2,9 @@
 @php
     $items = [
         [route('prayer'), 'Jadwal Sholat', 'Harian & bulanan, metode dapat dipilih', 'clock', false],
+        [route('profile.worship'), 'Tracker Ibadah', 'Catat sholat 5 waktu & amalan harian (perlu akun)', 'check-circle', false],
+        [route('imsakiyah'), 'Imsakiyah Ramadan', 'Jadwal imsak & buka sebulan penuh', 'moon', false],
+        [route('fasting'), 'Kalender Puasa Sunnah', 'Senin-Kamis, Ayyamul Bidh, Arafah, Asyura', 'calendar', false],
         [route('qibla'), 'Arah Kiblat', 'Kompas perangkat & derajat', 'compass', false],
         [route('mosques'), 'Masjid Terdekat', 'Peta & daftar masjid/musala sekitar', 'pin', false],
         [route('doa'), 'Dzikir & Doa', 'Arab, Latin, arti, dan sumber', 'hands', false],
