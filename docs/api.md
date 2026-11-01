@@ -41,6 +41,8 @@ Web memakai sesi (cookie) — domain harus terdaftar di `SANCTUM_STATEFUL_DOMAIN
 | GET/POST | `/me/bookmarks` · DELETE `/me/bookmarks/{id}` |
 | GET/POST | `/me/notes` · PATCH/DELETE `/me/notes/{id}` (field `tags`, dipisah koma) |
 | GET/POST/DELETE | `/me/memorization` — status hafalan; POST `{verse_id, grade: lupa\|ragu\|lancar}`; DELETE `?surah=` |
+| GET | `/me/worship-logs` — catatan ibadah 31 hari terakhir; `meta.streak`, daftar kunci sholat & amalan |
+| PUT | `/me/worship-logs/{YYYY-MM-DD}` — `{prayers: {subuh: jamaah\|tepat\|qadha\|null, …}, habits: {tilawah: true, …}}`; hanya hari ini s.d. 30 hari lalu |
 | GET/PUT | `/me/reading-progress` (`verse_id`, `mark_read`, `from_ayah`) |
 | GET/PUT | `/me/reading-goals` |
 | GET | `/me/data-export` · POST `/me/delete-account` (`password`) |

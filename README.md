@@ -7,23 +7,25 @@ Dibangun dengan **Laravel 13** mengikuti *ALMARA MUSLIM — Blueprint Teknis & R
 
 ## Status rilis
 
-Versi **2.6.0** mencakup Rilis Pertama (MVP, blueprint §1.1) + *Pengaturan Tampilan & Tema*:
+Versi **2.7.0** mencakup Rilis Pertama (MVP, blueprint §1.1) + *Pengaturan Tampilan & Tema*:
 
 | Area | Isi |
 |---|---|
 | Navigasi | Beranda · Qur'an · Belajar · Ibadah · Profil |
 | Beranda | Salam & lokasi, sholat berikutnya + hitung mundur, cuaca & prakiraan per jam, aksi cepat, lanjutkan bacaan, target tilawah, ayat harian, hari besar, catatan — kartu dapat diurutkan/disembunyikan |
-| Al-Qur'an | 114 surah & 30 juz, terjemahan & tafsir Kemenag, pencarian, bookmark, catatan pribadi, tandai dibaca, unduh offline, pilihan mode baca |
-| Audio qari | Pemutar murattal (putar dari ayat, sorot ayat, mode per ayat, ulang); **Qari ALMARA** (rekaman sendiri: unggah → karantina → review → terbit) & qari berlisensi **Quran.Foundation** |
-| Ibadah | Jadwal sholat (8 metode, mazhab Asar, koreksi menit), kiblat + kalibrasi, masjid terdekat (OpenStreetMap), dzikir & doa bersumber, tasbih, kalender Hijriah, zakat, panduan Umroh, Haji & Ziarah Kubur |
+| Al-Qur'an | 114 surah & 30 juz, halaman per ayat (`/al-quran/2/255`), terjemahan & tafsir Kemenag, pencarian terjemahan & **huruf Arab** (harakat diabaikan), bagikan ayat sebagai gambar, bookmark, catatan pribadi, tandai dibaca, unduh offline, pilihan mode baca |
+| Audio qari | Pemutar murattal (putar dari ayat, sorot ayat, penanda ketukan huruf, mode per ayat, ulang, **kecepatan 0,75–1,5×, timer tidur, lanjut otomatis ke surah berikutnya, ulang rentang ayat X–Y N kali**); **Qari ALMARA** (rekaman sendiri: unggah → karantina → review → terbit) & qari berlisensi **Quran.Foundation** |
+| Ibadah | Jadwal sholat (8 metode, mazhab Asar, koreksi menit), kiblat + kalibrasi, masjid terdekat (OpenStreetMap), dzikir & doa bersumber, tasbih, **Tahlil lengkap** (pembuka s.d. doa, dengan penghitung), **tracker ibadah harian**, jadwal sholat per kota, **imsakiyah Ramadan**, **kalender puasa sunnah**, kalender Hijriah, zakat, panduan Umroh, Haji & Ziarah Kubur |
 | Belajar | Tajwid bertingkat + latihan, Hafalan & Murojaah (pengulangan berjarak), Terjemah & Frasa (offline + layanan opsional), Jurnal bertag & koleksi ayat |
 | Akun | Daftar/masuk, reset sandi, verifikasi email, progres & target, ekspor & hapus data |
 | Pengaturan | Tampilan & Tema (Terang/Gelap/Sistem, 5 aksen, ukuran teks UI/Arab/terjemahan, pratinjau, reset), Al-Qur'an, Jadwal Sholat, Beranda |
 | Admin | Peran admin/editor/reviewer, alur draft → review → terbit, versi konten, audio qari, sumber & lisensi, pengguna, konfigurasi, log audit |
 | API | `/api/v1` format `{data, meta}` — lihat `docs/api.md` |
 | PWA | Manifest, service worker berversi, offline, halaman pribadi tidak pernah dicache |
+| SEO | Sitemap (±6.500 URL: ayat, kota, imsakiyah, panduan), `robots.txt` dinamis, Open Graph/Twitter card, JSON-LD |
+| Iklan | Modul AdSense/CPM opsional (mati bawaan): slot aman, persetujuan personal/non-personal, `ads.txt` — lihat `docs/iklan.md` |
 
-Pengingat adzan (Web Push) aktif setelah kunci VAPID dibuat (`php artisan almara:push:keys`) dan penjadwal berjalan. Mode **Mushaf** (teks bersambung, nomor ayat berornamen, ketuk ayat untuk arti) aktif sebagai tampilan bawaan. **Transliterasi Latin** aktif setelah dataset berizin diimpor: `php artisan almara:quran:import-latin berkas.json --license="..."`. Belum diaktifkan: Mushaf halaman bergambar (butuh edisi berlisensi), Premium/Iklan.
+Pengingat adzan (Web Push) aktif setelah kunci VAPID dibuat (`php artisan almara:push:keys`) dan penjadwal berjalan. Mode **Mushaf** (teks bersambung, nomor ayat berornamen, ketuk ayat untuk arti) aktif sebagai tampilan bawaan. **Transliterasi Latin** aktif setelah dataset berizin diimpor: `php artisan almara:quran:import-latin berkas.json --license="..."`. Belum diaktifkan: Mushaf halaman bergambar (butuh edisi berlisensi). Iklan aktif setelah `ADS_ENABLED=true` + `ADSENSE_CLIENT` diisi.
 
 Deploy ke Ubuntu: lihat **`docs/deployment.md`** (Nginx, PHP 8.4, MySQL, HTTPS, cron, Play Store/TWA).
 
@@ -83,6 +85,7 @@ php artisan test
 | `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` | kosong | Pengingat adzan (Web Push) — buat dengan `php artisan almara:push:keys` |
 | `TWA_PACKAGE_NAME`, `TWA_SHA256_FINGERPRINTS` | kosong | `/.well-known/assetlinks.json` untuk Play Store |
 | `ALMARA_WEATHER` | `true` | Kartu cuaca di beranda (Open-Meteo, di-cache 30 menit per lokasi) |
+| `ADS_ENABLED`, `ADSENSE_CLIENT`, `ADSENSE_SLOT_FOOTER`, `ADSENSE_SLOT_LIST` | nonaktif | Iklan (lihat `docs/iklan.md`); `ADS_TXT_EXTRA` untuk jaringan CPM lain |
 | `OPEN_METEO_API_KEY` | kosong | **Wajib untuk penggunaan komersial** (aplikasi disewakan/berbayar/beriklan); API gratis Open-Meteo hanya untuk non-komersial |
 
 ## Audio qari
@@ -110,7 +113,7 @@ Aplikasi otomatis memakai `https` di balik tunnel lokal (`TRUSTED_PROXIES=127.0.
 
 ## Dokumentasi
 
-`docs/architecture.md` · `docs/api.md` · `docs/content-sources.md` · `docs/security.md` · `docs/deployment.md` · `docs/adr/`
+`docs/architecture.md` · `docs/api.md` · `docs/content-sources.md` · `docs/security.md` · `docs/deployment.md` · `docs/iklan.md` · `docs/adr/`
 
 ## Sumber data
 
